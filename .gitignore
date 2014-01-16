@@ -12,3 +12,4 @@ jformica_android/gen
 **/.settings
 *.project
 *.classpath
+target/

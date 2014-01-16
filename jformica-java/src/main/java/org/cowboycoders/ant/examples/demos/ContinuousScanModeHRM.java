@@ -105,11 +105,9 @@ public class ContinuousScanModeHRM
 		/* must be called before any configuration takes place */
 		node.start();
 		
-		/* sends reset request : resets channels to default state */
-		node.reset();
-
 		node.setLibConfig( true, false, false );
 
+		Thread.sleep( 10000 );
 		Channel channel = node.getFreeChannel();
 
 		// Arbitrary name : useful for identifying channel
@@ -143,6 +141,7 @@ public class ContinuousScanModeHRM
 		// Listen for 60 seconds
 		Thread.sleep( 60000 );
 
+		log.info( "Closing channel..." );
 		// stop listening
 		channel.close();
 

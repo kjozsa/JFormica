@@ -18,142 +18,170 @@
  */
 package org.cowboycoders.ant.interfaces;
 
+import org.cowboycoders.ant.events.BroadcastMessenger;
+
 import java.util.Collections;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.cowboycoders.ant.events.BroadcastMessenger;
+public abstract class AbstractAntTransceiver implements AntChipInterface
+{
+	private final Lock messengerLock = new ReentrantLock();
 
-public abstract class AbstractAntTransceiver implements AntChipInterface  {
+	/**
+	 * Messengers to inform when rxRecieved
+	 */
+	private Set<BroadcastMessenger<byte[]>> mRxMessengers = Collections.newSetFromMap( new WeakHashMap<BroadcastMessenger<byte[]>, Boolean>() );
+	/**
+	 * messengers to inform when chip status changes
+	 */
+	private Set<BroadcastMessenger<AntStatusUpdate>> mStatusMessengers = Collections.newSetFromMap( new WeakHashMap<BroadcastMessenger<AntStatusUpdate>, Boolean>() );
+	/**
+	 * Stores last status update
+	 */
+	private AntStatusUpdate lastStatusUpdate = new AntStatusUpdate();
 
-  /**
-   * Messengers to inform when rxRecieved
-   */
-  private Set<BroadcastMessenger<byte[]>> mRxMessengers = Collections.newSetFromMap(new WeakHashMap<BroadcastMessenger<byte[]>,Boolean>());
-  
+	public AbstractAntTransceiver()
+	{
+		super();
+	}
 
-  /**
-   * messengers to inform when chip status changes
-   */
-  private Set<BroadcastMessenger<AntStatusUpdate>> mStatusMessengers = Collections.newSetFromMap(new WeakHashMap<BroadcastMessenger<AntStatusUpdate>,Boolean>());
-  
-  private final Lock messengerLock = new ReentrantLock();
-  
-  /**
-   * Stores last status update
-   */
-  private AntStatusUpdate lastStatusUpdate = new AntStatusUpdate();
-  
-  /**
-   * @return the mRxMessengers
-   */
-  public Set<BroadcastMessenger<byte[]>> getRxMessengers() {
-    return mRxMessengers;
-  }
+	/**
+	 * @return the mRxMessengers
+	 */
+	public Set<BroadcastMessenger<byte[]>> getRxMessengers()
+	{
+		return mRxMessengers;
+	}
 
-  /**
-   * @return the mStatusMessengers
-   */
-  public Set<BroadcastMessenger<AntStatusUpdate>> getStatusMessengers() {
-    return mStatusMessengers;
-  }
+	/**
+	 * @return the mStatusMessengers
+	 */
+	public Set<BroadcastMessenger<AntStatusUpdate>> getStatusMessengers()
+	{
+		return mStatusMessengers;
+	}
 
-  /**
-   * @return the messengerLock
-   */
-  public Lock getMessengerLock() {
-    return messengerLock;
-  }
+	/**
+	 * @return the messengerLock
+	 */
+	public Lock getMessengerLock()
+	{
+		return messengerLock;
+	}
 
-  public AbstractAntTransceiver() {
-    super();
-  }
+	/**
+	 * keep a reference as stored in a weak list
+	 */
+	@Override
+	public void registerRxMesenger( BroadcastMessenger<byte[]> rxMessenger )
+	{
+		if( rxMessenger == null )
+		{
+			return;
+		}
 
-  /**
-   * keep a reference as stored in a weak list
-   */
-  @Override
-  public void registerRxMesenger(BroadcastMessenger<byte[]> rxMessenger) {
-    if(rxMessenger == null) {
-      return;
-    }
-    try {
-      messengerLock.lock();
-      this.mRxMessengers.add(rxMessenger);
-    } finally {
-      messengerLock.unlock();
-    }
-    
-    
-  }
+		try
+		{
+			messengerLock.lock();
+			this.mRxMessengers.add( rxMessenger );
+		}
+		finally
+		{
+			messengerLock.unlock();
+		}
 
-  /**
-   * keep a reference as stored in a weak list
-   */
-  @Override
-  public void registerStatusMessenger(BroadcastMessenger<AntStatusUpdate> statusMessenger) {
-    if(statusMessenger == null) {
-      return;
-    }
-    
-    try {
-      messengerLock.lock();
-      this.mStatusMessengers.add(statusMessenger);
-    } finally {
-      messengerLock.unlock();
-    }
-  }
-  
-  protected void broadcastStatus(AntStatus status, Object optionalArg) {
-    try {
-      getMessengerLock().lock();
-      Set<BroadcastMessenger<AntStatusUpdate>> mStatusMessengers = getStatusMessengers();
-      if (mStatusMessengers != null) {
-        AntStatusUpdate update = new AntStatusUpdate();
-        update.status = status;
-        update.optionalArg = optionalArg;
-        for (BroadcastMessenger<AntStatusUpdate> statusMessenger : mStatusMessengers) {
-          if (statusMessenger == null) {
-            continue;
-          }
-          statusMessenger.sendMessage(update);
-        }
-      }
-    } finally {
-      getMessengerLock().unlock();
-    }
-  }
-  
-  protected void broadcastStatus(AntStatus status) {
-    this.broadcastStatus(status, null);
-  }
-  
-  protected void broadcastRxMessage(byte [] ANTRxMessage) {
-    try {
-      getMessengerLock().lock();
-      Set<BroadcastMessenger<byte[]>> mRxMessengers = getRxMessengers();
-      if (mRxMessengers == null) {
-        return;
-      }
-      for (BroadcastMessenger<byte[]> rxMessenger : mRxMessengers) {
-        if (rxMessenger == null) {
-          continue;
-        }
-        rxMessenger.sendMessage(ANTRxMessage);
-      }
-    } finally {
-     getMessengerLock().unlock();
-    } 
-   }
-  
-  /* (non-Javadoc)
-   * @see org.cowboycoders.ant.interfaces.AntChipInterface#getStatus()
-   */
-  @Override
-  public AntStatusUpdate getStatus() {
-    return lastStatusUpdate;
-  }
+	}
+
+	/**
+	 * keep a reference as stored in a weak list
+	 */
+	@Override
+	public void registerStatusMessenger( BroadcastMessenger<AntStatusUpdate> statusMessenger )
+	{
+		if( statusMessenger == null )
+		{
+			return;
+		}
+
+		try
+		{
+			messengerLock.lock();
+			this.mStatusMessengers.add( statusMessenger );
+		}
+		finally
+		{
+			messengerLock.unlock();
+		}
+	}
+
+	/* (non-Javadoc)
+	   * @see org.cowboycoders.ant.interfaces.AntChipInterface#getStatus()
+	   */
+	@Override
+	public AntStatusUpdate getStatus()
+	{
+		return lastStatusUpdate;
+	}
+
+	protected void broadcastStatus( AntStatus status, Object optionalArg )
+	{
+		try
+		{
+			getMessengerLock().lock();
+			Set<BroadcastMessenger<AntStatusUpdate>> mStatusMessengers = getStatusMessengers();
+			if( mStatusMessengers != null )
+			{
+				AntStatusUpdate update = new AntStatusUpdate();
+				update.status = status;
+				update.optionalArg = optionalArg;
+				for( BroadcastMessenger<AntStatusUpdate> statusMessenger : mStatusMessengers )
+				{
+					if( statusMessenger == null )
+					{
+						continue;
+					}
+					statusMessenger.sendMessage( update );
+				}
+			}
+		}
+		finally
+		{
+			getMessengerLock().unlock();
+		}
+	}
+
+	protected void broadcastStatus( AntStatus status )
+	{
+		this.broadcastStatus( status, null );
+	}
+
+	protected void broadcastRxMessage( byte[] ANTRxMessage )
+	{
+		try
+		{
+			getMessengerLock().lock();
+			Set<BroadcastMessenger<byte[]>> mRxMessengers = getRxMessengers();
+			if( mRxMessengers == null )
+			{
+				return;
+			}
+
+			for( BroadcastMessenger<byte[]> rxMessenger : mRxMessengers )
+			{
+				if( rxMessenger == null )
+				{
+					continue;
+				}
+				rxMessenger.sendMessage( ANTRxMessage );
+			}
+		}
+		finally
+		{
+			getMessengerLock().unlock();
+		}
+	}
 
 }

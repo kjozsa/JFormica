@@ -21,7 +21,6 @@ package org.cowboycoders.ant.interfaces;
 
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.commands.ResetMessage;
-import org.cowboycoders.ant.utils.ByteUtils;
 import org.cowboycoders.ant.utils.UsbUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +38,6 @@ import javax.usb.UsbNotOpenException;
 import javax.usb.UsbPipe;
 import javax.usb.UsbServices;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -51,12 +49,6 @@ public class AntTransceiver extends AbstractAntTransceiver
 	 * sync byte
 	 */
 	private static byte MESSAGE_TX_SYNC = (byte) 0xA4;
-
-	/**
-	 * Used to set read buffer size
-	 */
-	private static final int MAX_MSG_LENGTH = 23;
-	private static final int MESSAGE_OFFSET_MSG_LENGTH = 1;
 
 	/**
 	 * Usb Interface
@@ -123,7 +115,7 @@ public class AntTransceiver extends AbstractAntTransceiver
 
 	private void doInit( AntDeviceId antId, int deviceNumber )
 	{
-		UsbServices usbServices = null;
+		UsbServices usbServices;
 		UsbHub rootHub;
 
 		try
@@ -170,174 +162,45 @@ public class AntTransceiver extends AbstractAntTransceiver
 			throw new AntCommunicationException( "Device not found" );
 		}
 
-		UsbDevice device = devices.get( deviceNumber );
-
-		this.device = device;
+		this.device = devices.get( deviceNumber );
 	}
 
-	private void logData( byte[] data, String tag )
+	private void logData( int len, byte[] data, String tag )
 	{
 		StringBuilder logBuffer = new StringBuilder();
 
-		for( Byte b : data )
+		for( int i = 0; i < len; i++ )
 		{
-			logBuffer.append( String.format( "%x ", b ) );
+			byte b = data[i];
+			logBuffer.append( String.format( "%02x ", b ) );
 		}
 
-		logBuffer.append( (String.format( "\n" )) );
-
-		log.debug( tag + " : " + logBuffer );
+		log.trace( tag + " : " + logBuffer );
 	}
 
 	public class UsbReader extends Thread
 	{
-		private byte[] last;
-
 		private static final int BUFFER_SIZE = 64;
 
-		/**
-		 * @param data buffer to check
-		 * @return data remaining
-		 */
-		private byte[] lookForSync( byte[] data, int len )
-		{
-			if( data == null || data.length < 1 )
-			{
-				return new byte[0];
-			}
-
-			if( data[0] != MESSAGE_TX_SYNC )
-			{
-				int index = -1;
-				for( int i = 0; i < len; i++ )
-				{
-					if( data[i] == MESSAGE_TX_SYNC )
-					{
-						index = i;
-						break;
-					}
-				}
-				// not found
-				if( index < 0 )
-				{
-					log.warn( "data read from usb endpoint does not contain a sync byte : ignoring" );
-					return new byte[0]; // zero length array
-				}
-				log.info( "found non-zero sync byte index" );
-				data = Arrays.copyOfRange( data, index, data.length );
-			}
-			return data;
-		}
-
-		// All this array copying inefficient but simple (could keep reference
-		// to current index instead)
-		private byte[] skipCurrentSync( byte[] data )
-		{
-			if( data.length < 1 )
-			{
-				return new byte[0];
-			}
-			data = Arrays.copyOfRange( data, 1, data.length );
-			return data;
-		}
-
-		/**
-		 * Gets the next message and notifies interested listeners.
-		 *
-		 * @param data - message data
-		 * @param len  - message length
-		 */
-		void processBuffer( byte[] data, int len )
-		{
-			while( len > 0 )
-			{
-				data = lookForSync( data, len );
-
-				if( data.length <= MESSAGE_OFFSET_MSG_LENGTH )
-				{
-					log.info( "data length too small, checking next packet" );
-					// assume rest will arrive in next packet
-					last = data;
-					break;
-				}
-
-				int msgLength = data[MESSAGE_OFFSET_MSG_LENGTH];
-
-				// negative length does not make sense
-				if( msgLength < 0 )
-				{
-					log.warn( "msgLength appears to be incorrect (ignorning). Length : " + msgLength );
-					data = skipCurrentSync( data );
-					continue;
-				}
-
-				int checkSumIndex = msgLength + 3;
-
-				if( checkSumIndex >= data.length )
-				{
-					// unreasonably large checkSumIndex (dont span multiple
-					// buffers)
-					if( checkSumIndex >= BUFFER_SIZE - 1 )
-					{
-						log.warn( "msgLength appears to be incorrect (ignorning). Length : " + msgLength );
-						data = skipCurrentSync( data );
-						continue;
-					}
-
-					// we try assume continued in next buffer
-					last = data;
-					break;
-				}
-
-				// data minus sync and checksum
-				byte[] cleanData = new byte[msgLength + 2];
-
-				for( int i = 0; i < msgLength + 2; i++ )
-				{
-					cleanData[i] = data[i + 1];
-				}
-
-				if( getChecksum( cleanData ) != data[checkSumIndex] )
-				{
-					log.warn( "checksum incorrect : ignoring" );
-					data = skipCurrentSync( data );
-					continue;
-				}
-
-				AntTransceiver.this.broadcastRxMessage( cleanData );
-				// cleandata length + sync + checksum
-				len -= (cleanData.length + 2);
-				data = Arrays.copyOfRange( data, cleanData.length + 2, data.length );
-			}
-		}
-
-		/*
-		 * Two Modifications (David George - 11/June/2013)
-		 * 
-		 * 1. continue if we get a USB Exception on read from lower layers, this
-		 * is a timeout and we don't care
-		 * 
-		 * 2. use returned data length to make code more efficient (hopefully).
-		 * No more searching for SYNC bytes in zero data
-		 */
 		@Override
 		public void run()
 		{
+			AntMessageParser antMessageParser = new AntMessageParser();
 
 			try
 			{
 				while( readEndpoint )
 				{
-
-					// interfaceLock.lock();
-					// byte [] data = new byte[MAX_MSG_LENGTH];
 					byte[] data = new byte[BUFFER_SIZE];
-					int len;
+					int bytesReceived;
+
 					try
 					{
-						// inPipe.open();
-						len = inPipe.syncSubmit( data );
-						// System.out.println("received " + len);
+						bytesReceived = inPipe.syncSubmit( data );
+						if( bytesReceived == 0 )
+						{
+							continue;
+						}
 					}
 					catch( UsbException e )
 					{
@@ -348,19 +211,13 @@ public class AntTransceiver extends AbstractAntTransceiver
 						continue;
 					}
 
-					logData( data, "read" );
+					logData( bytesReceived, data, "read" );
+					List<byte[]> messages = antMessageParser.parse( data, bytesReceived );
 
-					// process remaining bytes from last buffer
-					if( last != null )
+					for( byte[] bytes : messages )
 					{
-						// TODO len is bigger due to remaining bytes
-						len += last.length;
-						data = ByteUtils.joinArray( last, data );
-						last = null;
+						AntTransceiver.this.broadcastRxMessage( bytes );
 					}
-
-					processBuffer( data, len );
-
 				}
 
 			}
@@ -492,7 +349,6 @@ public class AntTransceiver extends AbstractAntTransceiver
 
 	private void killUsbReader()
 	{
-
 		readEndpoint = false;
 
 		// Doesn't seem to work so we send a message instead
@@ -528,7 +384,6 @@ public class AntTransceiver extends AbstractAntTransceiver
 
 			try
 			{
-				// inPipe.abortAllSubmissions();
 				inPipe.close();
 			}
 			catch( UsbException e )
@@ -537,12 +392,6 @@ public class AntTransceiver extends AbstractAntTransceiver
 			}
 
 			_interface.release();
-
-			// } finally {
-			// interfaceLock.unlock();
-			// }
-
-			// _interface.release();
 
 			running = false;
 		}
@@ -575,7 +424,7 @@ public class AntTransceiver extends AbstractAntTransceiver
 				pipe.open();
 			}
 			pipe.syncSubmit( data );
-			logData( data, "wrote" );
+			logData( data.length, data, "wrote" );
 		}
 		finally
 		{
@@ -608,7 +457,7 @@ public class AntTransceiver extends AbstractAntTransceiver
 
 	public byte getChecksum( byte[] nocheck )
 	{
-		byte checksum = 0;
+		byte checksum;
 		checksum = MESSAGE_TX_SYNC;
 		for( byte b : nocheck )
 		{
@@ -621,10 +470,7 @@ public class AntTransceiver extends AbstractAntTransceiver
 	{
 		byte[] data = new byte[nocheck.length + 2];
 		data[0] = MESSAGE_TX_SYNC;
-		for( int i = 1; i < data.length - 1; i++ )
-		{
-			data[i] = nocheck[i - 1];
-		}
+		System.arraycopy( nocheck, 0, data, 1, data.length - 1 - 1 );
 		data[data.length - 1] = getChecksum( nocheck );
 		return data;
 	}

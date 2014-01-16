@@ -53,7 +53,7 @@ public class ChannelStatusResponse extends ChannelMessage {
     ;
     
     private static Map <Byte,State> ordinalMap =
-        new HashMap<Byte,State>();
+        new HashMap<>();
     
     
     static {

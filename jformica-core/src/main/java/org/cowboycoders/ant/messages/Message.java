@@ -55,7 +55,7 @@ public class Message implements Messageable {
       id = MessageId.INVALID;
     }
     if ( payload  == null ) {
-      payload = new ArrayList<Byte>();
+      payload = new ArrayList<>();
     }
     this.payload = payload;
     this.id = id;
@@ -181,7 +181,7 @@ public void setStandardPayload(ArrayList<Byte> payload) throws ValidationExcepti
     id = MessageId.lookUp(buffer[AntMesg.MESG_ID_OFFSET]);
     byte[] payload = Arrays.copyOfRange(buffer, AntMesg.MESG_DATA_OFFSET, buffer.length);
     
-    ArrayList<Byte> payLoadList = new ArrayList<Byte>();
+    ArrayList<Byte> payLoadList = new ArrayList<>();
     for (Byte b : payload) {
       payLoadList.add(b);
     }

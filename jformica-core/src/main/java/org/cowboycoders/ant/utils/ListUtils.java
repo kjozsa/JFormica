@@ -54,7 +54,7 @@ public class ListUtils {
     if (list == null) {
       list = (X) new ArrayList<V>();
     }
-    List<V> temp =  new ArrayList<V>(list);
+    List<V> temp =  new ArrayList<>(list);
     list.removeAll(temp);
     list.addAll(prefix);
     list.addAll(temp);

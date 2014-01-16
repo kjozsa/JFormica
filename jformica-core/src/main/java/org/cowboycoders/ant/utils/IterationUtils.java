@@ -25,7 +25,7 @@ public class IterationUtils {
   private IterationUtils() {}
   
   public static <V> List<V> filter(Iterable<V> iterable, Filter<V> filter) {
-    List <V> filteredObjects = new ArrayList<V>();
+    List <V> filteredObjects = new ArrayList<>();
     for (V object : iterable) {
       if (filter.isWanted(object)) {
         filteredObjects.add(object);

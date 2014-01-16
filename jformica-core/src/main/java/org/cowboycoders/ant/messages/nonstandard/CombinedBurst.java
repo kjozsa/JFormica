@@ -18,11 +18,6 @@
  */
 package org.cowboycoders.ant.messages.nonstandard;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Logger;
-
 import org.cowboycoders.ant.ChannelId;
 import org.cowboycoders.ant.messages.DeviceInfoQueryable;
 import org.cowboycoders.ant.messages.RssiInfoQueryable;
@@ -30,6 +25,12 @@ import org.cowboycoders.ant.messages.TimestampInfoQueryable;
 import org.cowboycoders.ant.messages.data.BurstDataMessage;
 import org.cowboycoders.ant.utils.BurstMessageSequenceGenerator;
 import org.cowboycoders.ant.utils.ByteUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Combines individual BurstDataMessage to produce a single array of data
@@ -37,9 +38,8 @@ import org.cowboycoders.ant.utils.ByteUtils;
  *
  */
 public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, TimestampInfoQueryable {
-	
-	public static Logger LOGGER = Logger.getLogger(CombinedBurst.class.getSimpleName());
-	
+
+	private static final Logger log = LoggerFactory.getLogger( CombinedBurst.class );
 	/**
 	 * Diagnostic flags
 	 * @author will
@@ -52,7 +52,7 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 	
 	private final Byte [] data;
 	
-	private final List<StatusFlag> statusFlags = new ArrayList<StatusFlag>();
+	private final List<StatusFlag> statusFlags = new ArrayList<>();
 
 	private final boolean complete;
 	
@@ -259,8 +259,8 @@ public class CombinedBurst implements DeviceInfoQueryable, RssiInfoQueryable, Ti
 		 * Discards all stored data
 		 */
 		public void reset() {
-			combinedData = new ArrayList<Byte>();
-			statusFlags = new ArrayList<StatusFlag>();
+			combinedData = new ArrayList<>();
+			statusFlags = new ArrayList<>();
 			sequenceGenerator = new BurstMessageSequenceGenerator();
 			expectedSequenceNumber = sequenceGenerator.next();
 			complete = false;

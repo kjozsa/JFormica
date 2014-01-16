@@ -128,7 +128,7 @@ public enum ResponseCode {
    ;
    
    private static HashMap<Byte, ResponseCode> idTypeMap = 
-       new HashMap<Byte, ResponseCode>();
+       new HashMap<>();
    
    private byte code;
    

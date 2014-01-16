@@ -49,7 +49,7 @@ public class SlaveChannelType extends ChannelType {
 
   private static ChannelType.Types [] getChannelTypesArray(boolean shared,
       boolean rxOnly) {
-    List<ChannelType.Types> types = new ArrayList<ChannelType.Types>();
+    List<ChannelType.Types> types = new ArrayList<>();
     types.add(ChannelType.Types.SLAVE);
     if (shared) types.add(ChannelType.Types.SHARED_RECEIVE);
     if (rxOnly) types.add(ChannelType.Types.ONEWAY_RECEIVE);  

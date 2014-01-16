@@ -36,7 +36,7 @@ public abstract class AbstractFixedSizeQueue<V> extends AbstractQueue<V> impleme
 	}
 
 	public AbstractFixedSizeQueue(int maxSize) {
-		this.queue = new LinkedList<V>();
+		this.queue = new LinkedList<>();
 		this.maxSize = maxSize;
 	}
 

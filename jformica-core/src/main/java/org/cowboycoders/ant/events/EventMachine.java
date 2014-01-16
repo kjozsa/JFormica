@@ -18,38 +18,24 @@
  */
 package org.cowboycoders.ant.events;
 
+import org.cowboycoders.ant.interfaces.AntChipInterface;
+import org.cowboycoders.ant.messages.AntMessageFactory;
+import org.cowboycoders.ant.messages.MessageException;
+import org.cowboycoders.ant.messages.MessageMetaWrapper;
+import org.cowboycoders.ant.messages.StandardMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import java.util.logging.Logger;
-
-import org.cowboycoders.ant.interfaces.AntChipInterface;
-import org.cowboycoders.ant.messages.AntMessageFactory;
-import org.cowboycoders.ant.messages.MessageException;
-import org.cowboycoders.ant.messages.MessageMetaWrapper;
-import org.cowboycoders.ant.messages.StandardMessage;
-
-
-
-
 public class EventMachine  {
-  
-  /**
-   * guards list of received messages
-   */
-  //private final Lock rxQueueLock = new ReentrantLock();
-  
-  //private Condition rxQueueChanged = rxQueueLock.newCondition();
-  
-  //private boolean rxQueueEmpty = true;
-  
 
+	private static final Logger log = LoggerFactory.getLogger( EventMachine.class );
   private AntChipInterface chipInterface;
-  
-  public final static Logger LOGGER = Logger.getLogger(EventMachine.class .getName()); 
   
   private BroadcastMessenger<byte []> rawMessenger;
   
@@ -66,14 +52,14 @@ public class EventMachine  {
       try {
        msg = AntMessageFactory.createMessage(message);
      } catch (MessageException e) {
-       LOGGER.warning("Error converting raw data to type StandardMessage");
+       log.warn( "Error converting raw data to type StandardMessage" );
      }
      
       if(msg != null) {
-        LOGGER.finer("received :" + msg.getClass());
+        log.trace( "received :" + msg.getClass() );
         convertedMessenger.sendMessage(msg);
       } else {
-        LOGGER.warning("Ignoring data packet");
+        log.warn( "Ignoring data packet" );
       }
     }
     
@@ -102,7 +88,7 @@ public class EventMachine  {
     	}
       
 	    MessageMetaWrapper<StandardMessage> wrappedMessage =
-	         new MessageMetaWrapper<StandardMessage>(message);
+	         new MessageMetaWrapper<>(message);
 	    
 	    try {
 	    	messageUpdateLock.lock();
@@ -145,8 +131,8 @@ public class EventMachine  {
 
   public EventMachine(AntChipInterface chipInterface) {
     this.chipInterface = chipInterface;
-    this.rawMessenger = new BroadcastMessenger<byte []>();
-    this.convertedMessenger = new BroadcastMessenger<StandardMessage>();
+    this.rawMessenger = new BroadcastMessenger<>();
+    this.convertedMessenger = new BroadcastMessenger<>();
     chipInterface.registerRxMesenger(rawMessenger);
     rawMessenger.addBroadcastListener(new EventPump());
   }
@@ -159,12 +145,7 @@ public class EventMachine  {
     convertedMessenger.removeBroadcastListener(listener);
   }
   
-  public static Logger getLogger() {
-    return LOGGER;
-  }
-  
-  
-  public MessageMetaWrapper<StandardMessage> waitForCondition( 
+  public MessageMetaWrapper<StandardMessage> waitForCondition(
       MessageCondition msgCondition,
       Long timeout, TimeUnit timeoutUnit, LockExchangeContainer lockExchanger) 
           throws InterruptedException, TimeoutException {

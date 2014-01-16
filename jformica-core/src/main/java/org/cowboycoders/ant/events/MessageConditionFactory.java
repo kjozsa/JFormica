@@ -18,13 +18,13 @@
  */
 package org.cowboycoders.ant.events;
 
-import java.util.logging.Logger;
-
 import org.cowboycoders.ant.TransferException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.messages.responses.Response;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Commonly used conditions
@@ -32,9 +32,8 @@ import org.cowboycoders.ant.messages.responses.ResponseCode;
  *
  */
 public class MessageConditionFactory {
-  
-  public final static Logger LOGGER = Logger.getLogger(MessageConditionFactory.class .getName());
-  
+
+	private static final Logger log = LoggerFactory.getLogger( MessageConditionFactory.class );
   private static MessageCondition GENERIC_RESPONSE_CONDITION = new ResponseCondition();
   
   private static MessageCondition RESPONSE_FILTER_CONDITION = new MessageCondition() {
@@ -72,8 +71,8 @@ public class MessageConditionFactory {
     MessageCondition condition = new MessageCondition () {
       @Override
       public boolean test(StandardMessage msg) {
-        LOGGER.finer(msg.getClass().toString());
-        LOGGER.finer(clazz.toString());
+        log.trace( msg.getClass().toString() );
+        log.trace( clazz.toString() );
         if (msg.getClass().equals(clazz)) return true;
         return false;
       }
@@ -94,8 +93,8 @@ public class MessageConditionFactory {
     MessageCondition condition = new MessageCondition () {
       @Override
       public boolean test(StandardMessage msg) {
-        LOGGER.finer(msg.getClass().toString());
-        LOGGER.finer(clazz.toString());
+        log.trace( msg.getClass().toString() );
+        log.trace( clazz.toString() );
         if (clazz.isInstance(msg)) return true;
         return false;
       }

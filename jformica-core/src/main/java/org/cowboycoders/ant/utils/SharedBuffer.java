@@ -83,7 +83,7 @@ public class SharedBuffer<V> {
 
   public SharedBuffer(int length) {
     this.length = length;
-    msgBuffer = new FixedSizeFifo<V>(length);
+    msgBuffer = new FixedSizeFifo<>(length);
     
   }
   

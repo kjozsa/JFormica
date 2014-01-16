@@ -38,7 +38,7 @@ public class ChannelTest {
 		final List<byte[]> list = ByteUtils.splitByteArray(data,
 				AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE);
 		final BurstMessageSequenceGenerator generator = new BurstMessageSequenceGenerator();
-		final List<BurstDataMessage> rtn = new ArrayList<BurstDataMessage>();
+		final List<BurstDataMessage> rtn = new ArrayList<>();
 		
 		for (int i = 0; i < list.size() - 1; i++) {
 			BurstDataMessage msg = new BurstDataMessage();
@@ -59,7 +59,7 @@ public class ChannelTest {
     
     @Test
     public void shouldNotDiscardMessageCausingSequenceError() throws InterruptedException {
-        final List<CombinedBurst> bursts = new ArrayList<CombinedBurst>();
+        final List<CombinedBurst> bursts = new ArrayList<>();
         final Lock syncLock = new ReentrantLock();
         final Condition allBurstsArrived = syncLock.newCondition();
         final int burstsSent = 2;

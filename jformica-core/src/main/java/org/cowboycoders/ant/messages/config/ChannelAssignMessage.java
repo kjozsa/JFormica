@@ -100,7 +100,7 @@ public class ChannelAssignMessage extends ChannelMessage {
   
   private static Set<ExtendedAssignment> generateExtendedSet(
       ExtendedAssignment [] extended) {
-    Set<ExtendedAssignment> ea = new HashSet<ExtendedAssignment>();
+    Set<ExtendedAssignment> ea = new HashSet<>();
     if (extended != null) {
       for (ExtendedAssignment e : extended) {
         ea.add(e);

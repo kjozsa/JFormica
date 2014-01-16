@@ -59,7 +59,7 @@ public class BroadcastMessenger<V> {
 	/**
 	 * Contains all classes listening for new messages
 	 */
-	Set<BroadcastListener<V>> listeners = new HashSet<BroadcastListener<V>>();
+	Set<BroadcastListener<V>> listeners = new HashSet<>();
 
 	/**
 	 * Used to lock {@code listeners}

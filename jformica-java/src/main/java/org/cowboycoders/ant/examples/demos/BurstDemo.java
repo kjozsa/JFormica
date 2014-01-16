@@ -1,10 +1,5 @@
 package org.cowboycoders.ant.examples.demos;
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-
 import org.cowboycoders.ant.Channel;
 import org.cowboycoders.ant.ChannelId;
 import org.cowboycoders.ant.Node;
@@ -18,6 +13,9 @@ import org.cowboycoders.ant.messages.MasterChannelType;
 import org.cowboycoders.ant.messages.SlaveChannelType;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
 import org.cowboycoders.ant.messages.nonstandard.CombinedBurst;
+
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Sends / receives a burst and prints channel id from extended bytes. Requires 2 ant chips!
@@ -146,8 +144,6 @@ public class BurstDemo {
 	
 	private static final ChannelType SLAVE_TYPE = new SlaveChannelType();
 	
-	public static final Level LOG_LEVEL = Level.SEVERE;
-	
 	public static void setupHrmChannel(Channel channel, ChannelType type, String name, ChannelId id) {
 		// Arbitrary name : useful for identifying channel
 		channel.setName(name);
@@ -174,8 +170,6 @@ public class BurstDemo {
 	}
 	
 	public static void main(String[] args) throws InterruptedException, TransferException, TimeoutException {
-		
-		setupLogging();
 		
 		AntTransceiver antchip = new AntTransceiver(0);
 		AntTransceiver antchip2 = new AntTransceiver(1);
@@ -219,19 +213,4 @@ public class BurstDemo {
 		node.stop();
 		
 	}
-	
-	public static void setupLogging() {
-		// set logging level
-	    AntTransceiver.LOGGER.setLevel(LOG_LEVEL);
-	    ConsoleHandler handler = new ConsoleHandler();
-	    // PUBLISH this level
-	    handler.setLevel(LOG_LEVEL);
-	    AntTransceiver.LOGGER.addHandler(handler);
-	    // Don't duplicate messages by sending to parent handler as well
-	    AntTransceiver.LOGGER.setUseParentHandlers(false);
-	}
-	
-	
-	
-	
 }

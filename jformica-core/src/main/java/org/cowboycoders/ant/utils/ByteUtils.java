@@ -159,7 +159,7 @@ public class ByteUtils {
 	   * @return
 	   */
 	  public static List<Byte> lsbSplit(Integer in, int numberOfBytes) {
-	    List<Byte> bytes = new ArrayList<Byte>();
+	    List<Byte> bytes = new ArrayList<>();
 	    for (byte i = 0 ; i < numberOfBytes ; i++) {
 	      int mask = 0xff << (i*8);
 	      bytes.add((byte) ((in & mask) >>> (i*8)) );
@@ -185,7 +185,7 @@ public class ByteUtils {
 	   * @return the merger of the bytes
 	   */
 	  public static Integer msbMerge(List<Byte> data) {
-	    List<Byte> clone = new ArrayList<Byte>(data);
+	    List<Byte> clone = new ArrayList<>(data);
 	    Collections.reverse(clone);
 	    return lsbMerge(clone);
 	  }
@@ -197,7 +197,7 @@ public class ByteUtils {
 	   * @return
 	   */
 	  public static List<byte[]> splitByteArray(final byte[] data, final int packetLength) {
-	    List<byte[]> split = new ArrayList<byte[]>();  
+	    List<byte[]> split = new ArrayList<>();
 	    int wholePackets = (int)(data.length / packetLength);
 	
 	    int index = 0;

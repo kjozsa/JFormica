@@ -96,7 +96,7 @@ public class CombinedBurstTest  {
 	public List<BurstDataMessage> sendBurst(byte[] data)  {
 		    final List<byte[]> list = ByteUtils.splitByteArray(data, AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE);
 		    final BurstMessageSequenceGenerator generator = new BurstMessageSequenceGenerator();
-		    final List<BurstDataMessage> sentMessages = new ArrayList<BurstDataMessage>();
+		    final List<BurstDataMessage> sentMessages = new ArrayList<>();
 		   
 		          // handle all but last
 		          for (int i = 0; i < list.size() -1 ; i++) {

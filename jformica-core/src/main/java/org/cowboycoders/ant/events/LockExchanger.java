@@ -18,26 +18,27 @@
  */
 package org.cowboycoders.ant.events;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Lock;
-import java.util.logging.Logger;
-
 
 public class LockExchanger implements Callable<Lock> {
   
   private TimeUnit timeoutUnit;
   private long timeout;
   private LockExchangeContainer container;
-  public final static Logger LOGGER = Logger.getLogger(EventMachine.class .getName()); 
+	private static final Logger log = LoggerFactory.getLogger( LockExchanger.class );
 
   public LockExchanger(LockExchangeContainer container, long timeout, TimeUnit unit) {
     this.timeout = timeout;
     this.timeoutUnit = unit;
     this.container = container;
   }
-  
+
   @Override
   public Lock call() throws InterruptedException, TimeoutException {
     try {
@@ -50,7 +51,7 @@ public class LockExchanger implements Callable<Lock> {
             throw new TimeoutException("timeout waiting for exchanged lock");
           }
         }
-        LOGGER.finer("call() - returning");
+        log.trace( "call() - returning" );
         return container.returnLock;
     } finally {
       container.lock.unlock();

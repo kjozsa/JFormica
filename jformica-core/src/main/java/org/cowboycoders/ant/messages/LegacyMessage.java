@@ -99,7 +99,7 @@ public class LegacyMessage extends Message implements
 			return extendedPayload;
 		}
 
-		ArrayList<Byte> standardPayload = new ArrayList<Byte>();
+		ArrayList<Byte> standardPayload = new ArrayList<>();
 		standardPayload.add(extendedPayload.get(0));
 		if (extendedPayload.size() <= DATA_OFFSET) {
 			return extendedPayload;

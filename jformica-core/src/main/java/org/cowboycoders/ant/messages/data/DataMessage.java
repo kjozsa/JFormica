@@ -76,7 +76,7 @@ public abstract class DataMessage extends ChannelMessage {
     if (data.length != DATA_LENGTH) {
       throw new FatalMessageException("data array incorrect length");
     }
-    ArrayList <Byte> payload = new ArrayList<Byte>();
+    ArrayList <Byte> payload = new ArrayList<>();
     payload.add((byte)getChannelNumber());
     for(int i =0 ; i < data.length ; i++) {
       payload.add(data[i]);

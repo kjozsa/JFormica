@@ -96,10 +96,10 @@ public enum Capability {
    * maps code to {@code} Capability
    */
   private static Map<Byte,Capability> codeMap 
-    = new HashMap<Byte,Capability>();
+    = new HashMap<>();
   
   private static Map<CapabilityCategory, List<Capability>> categoryMap
-    = new HashMap<CapabilityCategory, List<Capability>>();
+    = new HashMap<>();
   
   static {
     for (CapabilityCategory c : CapabilityCategory.values()) {
@@ -159,7 +159,7 @@ public enum Capability {
   }
   
   public static List<Capability> getCapabilitiesInCategory(CapabilityCategory category) {
-    List<Capability> rtn = new ArrayList<Capability>();
+    List<Capability> rtn = new ArrayList<>();
     List<Capability> local = categoryMap.get(category);
     for (int i = 0 ; i< local.size() ; i++) {
       rtn.add(local.get(i));

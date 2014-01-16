@@ -49,7 +49,7 @@ public abstract class ChannelMessage extends StandardMessage {
   public ChannelMessage(Message backend,MessageId id, Integer channelNo,
       DataElement [] messageElements) {
     this(backend,id, channelNo,
-        new ArrayList<DataElement>(Arrays.asList(messageElements)));
+        new ArrayList<>(Arrays.asList(messageElements)));
   }
   
   /**

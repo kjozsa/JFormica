@@ -25,7 +25,7 @@ public class NetworkHandleTest {
 	public void checkRefCountIncremented() {
 		NetworkKey key = new NetworkKey(1,2,3,4,5,6,7,8);
 		Network n = new Network(0, key, null);
-		ArrayList<NetworkHandle> handles = new ArrayList<NetworkHandle>();
+		ArrayList<NetworkHandle> handles = new ArrayList<>();
 		for (int i = 0 ; i < 10 ; i++) {
 			NetworkHandle h = new NetworkHandle(n);
 			handles.add(h);

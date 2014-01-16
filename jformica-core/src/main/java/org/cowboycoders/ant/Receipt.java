@@ -18,23 +18,24 @@
  */
 package org.cowboycoders.ant;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import org.cowboycoders.ant.messages.MessageMetaWrapper;
 import org.cowboycoders.ant.messages.StandardMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class Receipt {
-	
-  public static Logger LOGGER = Logger.getLogger(Receipt.class.getName());
 
-  private LinkedList<MessageMetaWrapper<? extends StandardMessage>> sentMessages = new LinkedList<MessageMetaWrapper<? extends StandardMessage>>();
-  private LinkedList<MessageMetaWrapper<? extends StandardMessage>> receivedMessages = new LinkedList<MessageMetaWrapper<? extends StandardMessage>>();
+	private static final Logger log = LoggerFactory.getLogger( Receipt.class );
+
+  private LinkedList<MessageMetaWrapper<? extends StandardMessage>> sentMessages = new LinkedList<>();
+  private LinkedList<MessageMetaWrapper<? extends StandardMessage>> receivedMessages = new LinkedList<>();
   
   public void addReceived(MessageMetaWrapper<? extends StandardMessage> receivedMeta) {
 	  if (receivedMeta == null) {
-		  LOGGER.warning("passed null message, ignoring");
+		  log.warn( "passed null message, ignoring" );
 		  return;
 	  }
 	  receivedMessages.add(receivedMeta);
@@ -42,7 +43,7 @@ public class Receipt {
   
   public void addSent(MessageMetaWrapper<? extends StandardMessage> msg) {
 	  if (msg == null) {
-		  LOGGER.warning("passed null message, ignoring");
+		  log.warn( "passed null message, ignoring" );
 		  return;
 	  }
 	  sentMessages.add(msg);
@@ -50,7 +51,7 @@ public class Receipt {
   
   public void addSent(List<MessageMetaWrapper<? extends StandardMessage>> msgs) {
 	  if (msgs == null) {
-		  LOGGER.warning("passed null list, ignoring");
+		  log.warn( "passed null list, ignoring" );
 		  return;
 	  }
 	  for (MessageMetaWrapper<? extends StandardMessage> msg : msgs) {

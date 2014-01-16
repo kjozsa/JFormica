@@ -1,10 +1,5 @@
 package org.cowboycoders.ant.examples.demos.unfinished.scales;
 
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-
 import org.cowboycoders.ant.Channel;
 import org.cowboycoders.ant.Node;
 import org.cowboycoders.ant.events.BroadcastListener;
@@ -20,6 +15,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -103,23 +100,7 @@ public class ScalesSpoofer {
 	
 	private static byte page = 80;
 
-	public static final Level LOG_LEVEL = Level.OFF;
-
-	public static void setupLogging() {
-		// set logging level
-		AntTransceiver.LOGGER.setLevel(LOG_LEVEL);
-		ConsoleHandler handler = new ConsoleHandler();
-		// PUBLISH this level
-		handler.setLevel(LOG_LEVEL);
-		AntTransceiver.LOGGER.addHandler(handler);
-		// Don't duplicate messages by sending to parent handler as well
-		AntTransceiver.LOGGER.setUseParentHandlers(false);
-	}
-
 	public static void main(String[] args) throws InterruptedException {
-
-		// optional: enable console logging with Level = LOG_LEVEL
-		setupLogging();
 
 		/*
 		 * Choose driver: AndroidAntTransceiver or AntTransceiver

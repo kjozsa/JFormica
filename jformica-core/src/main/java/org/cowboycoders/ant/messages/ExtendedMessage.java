@@ -232,7 +232,7 @@ public class ExtendedMessage extends Message implements
 	@Override
 	public ArrayList<Byte> getStandardPayload() {
 		ArrayList<Byte> extendedPayload = super.getStandardPayload();
-		ArrayList<Byte> rtn = new ArrayList<Byte>();
+		ArrayList<Byte> rtn = new ArrayList<>();
 		rtn.addAll(extendedPayload.subList(0, AntMesg.MESG_DATA_SIZE));
 		return rtn;
 	}
@@ -263,7 +263,7 @@ public class ExtendedMessage extends Message implements
 	public Integer getExtendedData(DataElement element) {
 
 		ExtendedFlag flag = ExtendedFlag.DISABLE;
-		List<DataElement> extendedElements = new ArrayList<DataElement>();
+		List<DataElement> extendedElements = new ArrayList<>();
 		ArrayList<Byte> payload = getPayload();
 		if (payload.size() <= EXTENDED_FLAG_OFFSET) {
 			return null;
@@ -415,7 +415,7 @@ public class ExtendedMessage extends Message implements
 	 */
 	public void setDataElement(DataElement element, Integer value) {
 		ArrayList<Byte> payload = getPayload();
-		Map<DataElement,Integer> oldValues = new HashMap<DataElement,Integer>();
+		Map<DataElement,Integer> oldValues = new HashMap<>();
 		
 		final int oldSize = payload.size();
 		
@@ -464,7 +464,7 @@ public class ExtendedMessage extends Message implements
 			ArrayList<Byte> payload,
 			byte flagValue) {
 		
-		List<DataElement> extendedElements = new ArrayList<DataElement>();
+		List<DataElement> extendedElements = new ArrayList<>();
 		ExtendedFlag flag = getFlagFromDataElement(element);
 		
 		// toggle element mask

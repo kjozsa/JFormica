@@ -1,18 +1,9 @@
 package org.cowboycoders.ant.examples.demos;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-
 import org.cowboycoders.ant.Channel;
+import org.cowboycoders.ant.ChannelId;
 import org.cowboycoders.ant.DefaultChannelEventHandler;
 import org.cowboycoders.ant.Node;
-import org.cowboycoders.ant.ChannelId;
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.examples.NetworkKeys;
 import org.cowboycoders.ant.examples.Utils;
@@ -20,6 +11,13 @@ import org.cowboycoders.ant.interfaces.AntTransceiver;
 import org.cowboycoders.ant.messages.ChannelType;
 import org.cowboycoders.ant.messages.SlaveChannelType;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Bit of a hack to demonstrate multiple devices / blacklists . Improvements welcomed ...
@@ -187,20 +185,6 @@ public class MultiHeartRateMonitor {
 			.setTransmissonType(HRM_TRANSMISSION_TYPE)
 			.build();
 	
-	
-	public static final Level LOG_LEVEL = Level.SEVERE;
-	
-	public static void setupLogging() {
-		// set logging level
-	    AntTransceiver.LOGGER.setLevel(LOG_LEVEL);
-	    ConsoleHandler handler = new ConsoleHandler();
-	    // PUBLISH this level
-	    handler.setLevel(LOG_LEVEL);
-	    AntTransceiver.LOGGER.addHandler(handler);
-	    // Don't duplicate messages by sending to parent handler as well
-	    AntTransceiver.LOGGER.setUseParentHandlers(false);
-	}
-	
 	public static void setupHrmChannel(Channel channel, String name, ChannelId id) {
 		// Arbitrary name : useful for identifying channel
 		channel.setName(name);
@@ -259,9 +243,6 @@ public class MultiHeartRateMonitor {
 	
 	public static void main(String[] args) throws InterruptedException {
 		
-		// optional: enable console logging with Level = LOG_LEVEL
-		setupLogging();
-		
 		/*
 		 * Choose driver: AndroidAntTransceiver or AntTransceiver
 		 * 
@@ -281,7 +262,7 @@ public class MultiHeartRateMonitor {
 		node.reset();
 		
 		Lock channelLock = new ReentrantLock();
-		Set<ChannelId> devicesFound = new HashSet<ChannelId>(4);
+		Set<ChannelId> devicesFound = new HashSet<>(4);
 		
 		Channel searchChannel = node.getFreeChannel();
 		
@@ -318,7 +299,7 @@ public class MultiHeartRateMonitor {
 		
 		System.out.println("Opening channels");
 		
-		List<Channel> channels = new ArrayList<Channel>();
+		List<Channel> channels = new ArrayList<>();
 		int count = 0;
 		for (ChannelId id : devicesFound) {
 			Channel channel = node.getFreeChannel();

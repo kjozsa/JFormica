@@ -108,7 +108,7 @@ public enum MessageId {
   ;
   
   private static HashMap<Byte, MessageId> iDTypeMap = 
-      new HashMap<Byte, MessageId>();
+      new HashMap<>();
   
   static {
     for( MessageId type : MessageId.values() ) {

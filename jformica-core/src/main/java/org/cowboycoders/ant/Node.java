@@ -18,21 +18,6 @@
  */
 package org.cowboycoders.ant;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.Lock;
-import java.util.logging.Logger;
-
 import org.cowboycoders.ant.AntLogger.Direction;
 import org.cowboycoders.ant.AntLogger.LogDataContainer;
 import org.cowboycoders.ant.events.BroadcastListener;
@@ -56,14 +41,32 @@ import org.cowboycoders.ant.messages.config.LibConfigMessage;
 import org.cowboycoders.ant.messages.config.NetworkKeyMessage;
 import org.cowboycoders.ant.messages.config.TxPowerMessage;
 import org.cowboycoders.ant.messages.notifications.StartupMessage;
+import org.cowboycoders.ant.messages.responses.Capability;
 import org.cowboycoders.ant.messages.responses.CapabilityCategory;
 import org.cowboycoders.ant.messages.responses.CapabilityResponse;
-import org.cowboycoders.ant.messages.responses.Capability;
 import org.cowboycoders.ant.messages.responses.Response;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
 import org.cowboycoders.ant.messages.responses.ResponseExceptionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.locks.Lock;
 
 public class Node {
+
+	private static final Logger log = LoggerFactory.getLogger( Node.class );
 
 	class ThreadedWait implements
 			Callable<MessageMetaWrapper<? extends StandardMessage>> {
@@ -82,8 +85,6 @@ public class Node {
 
 	}
 
-	public final static Logger LOGGER = Logger.getLogger(EventMachine.class
-			.getName());
 	private Set<AntLogger> antLoggers = Collections
 			.newSetFromMap(new WeakHashMap<AntLogger, Boolean>());
 
@@ -130,7 +131,7 @@ public class Node {
 
 	};
 
-	private boolean running = false;
+	private volatile boolean running = false;
 	private EventMachine evm;
 
 	/**
@@ -144,7 +145,7 @@ public class Node {
 	private Network[] networks = new Network[0];
 	private CapabilityResponse capabilities;
 	private AntChipInterface antChipInterface;
-	private BroadcastMessenger<AntStatusUpdate> mStatusMessenger = new BroadcastMessenger<AntStatusUpdate>();
+	private BroadcastMessenger<AntStatusUpdate> mStatusMessenger = new BroadcastMessenger<>();
 
 	private class StatusListener implements BroadcastListener<AntStatusUpdate> {
 
@@ -156,7 +157,7 @@ public class Node {
 					// message
 					// // NOTE: should we use the reset ANtInterface method?
 					//
-					// LOGGER.warning("Node: external reset");
+					// log.warn("Node: external reset");
 				}
 				// weReset = false;
 			}
@@ -175,7 +176,7 @@ public class Node {
 					// we don't actually get a reset intent if we send a raw
 					// message
 					// NOTE: should we use the reset ANtInterface method?
-					LOGGER.warning("Node: external reset");
+					log.warn( "Node: external reset" );
 				}
 				weReset = false;
 			}
@@ -255,6 +256,7 @@ public class Node {
 		init();
 
 		running = true;
+		log.info( "Node started." );
 	}
 
 	// private void registerChannels(boolean add) {
@@ -285,7 +287,7 @@ public class Node {
 						null, null);
 			} catch (TimeoutException e) {
 				e.printStackTrace();
-				LOGGER.warning("getCapabilityResponse : timeout");
+				log.warn( "getCapabilityResponse : timeout" );
 				retries++;
 				if (retries >= maxRetries) {
 					throw e;
@@ -297,7 +299,7 @@ public class Node {
 	}
 
 	private void init() {
-		LOGGER.finer("entering init");
+		log.trace( "entering init" );
 		// reset();
 		try {
 			// android interface automatically requests ant version response.
@@ -321,7 +323,7 @@ public class Node {
 			channels[i] = new Channel(this, i);
 		}
 
-		LOGGER.finer("exiting init");
+		log.trace( "exiting init" );
 	}
 
 	private void freeNetwork(int i) {
@@ -462,7 +464,7 @@ public class Node {
 		public List<MessageMetaWrapper<? extends StandardMessage>> send(
 				StandardMessage msg) {
 			MessageMetaWrapper<StandardMessage> sentMeta = Node.this.send(msg);
-			List<MessageMetaWrapper<? extends StandardMessage>> rtn = new ArrayList<MessageMetaWrapper<? extends StandardMessage>>(
+			List<MessageMetaWrapper<? extends StandardMessage>> rtn = new ArrayList<>(
 					1);
 			rtn.add(sentMeta);
 			return rtn;
@@ -555,7 +557,7 @@ public class Node {
 	 * We wrap listeners to look for message of specific class - this is a map
 	 * from the original to the new one
 	 */
-	private Map<Object, BroadcastListener<StandardMessage>> mAdapterListenerMap = new HashMap<Object, BroadcastListener<StandardMessage>>();
+	private Map<Object, BroadcastListener<StandardMessage>> mAdapterListenerMap = new HashMap<>();
 
 	public synchronized <V extends StandardMessage> void registerRxListener(
 			final BroadcastListener<V> listener, final Class<V> clazz) {
@@ -585,7 +587,7 @@ public class Node {
 		if (adapter != null) {
 			evm.removeRxListener(adapter);
 		} else {
-			LOGGER.warning("removeRxListener: ignoring unknown listener");
+			log.warn( "removeRxListener: ignoring unknown listener" );
 		}
 
 	}
@@ -711,7 +713,7 @@ public class Node {
 					logger.log(data);
 				} catch (Exception e) {
 					// don't bring us down for the sake of logging
-					LOGGER.severe("error logging data");
+					log.error( "error logging data" );
 				}
 			}
 		}
@@ -719,11 +721,11 @@ public class Node {
 
 	public synchronized MessageMetaWrapper<StandardMessage> send(
 			StandardMessage msg) {
-		LOGGER.finer("sent: " + msg.toString() + " to chip");
+		log.debug( "sent: " + msg.toString() + " to chip" );
 		antChipInterface.send(msg.encode());
 		// now that we have sent, inform the loggers
 		logMessage(Direction.SENT, msg);
-		return new MessageMetaWrapper<StandardMessage>(msg);
+		return new MessageMetaWrapper<>(msg);
 	}
 
 	public synchronized void stop() {

@@ -1,9 +1,5 @@
 package org.cowboycoders.ant.examples.demos;
 
-import java.util.concurrent.TimeUnit;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-
 import org.cowboycoders.ant.Channel;
 import org.cowboycoders.ant.Node;
 import org.cowboycoders.ant.events.BroadcastListener;
@@ -17,6 +13,8 @@ import org.cowboycoders.ant.messages.commands.ChannelRequestMessage;
 import org.cowboycoders.ant.messages.commands.ChannelRequestMessage.Request;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
 import org.cowboycoders.ant.messages.responses.ChannelIdResponse;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Speed and Cadence ANT+ processor.
@@ -219,17 +217,6 @@ public class BasicSpeedAndCadence {
 	 */
 	private static final int HRM_DEVICE_ID = 0;
 
-	public static final Level LOG_LEVEL = Level.SEVERE;
-
-	public static void setupLogging() {
-		// set logging level
-		AntTransceiver.LOGGER.setLevel(LOG_LEVEL);
-		ConsoleHandler handler = new ConsoleHandler();
-		// PUBLISH this level
-		handler.setLevel(LOG_LEVEL);
-		AntTransceiver.LOGGER.addHandler(handler);
-	}
-
 	public static void printChannelConfig(Channel channel) {
 
 		// build request
@@ -264,9 +251,6 @@ public class BasicSpeedAndCadence {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-
-		// optional: enable console logging with Level = LOG_LEVEL
-		setupLogging();
 
 		/*
 		 * Choose driver: AndroidAntTransceiver or AntTransceiver

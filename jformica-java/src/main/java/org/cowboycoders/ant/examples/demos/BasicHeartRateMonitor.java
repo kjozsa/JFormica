@@ -1,8 +1,5 @@
 package org.cowboycoders.ant.examples.demos;
 
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-
 import org.cowboycoders.ant.Channel;
 import org.cowboycoders.ant.Node;
 import org.cowboycoders.ant.events.BroadcastListener;
@@ -12,7 +9,6 @@ import org.cowboycoders.ant.interfaces.AntTransceiver;
 import org.cowboycoders.ant.messages.ChannelType;
 import org.cowboycoders.ant.messages.SlaveChannelType;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
-
 
 public class BasicHeartRateMonitor {
 	
@@ -83,24 +79,7 @@ public class BasicHeartRateMonitor {
 	 */
 	private static final int HRM_DEVICE_ID = 0;
 	
-	
-	public static final Level LOG_LEVEL = Level.SEVERE;
-	
-	public static void setupLogging() {
-		// set logging level
-	    AntTransceiver.LOGGER.setLevel(LOG_LEVEL);
-	    ConsoleHandler handler = new ConsoleHandler();
-	    // PUBLISH this level
-	    handler.setLevel(LOG_LEVEL);
-	    AntTransceiver.LOGGER.addHandler(handler);
-	    // Don't duplicate messages by sending to parent handler as well
-	    AntTransceiver.LOGGER.setUseParentHandlers(false);
-	}
-	
 	public static void main(String[] args) throws InterruptedException {
-		
-		// optional: enable console logging with Level = LOG_LEVEL
-		setupLogging();
 		
 		/*
 		 * Choose driver: AndroidAntTransceiver or AntTransceiver

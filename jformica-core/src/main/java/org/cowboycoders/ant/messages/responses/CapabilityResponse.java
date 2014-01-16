@@ -21,14 +21,15 @@
  */
 package org.cowboycoders.ant.messages.responses;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import org.cowboycoders.ant.messages.Constants.DataElement;
 import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.StandardMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Devices capabilities
@@ -36,12 +37,8 @@ import org.cowboycoders.ant.messages.StandardMessage;
  *
  */
 public class CapabilityResponse extends StandardMessage {
-  
-  /**
-   * class logger
-   */
-  public final static Logger LOGGER = Logger.getLogger(CapabilityResponse.class .getName()); 
-  
+
+	private static final Logger log = LoggerFactory.getLogger( CapabilityResponse.class );
   /**
    * The additional elements we are adding to channelmessage
    */
@@ -71,7 +68,7 @@ public class CapabilityResponse extends StandardMessage {
    * @return a list of capabilities from that category
    */
   public List<Capability> getCapabilitiesList(CapabilityCategory category) {
-    List<Capability> rtn = new ArrayList<Capability>();
+    List<Capability> rtn = new ArrayList<>();
     byte capabilityByte = 0;
     switch(category) {
       case STANDARD:
@@ -88,11 +85,11 @@ public class CapabilityResponse extends StandardMessage {
         break;       
     }
     
-    LOGGER.finer("capabilityByte :" + String.format("%x", capabilityByte));
+    log.trace( "capabilityByte :" + String.format( "%x", capabilityByte ) );
     
     for (Capability c : Capability.getCapabilitiesInCategory(category)) {
       byte mask = c.getCode();
-      LOGGER.finer("mask :" + String.format("%x", mask));
+      log.trace( "mask :" + String.format( "%x", mask ) );
       if ((capabilityByte & mask) != 0) {
         rtn.add(c);
       }

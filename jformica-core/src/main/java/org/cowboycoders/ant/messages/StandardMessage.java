@@ -106,7 +106,7 @@ public abstract class StandardMessage
     
     this.id = id;
     
-    ArrayList<Byte> payload = new ArrayList<Byte>();
+    ArrayList<Byte> payload = new ArrayList<>();
 
     if (message == null) {
       message = new Message();

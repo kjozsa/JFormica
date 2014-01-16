@@ -45,8 +45,8 @@ public abstract class BufferedNodeComponent {
   }
   
   public BufferedNodeComponent(MessageCondition msgCondition, MessageCondition ackCondition) {
-    msgBuffer = new SharedMetaBuffer<MessageMetaWrapper<StandardMessage>>(MSG_BUFFER_LENGTH, msgCondition);
-    ackBuffer = new SharedMetaBuffer<MessageMetaWrapper<Response>>(ACK_BUFFER_LENGTH, ackCondition);
+    msgBuffer = new SharedMetaBuffer<>(MSG_BUFFER_LENGTH, msgCondition);
+    ackBuffer = new SharedMetaBuffer<>(ACK_BUFFER_LENGTH, ackCondition);
   }
 
   /**

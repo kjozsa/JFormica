@@ -37,7 +37,7 @@ public class UsbUtils {
    */
   public static List<UsbDevice> getAllUsbDevices(UsbDevice usbDevice)
   {
-      List<UsbDevice> list = new java.util.ArrayList<UsbDevice>();
+      List<UsbDevice> list = new java.util.ArrayList<>();
 
       list.add(usbDevice);
 
@@ -61,7 +61,7 @@ public class UsbUtils {
    */
   public static List<UsbDevice> getUsbDevicesWithId(UsbDevice usbDevice, short vendorId, short productId)
   {
-    List<UsbDevice> list = new ArrayList<UsbDevice>();
+    List<UsbDevice> list = new ArrayList<>();
 
       /* A device's descriptor is always available.  All descriptor
        * field names and types match exactly what is in the USB specification.

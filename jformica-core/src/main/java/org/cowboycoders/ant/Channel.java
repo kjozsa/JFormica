@@ -18,21 +18,9 @@
  */
 package org.cowboycoders.ant;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Logger;
-
 import org.cowboycoders.ant.defines.AntDefine;
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.events.BroadcastMessenger;
-import org.cowboycoders.ant.events.EventMachine;
 import org.cowboycoders.ant.events.MessageCondition;
 import org.cowboycoders.ant.events.MessageConditionFactory;
 import org.cowboycoders.ant.messages.ChannelMessage;
@@ -48,6 +36,7 @@ import org.cowboycoders.ant.messages.commands.ChannelRequestMessage;
 import org.cowboycoders.ant.messages.commands.ChannelRequestMessage.Request;
 import org.cowboycoders.ant.messages.config.AddChannelIdMessage;
 import org.cowboycoders.ant.messages.config.ChannelAssignMessage;
+import org.cowboycoders.ant.messages.config.ChannelAssignMessage.ExtendedAssignment;
 import org.cowboycoders.ant.messages.config.ChannelFrequencyMessage;
 import org.cowboycoders.ant.messages.config.ChannelIdMessage;
 import org.cowboycoders.ant.messages.config.ChannelLowPrioritySearchTimeoutMessage;
@@ -56,28 +45,37 @@ import org.cowboycoders.ant.messages.config.ChannelSearchPriorityMessage;
 import org.cowboycoders.ant.messages.config.ChannelSearchTimeoutMessage;
 import org.cowboycoders.ant.messages.config.ChannelTxPowerMessage;
 import org.cowboycoders.ant.messages.config.ChannelUnassignMessage;
+import org.cowboycoders.ant.messages.config.ConfigListIdMessage;
 import org.cowboycoders.ant.messages.config.FrequencyAgilityMessage;
 import org.cowboycoders.ant.messages.config.ProximitySearchMessage;
-import org.cowboycoders.ant.messages.config.ChannelAssignMessage.ExtendedAssignment;
-import org.cowboycoders.ant.messages.config.ConfigListIdMessage;
-import org.cowboycoders.ant.messages.data.BurstDataMessage;
 import org.cowboycoders.ant.messages.data.BurstData;
+import org.cowboycoders.ant.messages.data.BurstDataMessage;
 import org.cowboycoders.ant.messages.nonstandard.CombinedBurst;
 import org.cowboycoders.ant.messages.nonstandard.CombinedBurst.StatusFlag;
-import org.cowboycoders.ant.messages.responses.Response;
 import org.cowboycoders.ant.messages.responses.ChannelStatusResponse;
 import org.cowboycoders.ant.messages.responses.ChannelStatusResponse.State;
+import org.cowboycoders.ant.messages.responses.Response;
 import org.cowboycoders.ant.messages.responses.ResponseCode;
 import org.cowboycoders.ant.utils.BurstMessageSequenceGenerator;
 import org.cowboycoders.ant.utils.ByteUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Channel {
 
 	public static final int SEARCH_TIMEOUT_NEVER = 255;
 
-	public final static Logger LOGGER = Logger.getLogger(EventMachine.class
-			.getName());
-
+	private static final Logger log = LoggerFactory.getLogger( Channel.class );
 	private static final int RAW_CHANNEL_PERIOD_DEFAULT = 8192;
 
 	private static final double CHANNEL_PERIOD_SCALE_FACTOR = 32768.0;
@@ -111,7 +109,7 @@ public class Channel {
 
 	private long burstTimeout = BURST_TIMEOUT_NANOS_DEFAULT;
 
-	private final BroadcastMessenger<CombinedBurst> burstMessenger = new BroadcastMessenger<CombinedBurst>();
+	private final BroadcastMessenger<CombinedBurst> burstMessenger = new BroadcastMessenger<>();
 
 	private CombinedBurst.Builder burstBuilder = new CombinedBurst.Builder();
 
@@ -176,7 +174,7 @@ public class Channel {
 	 *            the isFree to set
 	 */
 	protected synchronized void setFree(boolean free) {
-		LOGGER.entering(Channel.class.getSimpleName(), "setFree");
+		log.trace(Channel.class.getSimpleName(), "setFree");
 		
 		// Make sure channel is in reusable state
 		if (free) {
@@ -185,7 +183,7 @@ public class Channel {
 		
 		// clean up complete, set free		
 		this.free = free;
-		LOGGER.exiting(Channel.class.getSimpleName(), "setFree");
+		log.trace(Channel.class.getSimpleName(), "setFree");
 	}
 	
 	/**
@@ -200,10 +198,10 @@ public class Channel {
 			state = status.getState();
 		} catch (ChannelError e){
 			// ignore (assume assigned)
-			LOGGER.warning("Error requesting channel status");
+			log.warn("Error requesting channel status");
 		}
 		
-		LOGGER.finer("pre close: " + state);
+		log.trace("pre close: " + state);
 		
 		// if channel is open (try and close)
 		if (state.equals(State.TRACKING) || state.equals(State.SEARCHING)) {
@@ -211,7 +209,7 @@ public class Channel {
 				this.close();
 				
 			} catch (ChannelError e){
-				LOGGER.warning("Error closing channel in state: " + state);
+				log.warn("Error closing channel in state: " + state);
 			}
 		}
 		
@@ -224,10 +222,10 @@ public class Channel {
 			state = status.getState();
 		} catch (ChannelError e){
 			// ignore (assume assigned)
-			LOGGER.warning("Error requesting channel status");
+			log.warn("Error requesting channel status");
 		}
 		
-		LOGGER.finer("pre unassign: " + state);
+		log.trace("pre unassign: " + state);
 		
 		// channel is assigned, but not open
 		if (state.equals(State.ASSIGNED)) {
@@ -235,7 +233,7 @@ public class Channel {
 				this.unassign();
 				
 			} catch (ChannelError e){
-				LOGGER.warning("Error unassigning channel in state: " + state);
+				log.warn("Error unassigning channel in state: " + state);
 			}
 		}
 		
@@ -260,7 +258,7 @@ public class Channel {
 				StandardMessage msg) {
 			MessageMetaWrapper<StandardMessage> sentMeta = Channel.this
 					.send((ChannelMessage) msg);
-			List<MessageMetaWrapper<? extends StandardMessage>> rtn = new ArrayList<MessageMetaWrapper<? extends StandardMessage>>(
+			List<MessageMetaWrapper<? extends StandardMessage>> rtn = new ArrayList<>(
 					1);
 			rtn.add(sentMeta);
 			return rtn;
@@ -385,7 +383,7 @@ public class Channel {
 	 * We wrap listeners to look for message of specific class - this is a map
 	 * from the original to the new one
 	 */
-	private Map<Object, BroadcastListener<ChannelMessage>> mAdapterListenerMap = new HashMap<Object, BroadcastListener<ChannelMessage>>();
+	private Map<Object, BroadcastListener<ChannelMessage>> mAdapterListenerMap = new HashMap<>();
 	
 	private ChannelType type;
 
@@ -423,7 +421,7 @@ public class Channel {
 		if (adapter != null) {
 			parent.removeRxListener(adapter);
 		} else {
-			LOGGER.warning("removeRxListener: ignoring unknown listener");
+			log.warn("removeRxListener: ignoring unknown listener");
 		}
 
 	}
@@ -711,7 +709,7 @@ public class Channel {
 		if (assignedNetwork != null) {
 			networkNumber = assignedNetwork.getNumber();
 		} else {
-			LOGGER.warning("network key not found: default to network 0");
+			log.warn("network key not found: default to network 0");
 		}
 
 		assignMessage.setNetworkNumber(networkNumber);
@@ -859,7 +857,7 @@ public class Channel {
 				@Override
 				public ArrayList<MessageMetaWrapper<? extends StandardMessage>> send(
 						StandardMessage msgIn) {
-					ArrayList<MessageMetaWrapper<? extends StandardMessage>> sentMessages = new ArrayList<MessageMetaWrapper<? extends StandardMessage>>(
+					ArrayList<MessageMetaWrapper<? extends StandardMessage>> sentMessages = new ArrayList<>(
 							list.size());
 
 					// handle all but last

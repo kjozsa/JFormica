@@ -9,13 +9,15 @@ import org.cowboycoders.ant.messages.ChannelType;
 import org.cowboycoders.ant.messages.DeviceInfoQueryable;
 import org.cowboycoders.ant.messages.SlaveChannelType;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 
 public class ContinuousScanModeHRM
 {
-
+	private static final Logger log = LoggerFactory.getLogger( ContinuousScanModeHRM.class );
 	private static class Listener implements BroadcastListener<BroadcastDataMessage>
 	{
 
@@ -38,11 +40,10 @@ public class ContinuousScanModeHRM
 			 * should be converted to ints for any arithmetic / display - getUnsignedData()
 			 * is a utility method to do this.
 			 */
-			System.out.println( "Heart rate: " + message.getUnsignedData()[7] );
+			log.info( "Heart rate: " + message.getUnsignedData()[7] );
 			if( message instanceof DeviceInfoQueryable )
 			{
-				System.out.println( "deviceID: " + ((DeviceInfoQueryable) message).getChannelId().getDeviceNumber() );
-				System.out.println();
+				log.info( "deviceID: " + ((DeviceInfoQueryable) message).getChannelId().getDeviceNumber() );
 			}
 		}
 

@@ -21,6 +21,9 @@
  */
 package org.cowboycoders.ant.events;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
@@ -39,19 +42,19 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class BroadcastMessenger<V>
 {
-
+	private static final Logger log = LoggerFactory.getLogger( BroadcastMessenger.class );
 	/**
 	 * Used to concurrently notify listeners
 	 */
-	ExecutorService dispatchPool;
+	private ExecutorService dispatchPool;
 	/**
 	 * Contains all classes listening for new messages
 	 */
-	Set<BroadcastListener<V>> listeners = new HashSet<>();
+	private Set<BroadcastListener<V>> listeners = new HashSet<>();
 	/**
 	 * Used to lock {@code listeners}
 	 */
-	ReentrantReadWriteLock listenerLock = new ReentrantReadWriteLock();
+	private ReentrantReadWriteLock listenerLock = new ReentrantReadWriteLock();
 	private static final ExecutorService SHARED_SINGLE_THREAD_EXECUTOR = Executors.newSingleThreadExecutor( new ThreadFactory()
 	{
 		@Override
@@ -160,7 +163,14 @@ public class BroadcastMessenger<V>
 					@Override
 					public void run()
 					{
-						listener.receiveMessage( message );
+						try
+						{
+							listener.receiveMessage( message );
+						}
+						catch( Exception e )
+						{
+							log.error( "Error from listener: {}", e.getMessage() );
+						}
 					}
 				} );
 			}

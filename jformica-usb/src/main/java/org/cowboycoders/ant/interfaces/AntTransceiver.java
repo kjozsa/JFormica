@@ -43,12 +43,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class AntTransceiver extends AbstractAntTransceiver
 {
-	UsbPipe inPipe = null;
 	private static final Logger log = LoggerFactory.getLogger( AntTransceiver.class );
 	/**
 	 * sync byte
 	 */
 	private static byte MESSAGE_TX_SYNC = (byte) 0xA4;
+	private UsbPipe inPipe = null;
 	/**
 	 * Usb Interface
 	 */
@@ -181,7 +181,6 @@ public class AntTransceiver extends AbstractAntTransceiver
 			lock.unlock();
 		}
 
-		// TODO Auto-generated method stub
 		return true;
 	}
 
@@ -255,7 +254,7 @@ public class AntTransceiver extends AbstractAntTransceiver
 		}
 	}
 
-	public byte getChecksum( byte[] nocheck )
+	private byte getChecksum( byte[] nocheck )
 	{
 		byte checksum;
 		checksum = MESSAGE_TX_SYNC;
@@ -266,7 +265,7 @@ public class AntTransceiver extends AbstractAntTransceiver
 		return checksum;
 	}
 
-	public byte[] addExtras( byte[] nocheck )
+	private byte[] addExtras( byte[] nocheck )
 	{
 		byte[] data = new byte[nocheck.length + 2];
 		data[0] = MESSAGE_TX_SYNC;

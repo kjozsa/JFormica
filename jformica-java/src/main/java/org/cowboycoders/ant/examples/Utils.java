@@ -7,6 +7,8 @@ import org.cowboycoders.ant.events.MessageConditionFactory;
 import org.cowboycoders.ant.messages.commands.ChannelRequestMessage;
 import org.cowboycoders.ant.messages.commands.ChannelRequestMessage.Request;
 import org.cowboycoders.ant.messages.responses.ChannelIdResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -17,10 +19,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class Utils
 {
+	private static final Logger log = LoggerFactory.getLogger( Utils.class );
 
 	public static void printChannelConfig( Channel channel )
 	{
-
 		// build request
 		ChannelRequestMessage msg = new ChannelRequestMessage( channel.getNumber(), Request.CHANNEL_ID );
 
@@ -29,7 +31,6 @@ public class Utils
 
 		try
 		{
-
 			// send request (blocks until reply received or timeout expired)
 			ChannelIdResponse response = (ChannelIdResponse) channel.sendAndWaitForMessage( msg, condition, 5L, TimeUnit.SECONDS, null );
 
@@ -44,8 +45,7 @@ public class Utils
 		}
 		catch( Exception e )
 		{
-			// not critical, so just print error
-			e.printStackTrace();
+			log.error( "Error getting channel info", e );
 		}
 	}
 
@@ -65,7 +65,6 @@ public class Utils
 
 		try
 		{
-
 			// send request (blocks until reply received or timeout expired)
 			ChannelIdResponse response = (ChannelIdResponse) channel.sendAndWaitForMessage( msg, condition, 5L, TimeUnit.SECONDS, null );
 

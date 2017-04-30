@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AntMessageParser
+class AntMessageParser
 {
 	private static final Logger log = LoggerFactory.getLogger( AntMessageParser.class );
 	private static final int LOOKING_FOR_SYNC = 0;
@@ -21,21 +21,7 @@ public class AntMessageParser
 	private byte msgId;
 	private int msgIdx;
 
-	public static byte getChecksum( byte syncByte, byte[] msgData )
-	{
-		byte checksum = 0;
-		checksum ^= syncByte;
-		if( msgData != null )
-		{
-			for( byte b : msgData )
-			{
-				checksum ^= b;
-			}
-		}
-		return checksum;
-	}
-
-	public List<byte[]> parse( byte[] buf, int bytesRead )
+	List<byte[]> parse( byte[] buf, int bytesRead )
 	{
 		List<byte[]> messages = new ArrayList<>();
 
@@ -79,6 +65,8 @@ public class AntMessageParser
 					if( calculatedChecksum == checksum )
 					{
 						log.debug( "Received new AntMessage, msgId: " + String.format( "0x%x", msgId ) + ", len: " + msgLen );
+						byte b0 = dataBuf[0];
+						byte b1 = dataBuf[1];
 						messages.add( dataBuf );
 					}
 					else
@@ -96,5 +84,19 @@ public class AntMessageParser
 		}
 
 		return messages;
+	}
+
+	private static byte getChecksum( byte syncByte, byte[] msgData )
+	{
+		byte checksum = 0;
+		checksum ^= syncByte;
+		if( msgData != null )
+		{
+			for( byte b : msgData )
+			{
+				checksum ^= b;
+			}
+		}
+		return checksum;
 	}
 }

@@ -62,7 +62,6 @@ import java.util.concurrent.locks.Lock;
 
 public class Node
 {
-
 	private static final Logger log = LoggerFactory.getLogger( Node.class );
 	//	private Set<AntLogger> antLoggers = Collections.newSetFromMap( new WeakHashMap<AntLogger, Boolean>() );
 	private volatile boolean running = false;

@@ -16,11 +16,12 @@
 
     <logger name="org">
         <level value="DEBUG"/>
+        <!--<level value="TRACE"/>-->
     </logger>
 
 
     <root>
-        <priority value="DEBUG"/>
+        <priority value="TRACE"/>
         <appender-ref ref="console"/>
     </root>
 

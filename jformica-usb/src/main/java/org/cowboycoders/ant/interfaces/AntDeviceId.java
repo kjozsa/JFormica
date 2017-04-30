@@ -20,12 +20,11 @@ package org.cowboycoders.ant.interfaces;
 
 /**
  * Supported devices for {@link AntTransceiver}
- * @author will
  *
+ * @author will
  */
 public enum AntDeviceId
 {
-
 	ANTUSB_2( new DeviceDescriptor( 0x0fcf, 0x1008 ) ), ANTUSB_M( new DeviceDescriptor( 0x0fcf, 0x1009 ) ),;
 
 	private DeviceDescriptor usbDescriptor;

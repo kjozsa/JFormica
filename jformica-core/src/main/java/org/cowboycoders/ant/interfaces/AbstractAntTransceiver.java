@@ -19,27 +19,31 @@
 package org.cowboycoders.ant.interfaces;
 
 import org.cowboycoders.ant.events.BroadcastMessenger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class AbstractAntTransceiver implements AntChipInterface
 {
+	private static final Logger log = LoggerFactory.getLogger( AbstractAntTransceiver.class );
 	private final Lock messengerLock = new ReentrantLock();
 
 	/**
-	 * Messengers to inform when rxRecieved
+	 * Messengers to inform when rxReceived
 	 */
-	private Set<BroadcastMessenger<byte[]>> mRxMessengers = Collections.newSetFromMap( new WeakHashMap<BroadcastMessenger<byte[]>,
-			Boolean>() );
+	private Set<BroadcastMessenger<byte[]>> mRxMessengers = new HashSet<>();
+//	private Set<BroadcastMessenger<byte[]>> mRxMessengers = Collections.newSetFromMap( new WeakHashMap<BroadcastMessenger<byte[]>, Boolean>() );
+
 	/**
 	 * messengers to inform when chip status changes
 	 */
-	private Set<BroadcastMessenger<AntStatusUpdate>> mStatusMessengers = Collections.newSetFromMap( new
-			                                                                                                WeakHashMap<BroadcastMessenger<AntStatusUpdate>, Boolean>() );
+	private Set<BroadcastMessenger<AntStatusUpdate>> mStatusMessengers = new HashSet<>();
+//	private Set<BroadcastMessenger<AntStatusUpdate>> mStatusMessengers = Collections.newSetFromMap( new WeakHashMap<BroadcastMessenger <AntStatusUpdate>, Boolean>() );
+
 	/**
 	 * Stores last status update
 	 */

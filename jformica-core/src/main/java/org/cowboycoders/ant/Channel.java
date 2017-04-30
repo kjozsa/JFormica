@@ -574,21 +574,17 @@ public class Channel
 		{
 			sendAndWaitForMessage( msg, condition, 1L, TimeUnit.SECONDS, null );
 
-			// if master channel detect wait for first transmission, else ChannelClosedExceptions
-			// are thrown
+			// if master channel detect wait for first transmission, else ChannelClosedExceptions are thrown
 			if( type != null && type instanceof MasterChannelType )
 			{
-				MessageCondition masterTransmitting = MessageConditionFactory.newResponseCondition( MessageId.EVENT,
-				                                                                                    ResponseCode.EVENT_TX );
+				MessageCondition masterTransmitting = MessageConditionFactory.newResponseCondition( MessageId.EVENT, ResponseCode .EVENT_TX );
 				parent.getEvm().waitForCondition( masterTransmitting, 5L, TimeUnit.SECONDS, null );
 			}
-
 		}
 		catch( InterruptedException | TimeoutException e )
 		{
 			handleTimeOutException( e );
 		}
-
 	}
 
 	public synchronized void close()

@@ -1,20 +1,20 @@
 /**
- *     Copyright (c) 2013, Will Szumski
- *
- *     This file is part of formicidae.
- *
- *     formicidae is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     formicidae is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (c) 2013, Will Szumski
+ * <p>
+ * This file is part of formicidae.
+ * <p>
+ * formicidae is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * formicidae is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.cowboycoders.ant;
 
@@ -78,6 +78,14 @@ public class Channel
 
 	private static final Logger log = LoggerFactory.getLogger( Channel.class );
 	private static final int RAW_CHANNEL_PERIOD_DEFAULT = 8192;
+	private static final double CHANNEL_PERIOD_SCALE_FACTOR = 32768.0;
+	private static final double BURST_TIMEOUT_SCALE_FACTOR = 1.5; // number of
+	// channel
+	// periods
+	private static final long CONVERSION_FACTOR_SECONDS_TO_NANOSECONDS = (long) Math.pow( 10, 9 );
+	private static final long BURST_TIMEOUT_NANOS_DEFAULT = rawChannelPeriodToDefaultTimeout( RAW_CHANNEL_PERIOD_DEFAULT );
+	private final BroadcastMessenger<CombinedBurst> burstMessenger = new BroadcastMessenger<>();
+	private final BurstFilterCondition burstFilterCondition = new BurstFilterCondition();
 	/**
 	 * The channel messaging period in seconds * 32768. Maximum messaging period
 	 * is ~2 seconds.
@@ -87,51 +95,13 @@ public class Channel
 	 * Raw : not converted to seconds
 	 */
 	private int rawChannelPeriod = RAW_CHANNEL_PERIOD_DEFAULT;
-	private static final long BURST_TIMEOUT_NANOS_DEFAULT = rawChannelPeriodToDefaultTimeout( RAW_CHANNEL_PERIOD_DEFAULT );
 	private long burstTimeout = BURST_TIMEOUT_NANOS_DEFAULT;
-	private static final double CHANNEL_PERIOD_SCALE_FACTOR = 32768.0;
-	private static final double BURST_TIMEOUT_SCALE_FACTOR = 1.5; // number of
-	// channel
-	// periods
-	private static final long CONVERSION_FACTOR_SECONDS_TO_NANOSECONDS = (long) Math.pow( 10, 9 );
-	private final BroadcastMessenger<CombinedBurst> burstMessenger = new BroadcastMessenger<>();
-	private final MessageSender channelSender = new MessageSender()
-	{
-
-		@Override
-		public List<MessageMetaWrapper<? extends StandardMessage>> send( StandardMessage msg )
-		{
-			MessageMetaWrapper<StandardMessage> sentMeta = Channel.this.send( (ChannelMessage) msg );
-			List<MessageMetaWrapper<? extends StandardMessage>> rtn = new ArrayList<>( 1 );
-			rtn.add( sentMeta );
-			return rtn;
-
-		}
-
-	};
-	private final BurstFilterCondition burstFilterCondition = new BurstFilterCondition();
 	private Node parent;
 	private Network assignedNetwork;
 	private Long lastBurstTimeStamp;
+	private CombinedBurst.Builder burstBuilder = new CombinedBurst.Builder();
 	private final BroadcastListener<BurstDataMessage> burstListener = new BroadcastListener<BurstDataMessage>()
 	{
-
-		/**
-		 * Notifies listeners if new {@link CombinedBurst} is available
-		 *
-		 * @param burst
-		 *            may be null, in which case no action is taken.
-		 */
-		private void notifyListeners( CombinedBurst burst )
-		{
-			if( burst != null )
-			{
-				synchronized(Channel.this)
-				{
-					burstMessenger.sendMessage( burst );
-				}
-			}
-		}
 
 		@Override
 		public void receiveMessage( BurstDataMessage message )
@@ -164,13 +134,43 @@ public class Channel
 			lastBurstTimeStamp = newTimeStamp;
 		}
 
+		/**
+		 * Notifies listeners if new {@link CombinedBurst} is available
+		 *
+		 * @param burst
+		 *            may be null, in which case no action is taken.
+		 */
+		private void notifyListeners( CombinedBurst burst )
+		{
+			if( burst != null )
+			{
+				synchronized(Channel.this)
+				{
+					burstMessenger.sendMessage( burst );
+				}
+			}
+		}
+
 	};
-	private CombinedBurst.Builder burstBuilder = new CombinedBurst.Builder();
 	private String name = UUID.randomUUID().toString();
 	private boolean free = true;
 	private MessageCondition channelFilterCondition;
 	private Lock sendLock = new ReentrantLock();
 	private int number = 0;
+	private final MessageSender channelSender = new MessageSender()
+	{
+
+		@Override
+		public List<MessageMetaWrapper<? extends StandardMessage>> send( StandardMessage msg )
+		{
+			MessageMetaWrapper<StandardMessage> sentMeta = Channel.this.send( (ChannelMessage) msg );
+			List<MessageMetaWrapper<? extends StandardMessage>> rtn = new ArrayList<>( 1 );
+			rtn.add( sentMeta );
+			return rtn;
+
+		}
+
+	};
 	/**
 	 * We wrap listeners to look for message of specific class - this is a map
 	 * from the original to the new one
@@ -184,11 +184,6 @@ public class Channel
 		setNumber( number );
 		channelFilterCondition = new ChannelInstanceCondition( number );
 		this.registerRxListener( burstListener, BurstDataMessage.class );
-	}
-
-	private static long rawChannelPeriodToDefaultTimeout( final int rawChannelPeriod )
-	{
-		return (long) (BURST_TIMEOUT_SCALE_FACTOR * (rawChannelPeriod / CHANNEL_PERIOD_SCALE_FACTOR) * CONVERSION_FACTOR_SECONDS_TO_NANOSECONDS);
 	}
 
 	/**
@@ -223,6 +218,14 @@ public class Channel
 		return name;
 	}
 
+	/**
+	 * sets the channel name
+	 */
+	public synchronized void setName( String name )
+	{
+		this.name = name;
+	}
+
 	// /**
 	// * Used for queueing send events - should hold send lock
 	// */
@@ -238,14 +241,6 @@ public class Channel
 	// public ExecutorService getChannelExecutor() {
 	// return channelExecutor;
 	// }
-
-	/**
-	 * sets the channel name
-	 */
-	public synchronized void setName( String name )
-	{
-		this.name = name;
-	}
 
 	/**
 	 * @return the isFree
@@ -337,7 +332,8 @@ public class Channel
 	{
 		for( Object key : mAdapterListenerMap.keySet() )
 		{
-			@SuppressWarnings( "unchecked" ) BroadcastListener<ChannelMessage> listener = (BroadcastListener<ChannelMessage>) key;
+			@SuppressWarnings( "unchecked" )
+			BroadcastListener<ChannelMessage> listener = (BroadcastListener<ChannelMessage>) key;
 
 			// don't remove internal listeners !
 			if( listener.equals( burstListener ) )
@@ -408,17 +404,6 @@ public class Channel
 		}
 	}
 
-	// /**
-	// * No internal locking
-	// * Should hold sendLock @see getSendLock()
-	// * @param msg
-	// * @return
-	// */
-	// public MessageMetaWrapper<StandardMessage> atomicSend(ChannelMessage msg)
-	// {
-	// return sendToNode(msg);
-	// }
-
 	/**
 	 * Sets the channelId
 	 * See also {@link Channel#setId(int, int, int, boolean)}
@@ -429,6 +414,17 @@ public class Channel
 	{
 		this.setId( channelId.getDeviceNumber(), channelId.getDeviceType(), channelId.getTransmissonType(), channelId.isPairingFlagSet() );
 	}
+
+	// /**
+	// * No internal locking
+	// * Should hold sendLock @see getSendLock()
+	// * @param msg
+	// * @return
+	// */
+	// public MessageMetaWrapper<StandardMessage> atomicSend(ChannelMessage msg)
+	// {
+	// return sendToNode(msg);
+	// }
 
 	/**
 	 * @param channelFrequency
@@ -600,7 +596,8 @@ public class Channel
 		log.info( "Channel {} being closed...", getName() );
 		ChannelMessage msg = new ChannelCloseMessage( 0 );
 		MessageCondition noError = MessageConditionFactory.newResponseCondition( msg.getId(), ResponseCode.RESPONSE_NO_ERROR );
-		MessageCondition channelClosed = MessageConditionFactory.newResponseCondition( MessageId.EVENT, ResponseCode.EVENT_CHANNEL_CLOSED );
+		MessageCondition channelClosed = MessageConditionFactory.newResponseCondition( MessageId.EVENT, ResponseCode
+				.EVENT_CHANNEL_CLOSED );
 		MessageCondition chainedCondition = MessageConditionFactory.newChainedCondition( noError, channelClosed );
 		Receipt receipt = new Receipt();
 		try
@@ -644,7 +641,8 @@ public class Channel
 			final MessageCondition inProgress = MessageConditionFactory.newResponseCondition( MessageId.EVENT,
 			                                                                                  ResponseCode.TRANSFER_IN_PROGRESS );
 			final MessageCondition sequenceError = MessageConditionFactory.newResponseCondition( MessageId.EVENT,
-			                                                                                     ResponseCode.TRANSFER_SEQUENCE_NUMBER_ERROR );
+			                                                                                     ResponseCode
+					                                                                                     .TRANSFER_SEQUENCE_NUMBER_ERROR );
 			final MessageCondition transferInError = MessageConditionFactory.newResponseCondition( MessageId.EVENT,
 			                                                                                       ResponseCode.TRANSFER_IN_ERROR );
 			MessageCondition condition = new MessageCondition()
@@ -967,7 +965,8 @@ public class Channel
 	}
 
 	/**
-	 * Configures frequency agility for this channel. Should be used in conjunction with {@link ExtendedAssignment}.FREQUENCY_AGILITY_ENABLE
+	 * Configures frequency agility for this channel. Should be used in conjunction with {@link ExtendedAssignment}
+	 * .FREQUENCY_AGILITY_ENABLE
 	 * at assign time. Do not use with one-way or shared channels. Support chip dependent
 	 *
 	 * @param frequency1 The primary operating frequency offset in MHz from 2400MHz. Valid range: 0-124 Mhz
@@ -1017,6 +1016,13 @@ public class Channel
 		log.info( "Opening Channel {} in RxScanMode...", getName() );
 		ChannelMessage msg = new ChannelOpenRxScanModeMessage();
 		sendAndWaitForResponseNoError( msg );
+	}
+
+	private static long rawChannelPeriodToDefaultTimeout( final int rawChannelPeriod )
+	{
+		return (long) (BURST_TIMEOUT_SCALE_FACTOR *
+		               (rawChannelPeriod / CHANNEL_PERIOD_SCALE_FACTOR) *
+		               CONVERSION_FACTOR_SECONDS_TO_NANOSECONDS);
 	}
 
 	/**
@@ -1137,6 +1143,29 @@ public class Channel
 		configureExclusionInclusionList( ids.length, exclude );
 	}
 
+	/**
+	 * Filters burst messages if listeners exist for {@link CombinedBurst}s
+	 * <p/>
+	 * See:
+	 * <p/>
+	 * {@link Channel#registerBurstListener(BroadcastListener)}
+	 * {@link Channel#removeBurstListener(BroadcastListener)}
+	 */
+	public class BurstFilterCondition implements MessageCondition
+	{
+
+		@Override
+		public boolean test( StandardMessage msg )
+		{
+			if( burstMessenger.getListenerCount() > 0 && (msg instanceof BurstData) )
+			{
+				return false;
+			}
+			return true;
+		}
+
+	}
+
 	public static class ChannelInstanceCondition implements MessageCondition
 	{
 
@@ -1201,29 +1230,6 @@ public class Channel
 				return false;
 			}
 			if( (msg instanceof ChannelMessage) && (!(((ChannelMessage) msg).getChannelNumber() == getNumber())) )
-			{
-				return false;
-			}
-			return true;
-		}
-
-	}
-
-	/**
-	 * Filters burst messages if listeners exist for {@link CombinedBurst}s
-	 * <p/>
-	 * See:
-	 * <p/>
-	 * {@link Channel#registerBurstListener(BroadcastListener)}
-	 * {@link Channel#removeBurstListener(BroadcastListener)}
-	 */
-	public class BurstFilterCondition implements MessageCondition
-	{
-
-		@Override
-		public boolean test( StandardMessage msg )
-		{
-			if( burstMessenger.getListenerCount() > 0 && (msg instanceof BurstData) )
 			{
 				return false;
 			}

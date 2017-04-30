@@ -1,67 +1,69 @@
 /**
- *     Copyright (c) 2013, Will Szumski
- *
- *     This file is part of formicidae.
- *
- *     formicidae is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     formicidae is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (c) 2013, Will Szumski
+ * <p>
+ * This file is part of formicidae.
+ * <p>
+ * formicidae is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * formicidae is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.cowboycoders.ant.utils;
 
+import javax.usb.UsbDevice;
+import javax.usb.UsbHub;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.usb.UsbDevice;
-import javax.usb.UsbHub;
+public class UsbUtils
+{
 
+	/**
+	 * This forms an inclusive list of all UsbDevices connected to this UsbDevice.
+	 * <p>
+	 * The list includes the provided device.  If the device is also a hub,
+	 * the list will include all devices connected to it, recursively.
+	 * @param usbDevice The UsbDevice to use.
+	 * @return An inclusive List of all connected UsbDevices.
+	 */
+	public static List<UsbDevice> getAllUsbDevices( UsbDevice usbDevice )
+	{
+		List<UsbDevice> list = new java.util.ArrayList<>();
 
-public class UsbUtils {
-
-  /**
-   * This forms an inclusive list of all UsbDevices connected to this UsbDevice.
-   * <p>
-   * The list includes the provided device.  If the device is also a hub,
-   * the list will include all devices connected to it, recursively.
-   * @param usbDevice The UsbDevice to use.
-   * @return An inclusive List of all connected UsbDevices.
-   */
-  public static List<UsbDevice> getAllUsbDevices(UsbDevice usbDevice)
-  {
-      List<UsbDevice> list = new java.util.ArrayList<>();
-
-      list.add(usbDevice);
+		list.add( usbDevice );
 
       /* this is just normal recursion.  Nothing special. */
-      if (usbDevice.isUsbHub()) {
-          @SuppressWarnings("unchecked")
-          List<UsbDevice> devices = ((UsbHub)usbDevice).getAttachedUsbDevices();
-          for (int i=0; i<devices.size(); i++)
-              list.addAll(getAllUsbDevices((UsbDevice)devices.get(i)));
-      }
+		if( usbDevice.isUsbHub() )
+		{
+			@SuppressWarnings( "unchecked" )
+			List<UsbDevice> devices = ((UsbHub) usbDevice).getAttachedUsbDevices();
+			for( int i = 0; i < devices.size(); i++ )
+			{
+				list.addAll( getAllUsbDevices( (UsbDevice) devices.get( i ) ) );
+			}
+		}
 
-      return list;
-  }
+		return list;
+	}
 
-  /**
-   * Get a List of all devices that match the specified vendor and product id.
-   * @param usbDevice The UsbDevice to check.
-   * @param vendorId The vendor id to match.
-   * @param productId The product id to match.
-   * @return A List of any matching UsbDevice(s).
-   */
-  public static List<UsbDevice> getUsbDevicesWithId(UsbDevice usbDevice, short vendorId, short productId)
-  {
-    List<UsbDevice> list = new ArrayList<>();
+	/**
+	 * Get a List of all devices that match the specified vendor and product id.
+	 * @param usbDevice The UsbDevice to check.
+	 * @param vendorId The vendor id to match.
+	 * @param productId The product id to match.
+	 * @return A List of any matching UsbDevice(s).
+	 */
+	public static List<UsbDevice> getUsbDevicesWithId( UsbDevice usbDevice, short vendorId, short productId )
+	{
+		List<UsbDevice> list = new ArrayList<>();
 
       /* A device's descriptor is always available.  All descriptor
        * field names and types match exactly what is in the USB specification.
@@ -84,19 +86,23 @@ public class UsbUtils {
        *
        * See javax.usb.util.UsbUtil.unsignedInt() for some more information.
        */
-      if (vendorId == usbDevice.getUsbDeviceDescriptor().idVendor() &&
-          productId == usbDevice.getUsbDeviceDescriptor().idProduct())
-          list.add(usbDevice);
+		if( vendorId == usbDevice.getUsbDeviceDescriptor().idVendor() && productId == usbDevice.getUsbDeviceDescriptor().idProduct() )
+		{
+			list.add( usbDevice );
+		}
 
       /* this is just normal recursion.  Nothing special. */
-      if (usbDevice.isUsbHub()) {
-          @SuppressWarnings("unchecked")
-          List<UsbDevice> devices = ((UsbHub)usbDevice).getAttachedUsbDevices();
-          for (int i=0; i<devices.size(); i++)
-              list.addAll(getUsbDevicesWithId((UsbDevice)devices.get(i), vendorId, productId));
-      }
+		if( usbDevice.isUsbHub() )
+		{
+			@SuppressWarnings( "unchecked" )
+			List<UsbDevice> devices = ((UsbHub) usbDevice).getAttachedUsbDevices();
+			for( int i = 0; i < devices.size(); i++ )
+			{
+				list.addAll( getUsbDevicesWithId( (UsbDevice) devices.get( i ), vendorId, productId ) );
+			}
+		}
 
-      return list;
-  }
+		return list;
+	}
 
 }

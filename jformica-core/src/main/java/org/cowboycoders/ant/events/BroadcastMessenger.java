@@ -1,20 +1,20 @@
 /**
- *     Copyright (c) 2013, Will Szumski
- *
- *     This file is part of formicidae.
- *
- *     formicidae is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     formicidae is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (c) 2013, Will Szumski
+ * <p>
+ * This file is part of formicidae.
+ * <p>
+ * formicidae is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * formicidae is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
  *
@@ -27,9 +27,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Stores ant messages with thread safe access
@@ -37,39 +37,38 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @author will
  *
  */
-public class BroadcastMessenger<V> {
-
-	private static final ExecutorService SHARED_SINGLE_THREAD_EXECUTOR = Executors
-			.newSingleThreadExecutor(new ThreadFactory() {
-				@Override
-				public Thread newThread(Runnable runnable) {
-					Thread thread = Executors.defaultThreadFactory().newThread(
-							runnable);
-					thread.setName("BroadcastMessengerThread");
-					thread.setDaemon(true);
-					return thread;
-				}
-			});
+public class BroadcastMessenger<V>
+{
 
 	/**
 	 * Used to concurrently notify listeners
 	 */
 	ExecutorService dispatchPool;
-
 	/**
 	 * Contains all classes listening for new messages
 	 */
 	Set<BroadcastListener<V>> listeners = new HashSet<>();
-
 	/**
 	 * Used to lock {@code listeners}
 	 */
 	ReentrantReadWriteLock listenerLock = new ReentrantReadWriteLock();
+	private static final ExecutorService SHARED_SINGLE_THREAD_EXECUTOR = Executors.newSingleThreadExecutor( new ThreadFactory()
+	{
+		@Override
+		public Thread newThread( Runnable runnable )
+		{
+			Thread thread = Executors.defaultThreadFactory().newThread( runnable );
+			thread.setName( "BroadcastMessengerThread" );
+			thread.setDaemon( true );
+			return thread;
+		}
+	} );
 
 	/**
 	 * Backed by an unbounded TODO : fix this see java.util.concurrent.ThreadPoolExecutor
 	 */
-	public BroadcastMessenger() {
+	public BroadcastMessenger()
+	{
 		dispatchPool = SHARED_SINGLE_THREAD_EXECUTOR;
 	}
 
@@ -85,10 +84,9 @@ public class BroadcastMessenger<V> {
 	 * @param timeoutUnit TODO: document this
 	 * @param backingQueue TODO: document this
 	 */
-	public BroadcastMessenger(int coreSize, int maxSize, int timeout,
-			TimeUnit timeoutUnit, BlockingQueue<Runnable> backingQueue) {
-		dispatchPool = new ThreadPoolExecutor(coreSize, maxSize, timeout,
-				timeoutUnit, backingQueue);
+	public BroadcastMessenger( int coreSize, int maxSize, int timeout, TimeUnit timeoutUnit, BlockingQueue<Runnable> backingQueue )
+	{
+		dispatchPool = new ThreadPoolExecutor( coreSize, maxSize, timeout, timeoutUnit, backingQueue );
 	}
 
 	/**
@@ -96,11 +94,15 @@ public class BroadcastMessenger<V> {
 	 *
 	 * @param listener TODO: document this
 	 */
-	public void addBroadcastListener(BroadcastListener<V> listener) {
-		try {
+	public void addBroadcastListener( BroadcastListener<V> listener )
+	{
+		try
+		{
 			listenerLock.writeLock().lock();
-			listeners.add(listener);
-		} finally {
+			listeners.add( listener );
+		}
+		finally
+		{
 			listenerLock.writeLock().unlock();
 		}
 	}
@@ -110,11 +112,15 @@ public class BroadcastMessenger<V> {
 	 *
 	 * @param listener TODO: document this
 	 */
-	public void removeBroadcastListener(BroadcastListener<V> listener) {
-		try {
+	public void removeBroadcastListener( BroadcastListener<V> listener )
+	{
+		try
+		{
 			listenerLock.writeLock().lock();
-			listeners.remove(listener);
-		} finally {
+			listeners.remove( listener );
+		}
+		finally
+		{
 			listenerLock.writeLock().unlock();
 		}
 	}
@@ -123,11 +129,15 @@ public class BroadcastMessenger<V> {
 	 * Returns current number of listeners
 	 * @return number of listeners
 	 */
-	public int getListenerCount() {
-		try {
+	public int getListenerCount()
+	{
+		try
+		{
 			listenerLock.readLock().lock();
 			return listeners.size();
-		} finally {
+		}
+		finally
+		{
 			listenerLock.readLock().unlock();
 		}
 	}
@@ -137,19 +147,26 @@ public class BroadcastMessenger<V> {
 	 *
 	 * @param message TODO: document this
 	 */
-	public void sendMessage(final V message) {
-		try {
+	public void sendMessage( final V message )
+	{
+		try
+		{
 			listenerLock.readLock().lock();
-			for (final BroadcastListener<V> listener : listeners) {
+			for( final BroadcastListener<V> listener : listeners )
+			{
 				;
-				dispatchPool.execute(new Runnable() {
+				dispatchPool.execute( new Runnable()
+				{
 					@Override
-					public void run() {
-						listener.receiveMessage(message);
+					public void run()
+					{
+						listener.receiveMessage( message );
 					}
-				});
+				} );
 			}
-		} finally {
+		}
+		finally
+		{
 			listenerLock.readLock().unlock();
 		}
 

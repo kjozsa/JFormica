@@ -18,11 +18,12 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Speed and Cadence ANT+ processor.
- * 
+ *
  * @author David George
  * @date 11 June 2013
  */
-class Listener implements BroadcastListener<BroadcastDataMessage> {
+class Listener implements BroadcastListener<BroadcastDataMessage>
+{
 	private static int lastTs = 0;
 	private static int lastTc = 0;
 	private static int sRR = 0; // previous speed rotation measurement
@@ -30,7 +31,7 @@ class Listener implements BroadcastListener<BroadcastDataMessage> {
 	private static int cRR = 0; // previous cadence rotation measurement
 	private static int sCount = 0;
 	private static int cCount = 0;
-	
+
 	/**
 	 * Speed and cadence data is contained in the 8 byte data payload in the
 	 * message. Speed and Cadence have the same format. A short integer giving
@@ -57,7 +58,8 @@ class Listener implements BroadcastListener<BroadcastDataMessage> {
 	 * updates.
 	 */
 	@Override
-	public void receiveMessage(BroadcastDataMessage message) {
+	public void receiveMessage( BroadcastDataMessage message )
+	{
 		double WHEEL_SIZE = 212.372; // 700C23
 
 		int[] data = message.getUnsignedData();
@@ -70,26 +72,23 @@ class Listener implements BroadcastListener<BroadcastDataMessage> {
 
 		// Bytes 0 and 1: TTTT / 1024 = milliSeconds since the last
 		// rollover for cadence
-		int tC = data[0]
-				+ (data[1] << 8);
+		int tC = data[0] + (data[1] << 8);
 
 		// Bytes 2 and 3: Cadence rotation Count
-		int cR = data[2]
-				+ (data[3] << 8);
+		int cR = data[2] + (data[3] << 8);
 
 		// Bytes 4 and 5: TTTT / 1024 = milliSeconds since the last
 		// rollover for speed
-		int tS = data[4]
-				+ (data[5] << 8);
+		int tS = data[4] + (data[5] << 8);
 
 		// Bytes 6 and 7: speed rotation count.
-		int sR = data[6]
-				+ (data[7] << 8);
+		int sR = data[6] + (data[7] << 8);
 
 		//System.out
 		//		.println("tC " + tC + " cR " + cR + " tS " + tS + " sR " + sR);
 
-		if (lastTs == 0 || lastTc == 0) {
+		if( lastTs == 0 || lastTc == 0 )
+		{
 			// first time through, initialize counters and return
 			lastTs = tS;
 			lastTc = tC;
@@ -99,64 +98,84 @@ class Listener implements BroadcastListener<BroadcastDataMessage> {
 		}
 
 		int tD; // time delta
-		if (tS < lastTs) {
+		if( tS < lastTs )
+		{
 			// we have rolled over
 			tD = tS + (65536 - lastTs);
-		} else {
+		}
+		else
+		{
 			tD = tS - lastTs;
 		}
 
 		int sRD; // speed rotation delta
-		if (sR < sRR) {
+		if( sR < sRR )
+		{
 			// we have rolled over
 			sRD = sR + (65536 - sRR);
-		} else {
+		}
+		else
+		{
 			sRD = sR - sRR;
 		}
 
 		double speed = 0.0;
-		if (tD > 0) {
+		if( tD > 0 )
+		{
 			double distanceKM = (sRD * WHEEL_SIZE) / 100000;
 			totalDistance += distanceKM;
 			double timeS = ((double) tD) / 1024.0;
 			speed = distanceKM / (timeS / (60.0 * 60.0));
 			sCount = 0;
-		} else if (sCount < 12) {
+		}
+		else if( sCount < 12 )
+		{
 			sCount++;
 			speed = -1.0;
 		}
 
 		int cTD; // cadence time delta
-		if (tC < lastTc) {
+		if( tC < lastTc )
+		{
 			// we have rolled over
 			cTD = tC + (65536 - lastTc);
-		} else {
+		}
+		else
+		{
 			cTD = tC - lastTc;
 		}
 
 		int cRD; // cadence rotation delta
-		if (cR < cRR) {
+		if( cR < cRR )
+		{
 			// we have rolled over
 			cRD = cR + (65536 - cRR);
-		} else {
+		}
+		else
+		{
 			cRD = cR - cRR;
 		}
 
 		double cadence = 0.0;
-		if (cRD > 0) {
+		if( cRD > 0 )
+		{
 			double timeC = ((double) cTD) / 1024.0;
 			cadence = cRD * ((1 / timeC) * 60.0);
 			cCount = 0;
-		} else if (cCount < 12) {
+		}
+		else if( cCount < 12 )
+		{
 			cadence = -1.0;
 			cCount++;
 		}
 
-		if (tD > 0) {
-				System.out.printf("Distance %.3f km, Speed: %.2f km/h\n", totalDistance, speed);
+		if( tD > 0 )
+		{
+			System.out.printf( "Distance %.3f km, Speed: %.2f km/h\n", totalDistance, speed );
 		}
-		if (cTD > 0) {
-						System.out.printf("Cadence: %.0f\n", cadence);
+		if( cTD > 0 )
+		{
+			System.out.printf( "Cadence: %.0f\n", cadence );
 		}
 
 		lastTs = tS;
@@ -166,14 +185,14 @@ class Listener implements BroadcastListener<BroadcastDataMessage> {
 	}
 }
 
-
 /**
  * @author Will Szumskiroot
  * @author David George
- * 
+ *         <p>
  *         Based on Will's Heart Rate Monitor example
  */
-public class BasicSpeedAndCadence {
+public class BasicSpeedAndCadence
+{
 	/*
 	 * See ANT+ data sheet for explanation
 	 */
@@ -205,7 +224,7 @@ public class BasicSpeedAndCadence {
 	/*
 	 * device type for ANT+ heart rate monitor
 	 */
-	
+
 	private static final int ANT_SPORT_SandC_TYPE = 121; // 0x78
 
 	/*
@@ -217,51 +236,19 @@ public class BasicSpeedAndCadence {
 	 */
 	private static final int HRM_DEVICE_ID = 0;
 
-	public static void printChannelConfig(Channel channel) {
-
-		// build request
-		ChannelRequestMessage msg = new ChannelRequestMessage(
-				channel.getNumber(), Request.CHANNEL_ID);
-
-		// response should be an instance of ChannelIdResponse
-		MessageCondition condition = MessageConditionFactory
-				.newInstanceOfCondition(ChannelIdResponse.class);
-
-		try {
-
-			// send request (blocks until reply received or timeout expired)
-			ChannelIdResponse response = (ChannelIdResponse) channel
-					.sendAndWaitForMessage(msg, condition, 5L,
-							TimeUnit.SECONDS, null);
-
-			System.out.println();
-			System.out.println("Device configuration: ");
-			System.out.println("deviceID: " + response.getDeviceNumber());
-			System.out.println("deviceType: " + response.getDeviceType());
-			System.out.println("transmissionType: "
-					+ response.getTransmissionType());
-			System.out.println("pairing flag set: "
-					+ response.isPairingFlagSet());
-			System.out.println();
-
-		} catch (Exception e) {
-			// not critical, so just print error
-			e.printStackTrace();
-		}
-	}
-
-	public static void main(String[] args) throws InterruptedException {
+	public static void main( String[] args ) throws InterruptedException
+	{
 
 		/*
 		 * Choose driver: AndroidAntTransceiver or AntTransceiver
-		 * 
+		 *
 		 * AntTransceiver(int deviceNumber) deviceNumber : 0 ... number of usb
 		 * sticks plugged in 0: first usb ant-stick
 		 */
-		AntTransceiver antchip = new AntTransceiver(0);
+		AntTransceiver antchip = new AntTransceiver( 0 );
 
 		// initialises node with chosen driver
-		Node node = new Node(antchip);
+		Node node = new Node( antchip );
 
 		/* must be called before any configuration takes place */
 		node.start();
@@ -271,42 +258,41 @@ public class BasicSpeedAndCadence {
 
 		// specs say wait 500ms after reset before sending any more host
 		// commands
-		Thread.sleep(500);
+		Thread.sleep( 500 );
 
 		Channel channel = node.getFreeChannel();
 
 		// Arbitrary name : useful for identifying channel
-		channel.setName("C:SC");
+		channel.setName( "C:SC" );
 
 		// choose slave or master type. Constructors exist to set
 		// two-way/one-way and shared/non-shared variants.
 		ChannelType channelType = new SlaveChannelType();
 
 		// use ant network key "N:ANT+"
-		channel.assign(NetworkKeys.ANT_SPORT, channelType);
+		channel.assign( NetworkKeys.ANT_SPORT, channelType );
 
 		// registers an instance of our callback with the channel
-		channel.registerRxListener(new Listener(), BroadcastDataMessage.class);
+		channel.registerRxListener( new Listener(), BroadcastDataMessage.class );
 
 		/******* start device specific configuration ******/
 
-		channel.setId(HRM_DEVICE_ID, ANT_SPORT_SandC_TYPE,
-				HRM_TRANSMISSION_TYPE, HRM_PAIRING_FLAG);
+		channel.setId( HRM_DEVICE_ID, ANT_SPORT_SandC_TYPE, HRM_TRANSMISSION_TYPE, HRM_PAIRING_FLAG );
 
-		channel.setFrequency(ANT_SPORT_FREQ);
+		channel.setFrequency( ANT_SPORT_FREQ );
 
-		channel.setPeriod(ANT_SPORT_SPEED_PERIOD);
+		channel.setPeriod( ANT_SPORT_SPEED_PERIOD );
 
 		/******* end device specific configuration ******/
 
 		// timeout before we give up looking for device
-		channel.setSearchTimeout(Channel.SEARCH_TIMEOUT_NEVER);
+		channel.setSearchTimeout( Channel.SEARCH_TIMEOUT_NEVER );
 
 		// start listening
 		channel.open();
 
 		// Listen for 120 seconds
-		Thread.sleep(120000);
+		Thread.sleep( 120000 );
 
 		// stop listening
 		channel.close();
@@ -316,15 +302,46 @@ public class BasicSpeedAndCadence {
 		// this will reflect actual device id, transmission type etc. This info
 		// will allow
 		// you to only connect to this device in the future.
-		printChannelConfig(channel);
+		printChannelConfig( channel );
 
 		// resets channel configuration
 		channel.unassign();
 
 		// return the channel to the pool of available channels
-		node.freeChannel(channel);
+		node.freeChannel( channel );
 
 		// cleans up : gives up control of usb device etc.
 		node.stop();
+	}
+
+	public static void printChannelConfig( Channel channel )
+	{
+
+		// build request
+		ChannelRequestMessage msg = new ChannelRequestMessage( channel.getNumber(), Request.CHANNEL_ID );
+
+		// response should be an instance of ChannelIdResponse
+		MessageCondition condition = MessageConditionFactory.newInstanceOfCondition( ChannelIdResponse.class );
+
+		try
+		{
+
+			// send request (blocks until reply received or timeout expired)
+			ChannelIdResponse response = (ChannelIdResponse) channel.sendAndWaitForMessage( msg, condition, 5L, TimeUnit.SECONDS, null );
+
+			System.out.println();
+			System.out.println( "Device configuration: " );
+			System.out.println( "deviceID: " + response.getDeviceNumber() );
+			System.out.println( "deviceType: " + response.getDeviceType() );
+			System.out.println( "transmissionType: " + response.getTransmissionType() );
+			System.out.println( "pairing flag set: " + response.isPairingFlagSet() );
+			System.out.println();
+
+		}
+		catch( Exception e )
+		{
+			// not critical, so just print error
+			e.printStackTrace();
+		}
 	}
 }

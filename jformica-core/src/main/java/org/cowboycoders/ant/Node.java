@@ -1,20 +1,20 @@
 /**
- *     Copyright (c) 2013, Will Szumski
- *
- *     This file is part of formicidae.
- *
- *     formicidae is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     formicidae is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (c) 2013, Will Szumski
+ * <p>
+ * This file is part of formicidae.
+ * <p>
+ * formicidae is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * formicidae is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with formicidae.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.cowboycoders.ant;
 
@@ -64,6 +64,13 @@ public class Node
 {
 
 	private static final Logger log = LoggerFactory.getLogger( Node.class );
+	//	private Set<AntLogger> antLoggers = Collections.newSetFromMap( new WeakHashMap<AntLogger, Boolean>() );
+	private volatile boolean running = false;
+	private EventMachine evm;
+	private Channel[] channels = new Channel[0];
+	private Network[] networks = new Network[0];
+	private CapabilityResponse capabilities;
+	private AntChipInterface antChipInterface;
 	private final MessageSender nodeSender = new MessageSender()
 	{
 
@@ -77,13 +84,6 @@ public class Node
 		}
 
 	};
-	//	private Set<AntLogger> antLoggers = Collections.newSetFromMap( new WeakHashMap<AntLogger, Boolean>() );
-	private volatile boolean running = false;
-	private EventMachine evm;
-	private Channel[] channels = new Channel[0];
-	private Network[] networks = new Network[0];
-	private CapabilityResponse capabilities;
-	private AntChipInterface antChipInterface;
 	private BroadcastMessenger<AntStatusUpdate> mStatusMessenger = new BroadcastMessenger<>();
 	/**
 	 * flags that we did the reset, as oppose to someone else (externally)
@@ -317,7 +317,8 @@ public class Node
 				}
 				if( cause instanceof TimeoutException )
 				{
-					throw new TimeoutException( "Timeout waiting for lock exchange for MsgId: " + String.format("0x%02x", msg.getId().getMessageID() & 0xFF) );
+					throw new TimeoutException( "Timeout waiting for lock exchange for MsgId: " +
+					                            String.format( "0x%02x", msg.getId().getMessageID() & 0xFF ) );
 				}
 				throw new RuntimeException( cause );
 			}
@@ -341,7 +342,8 @@ public class Node
 			}
 			if( cause instanceof TimeoutException )
 			{
-				throw new TimeoutException( "Timeout waiting for lock exchange for MsgId: " + String.format("0x%02x", msg.getId().getMessageID() & 0xFF) );
+				throw new TimeoutException( "Timeout waiting for lock exchange for MsgId: " +
+				                            String.format( "0x%02x", msg.getId().getMessageID() & 0xFF ) );
 			}
 
 			throw new RuntimeException( cause );
@@ -430,7 +432,8 @@ public class Node
 	                                              final TimeUnit timeoutUnit,
 	                                              final MessageSender sender,
 	                                              final Receipt receipt,
-	                                              final MessageCondition errorCheckCondition ) throws InterruptedException, TimeoutException
+	                                              final MessageCondition errorCheckCondition ) throws InterruptedException,
+	                                                                                                  TimeoutException
 	{
 		final LockExchangeContainer lockContainer = new LockExchangeContainer();
 		final TransmissionErrorCondition errorCondition = new TransmissionErrorCondition( msg );
@@ -705,7 +708,7 @@ public class Node
 
 	private void logMessage( AntLogger.Direction direction, StandardMessage msg )
 	{
-		log.debug( direction.name() + " : " + String.format("0x%02x", msg.getId().getMessageID()) );
+		log.debug( direction.name() + " : " + String.format( "0x%02x", msg.getId().getMessageID() ) );
 	}
 
 	private void handleTimeOutException( Exception e, StandardMessage msg )
@@ -718,52 +721,6 @@ public class Node
 		{
 			throw new AntError( "Timeout whilst waiting for message / reply on Msg: " + (msg.getId().getMessageID() & 0XFF), e );
 		}
-	}
-
-	private static class TransmissionErrorCondition implements MessageCondition
-	{
-
-		private StandardMessage transmittedMessage;
-
-		/**
-		 * Throws an {@link RumtimeException} if an error is raised trying to
-		 * send message
-		 *
-		 * @param msg message that is being sent
-		 */
-		public TransmissionErrorCondition( StandardMessage msg )
-		{
-			transmittedMessage = msg;
-		}
-
-		@Override
-		public boolean test( StandardMessage msg )
-		{
-			// for message senders we look at all message ids
-			MessageId id = null;
-
-			// else we look for particular id
-			if( transmittedMessage != null )
-			{
-				id = transmittedMessage.getId();
-			}
-
-			// make sure it a response/event
-			if( !MessageConditionFactory.newResponseCondition( id, null ).test( msg ) )
-			{
-				return false;
-			}
-			Response response = (Response) msg;
-
-			// throw an exception if response is a known error condition (this
-			// will be re-thrown on waiting thread)
-			ResponseExceptionFactory.getFactory().throwOnError( response.getResponseCode() );
-
-			// this condition only throw exceptions on errors (always return
-			// false)
-			return false;
-		}
-
 	}
 
 	class ThreadedWait implements Callable<MessageMetaWrapper<? extends StandardMessage>>
@@ -820,6 +777,52 @@ public class Node
 		{
 			// null network key indicates network not mapped to key
 			freeNetwork( network.getNumber() );
+		}
+
+	}
+
+	private static class TransmissionErrorCondition implements MessageCondition
+	{
+
+		private StandardMessage transmittedMessage;
+
+		/**
+		 * Throws an {@link RumtimeException} if an error is raised trying to
+		 * send message
+		 *
+		 * @param msg message that is being sent
+		 */
+		public TransmissionErrorCondition( StandardMessage msg )
+		{
+			transmittedMessage = msg;
+		}
+
+		@Override
+		public boolean test( StandardMessage msg )
+		{
+			// for message senders we look at all message ids
+			MessageId id = null;
+
+			// else we look for particular id
+			if( transmittedMessage != null )
+			{
+				id = transmittedMessage.getId();
+			}
+
+			// make sure it a response/event
+			if( !MessageConditionFactory.newResponseCondition( id, null ).test( msg ) )
+			{
+				return false;
+			}
+			Response response = (Response) msg;
+
+			// throw an exception if response is a known error condition (this
+			// will be re-thrown on waiting thread)
+			ResponseExceptionFactory.getFactory().throwOnError( response.getResponseCode() );
+
+			// this condition only throw exceptions on errors (always return
+			// false)
+			return false;
 		}
 
 	}

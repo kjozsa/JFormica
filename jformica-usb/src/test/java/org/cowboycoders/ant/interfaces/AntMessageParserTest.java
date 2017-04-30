@@ -1,12 +1,10 @@
 package org.cowboycoders.ant.interfaces;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.List;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * User: npratt
@@ -26,7 +24,7 @@ public class AntMessageParserTest
 	@Test
 	public void testFeedRandomDataInWithoutSync() throws Exception
 	{
-		byte[] buf = genBuf(1,2,3,2,1,2,3,2,1);
+		byte[] buf = genBuf( 1, 2, 3, 2, 1, 2, 3, 2, 1 );
 		List<byte[]> msgs = parser.parse( buf, buf.length );
 
 		assertEquals( 0, msgs.size() );
@@ -35,7 +33,7 @@ public class AntMessageParserTest
 	@Test
 	public void testLotsOfRandomData() throws Exception
 	{
-		byte[] buf = genBuf(1,2,3,2,1,2,3,2,1);
+		byte[] buf = genBuf( 1, 2, 3, 2, 1, 2, 3, 2, 1 );
 		parser.parse( buf, buf.length );
 		parser.parse( buf, buf.length );
 		List<byte[]> msgs = parser.parse( buf, buf.length );
@@ -46,7 +44,7 @@ public class AntMessageParserTest
 	@Test
 	public void testSyncAtStart() throws Exception
 	{
-		byte[] buf = genBuf(AntMessage.ANT_SYNC_1,2,0,4,2,-96);
+		byte[] buf = genBuf( AntMessage.ANT_SYNC_1, 2, 0, 4, 2, -96 );
 		List<byte[]> msgs = parser.parse( buf, buf.length );
 
 		assertEquals( 1, msgs.size() );
@@ -56,35 +54,35 @@ public class AntMessageParserTest
 	@Test
 	public void testSyncAfterGarbage() throws Exception
 	{
-		byte[] buf = genBuf( 1,2,1,2,12,2,1,2,1,2,1,2,AntMessage.ANT_SYNC_1,2,0,4,2,-96);
+		byte[] buf = genBuf( 1, 2, 1, 2, 12, 2, 1, 2, 1, 2, 1, 2, AntMessage.ANT_SYNC_1, 2, 0, 4, 2, -96 );
 		List<byte[]> msgs = parser.parse( buf, buf.length );
 
 		assertEquals( 1, msgs.size() );
-		assertArrayEquals( genBuf( 2,0,4, 2 ), msgs.get( 0 ) );
+		assertArrayEquals( genBuf( 2, 0, 4, 2 ), msgs.get( 0 ) );
 	}
 
 	@Test
 	public void testMsgSplitOverMultiplePackets() throws Exception
 	{
-		byte[] buf = genBuf(AntMessage.ANT_SYNC_1,5,0,1);
+		byte[] buf = genBuf( AntMessage.ANT_SYNC_1, 5, 0, 1 );
 		List<byte[]> msgs = parser.parse( buf, buf.length );
 		assertEquals( 0, msgs.size() );
 
-		buf = genBuf(2,3);
+		buf = genBuf( 2, 3 );
 		msgs = parser.parse( buf, buf.length );
 		assertEquals( 0, msgs.size() );
 
-		buf = genBuf(4,5,-96);
+		buf = genBuf( 4, 5, -96 );
 		msgs = parser.parse( buf, buf.length );
 		assertEquals( 1, msgs.size() );
 
-		assertArrayEquals( genBuf( 5,0,1,2,3,4,5), msgs.get( 0 ) );
+		assertArrayEquals( genBuf( 5, 0, 1, 2, 3, 4, 5 ), msgs.get( 0 ) );
 	}
 
 	private byte[] genBuf( int... data )
 	{
 		byte[] bytes = new byte[data.length];
-		for( int i = 0; i < data.length; i++)
+		for( int i = 0; i < data.length; i++ )
 		{
 			bytes[i] = (byte) data[i];
 		}

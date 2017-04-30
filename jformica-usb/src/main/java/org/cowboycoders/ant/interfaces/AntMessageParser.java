@@ -10,11 +10,11 @@ public class AntMessageParser
 {
 	private static final Logger log = LoggerFactory.getLogger( AntMessageParser.class );
 	private static final int LOOKING_FOR_SYNC = 0;
-	private int currentState = LOOKING_FOR_SYNC;
 	private static final int LOOKING_FOR_LEN = 1;
 	private static final int LOOKING_FOR_MSGID = 2;
 	private static final int LOOKING_FOR_END_OF_MSG = 3;
 	private static final int LOOKING_FOR_CHECKSUM = 4;
+	private int currentState = LOOKING_FOR_SYNC;
 	private byte[] dataBuf;
 	private byte msgSync;
 	private byte msgLen;

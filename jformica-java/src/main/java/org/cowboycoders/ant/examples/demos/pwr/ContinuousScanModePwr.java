@@ -1,10 +1,14 @@
 package org.cowboycoders.ant.examples.demos.pwr;
 
+import com.google.common.eventbus.EventBus;
 import org.cowboycoders.ant.Channel;
 import org.cowboycoders.ant.ChannelId;
 import org.cowboycoders.ant.Node;
 import org.cowboycoders.ant.events.BroadcastListener;
 import org.cowboycoders.ant.examples.NetworkKeys;
+import org.cowboycoders.ant.examples.demos.pwr.events.CrankTorquePowerEvent;
+import org.cowboycoders.ant.examples.demos.pwr.events.PowerOnlyPowerEvent;
+import org.cowboycoders.ant.examples.demos.pwr.events.WheelTorquePowerEvent;
 import org.cowboycoders.ant.interfaces.AntTransceiver;
 import org.cowboycoders.ant.messages.ChannelType;
 import org.cowboycoders.ant.messages.DeviceInfoQueryable;
@@ -12,6 +16,8 @@ import org.cowboycoders.ant.messages.SlaveChannelType;
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 public class ContinuousScanModePwr
 {
@@ -52,8 +58,27 @@ public class ContinuousScanModePwr
 	 * any other number: match specific device id
 	 */
 	private static final int PWR_DEVICE_ID = 0;
+	private EventBus eventBus;
 
 	public static void main( String[] args ) throws InterruptedException
+	{
+		ContinuousScanModePwr main = new ContinuousScanModePwr();
+		main.run();
+	}
+
+	public ContinuousScanModePwr()
+	{
+		eventBus = new EventBus();
+	}
+
+	static int getNibble( int[] data, int lsb, int msb )
+	{
+		int lsbVal = data[lsb];
+		int msbVal = data[msb];
+		return (msbVal << 8) | lsbVal;
+	}
+
+	private void run() throws InterruptedException
 	{
 		/*
 		 * Choose driver: AndroidAntTransceiver or AntTransceiver
@@ -72,6 +97,7 @@ public class ContinuousScanModePwr
 
 		node.setLibConfig( true, false, false );
 
+		// Unsure why we sleep here - perhaps we're giving time for the lib/chip to respond to the prior request?
 		Thread.sleep( 3000 );
 //		Thread.sleep( 10000 );
 		Channel channel = node.getFreeChannel();
@@ -104,8 +130,15 @@ public class ContinuousScanModePwr
 		// start listening
 		channel.openInRxScanMode();
 
-		// Listen for 600 seconds
-		Thread.sleep( 600000 );
+		while( true )
+		{
+			// loop forever
+			Thread.sleep( 1000 );
+			if( 3 / 2 == 6 )
+			{
+				break;
+			}
+		}
 
 		log.info( "Closing channel..." );
 		// stop listening
@@ -119,17 +152,9 @@ public class ContinuousScanModePwr
 
 		// cleans up : gives up control of usb device etc.
 		node.stop();
-
 	}
 
-	private static int getNibble( int[] data, int lsb, int msb )
-	{
-		int lsbVal = data[lsb];
-		int msbVal = data[msb];
-		return (msbVal << 8) | lsbVal;
-	}
-
-	private static class PWRListener implements BroadcastListener<BroadcastDataMessage>
+	private class PWRListener implements BroadcastListener<BroadcastDataMessage>
 	{
 		private PowerCalculator calc1 = new PowerCalculator();
 		private PowerCalculator calc2 = new PowerCalculator();
@@ -137,10 +162,23 @@ public class ContinuousScanModePwr
 		@Override
 		public void receiveMessage( BroadcastDataMessage message )
 		{
-			int[] data = message.getUnsignedData();
+			final int[] data = message.getUnsignedData();
+			final int deviceId;
+			if( message instanceof DeviceInfoQueryable )
+			{
+				DeviceInfoQueryable deviceInfoQueryable = (DeviceInfoQueryable) message;
+				ChannelId channelId = deviceInfoQueryable.getChannelId();
+				deviceId = channelId.getDeviceNumber();
+			}
+			else
+			{
+				log.warn( "Received messaged from unknown deviceId: {}", Arrays.toString( data ) );
+				return;
+			}
+
 			int pageNumber = data[0];
 
-			log.info( "pageNumber: 0x{} : {}", Integer.toHexString( pageNumber ), data );
+			log.debug( "pageNumber: 0x{} : {}", Integer.toHexString( pageNumber ), data );
 
 			// 6.3 Byte Order
 			// Standard ANT messages are little endian for multi -byte fields; an exception is the Crank Torque-Frequency message format,
@@ -165,7 +203,10 @@ public class ContinuousScanModePwr
 					int cadence = data[3];
 					int pwr = getNibble( data, 6, 7 );
 
-					log.info( "PWR: {}, Cadence: {}, count: {}", pwr, cadence, eventCount );
+					log.info( "{} - PWR: {}, Cadence: {}, count: {}", deviceId, pwr, cadence, eventCount );
+
+					eventBus.post( new PowerOnlyPowerEvent( deviceId, pwr, cadence ) );
+
 					break;
 				}
 				case 0x11: // Standard Wheel Torque Main Data Page (0x11)
@@ -183,13 +224,17 @@ public class ContinuousScanModePwr
 
 					int pwr = calc1.calculate( wheelPeriod, eventCount, accumTorque, wheelTicks );
 
-					log.info( "PWR: {}, Cadence: {}, count: {}, wTicks: {}, wPeriod: {}, accumTorque: {}",
+					log.info( "{} - PWR: {}, Cadence: {}, count: {}, wTicks: {}, wPeriod: {}, accumTorque: {}",
+					          deviceId,
 					          pwr,
 					          cadence,
 					          eventCount,
 					          wheelTicks,
 					          wheelPeriod,
 					          accumTorque );
+
+					eventBus.post( new WheelTorquePowerEvent( deviceId, pwr, cadence ) );
+
 					break;
 				}
 				case 0x12: // Standard Crank Torque Main Data Page (0x12)
@@ -205,15 +250,18 @@ public class ContinuousScanModePwr
 					int crankPeriod = getNibble( data, 4, 5 );
 					int accumTorque = getNibble( data, 6, 7 );
 
-					int pwr = calc1.calculate( crankPeriod, eventCount, accumTorque, crankTicks );
+					int pwr = calc2.calculate( crankPeriod, eventCount, accumTorque, crankTicks );
 
-					log.info( "PWR: {}, Cadence: {}, count: {}, wTicks: {}, wPeriod: {}, accumTorque: {}",
+					log.info( "{} - PWR: {}, Cadence: {}, count: {}, wTicks: {}, wPeriod: {}, accumTorque: {}",
+					          deviceId,
 					          pwr,
 					          cadence,
 					          eventCount,
 					          crankTicks,
 					          crankPeriod,
 					          accumTorque );
+
+					eventBus.post( new CrankTorquePowerEvent( deviceId, pwr, cadence ) );
 
 					break;
 				}
@@ -235,15 +283,6 @@ public class ContinuousScanModePwr
 				default:
 					break;
 			}
-
-			if( message instanceof DeviceInfoQueryable )
-			{
-				DeviceInfoQueryable deviceInfoQueryable = (DeviceInfoQueryable) message;
-				ChannelId channelId = deviceInfoQueryable.getChannelId();
-				log.info( "deviceID: " + channelId.getDeviceNumber() );
-			}
 		}
-
 	}
-
 }

@@ -6,11 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import static org.cowboycoders.ant.examples.demos.hrm.BasicHeartRateMonitor.HRMListener.intToString;
 
-/**
- * User: npratt
- * Date: 4/30/17
- * Time: 11:28
- */
 public class HRMListenerTest
 {
 	private static final Logger log = LoggerFactory.getLogger( HRMListenerTest.class );

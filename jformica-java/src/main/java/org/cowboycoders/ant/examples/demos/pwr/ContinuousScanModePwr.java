@@ -131,15 +131,9 @@ public class ContinuousScanModePwr
 
 	private static class PWRListener implements BroadcastListener<BroadcastDataMessage>
 	{
+		private PowerCalculator calc1 = new PowerCalculator();
+		private PowerCalculator calc2 = new PowerCalculator();
 
-		/*
-		 * Once an instance of this class is registered with a channel,
-		 * this is called every time a broadcast message is received
-		 * on that channel.
-		 *
-		 * (non-Javadoc)
-		 * @see org.cowboycoders.ant.events.BroadcastListener#receiveMessage(java.lang.Object)
-		 */
 		@Override
 		public void receiveMessage( BroadcastDataMessage message )
 		{
@@ -187,7 +181,10 @@ public class ContinuousScanModePwr
 					int wheelPeriod = getNibble( data, 4, 5 );
 					int accumTorque = getNibble( data, 6, 7 );
 
-					log.info( "PWR: TBD, Cadence: {}, count: {}, wTicks: {}, wPeriod: {}, accumTorque: {}",
+					int pwr = calc1.calculate( wheelPeriod, eventCount, accumTorque, wheelTicks );
+
+					log.info( "PWR: {}, Cadence: {}, count: {}, wTicks: {}, wPeriod: {}, accumTorque: {}",
+					          pwr,
 					          cadence,
 					          eventCount,
 					          wheelTicks,
@@ -202,6 +199,37 @@ public class ContinuousScanModePwr
 					// The standard crank torque page is used to send event timing information and torque values from a power sensor that
 					// measures torque at the crank. Timing is based on a 2048Hz clock and torque is transmitted in Newton meters. All
 					// fields in this message shall [MD_0010] be set as described in Table 10-1.
+					int eventCount = data[1];
+					int crankTicks = data[2];
+					int cadence = data[3]; // 0XFF if unavailable
+					int crankPeriod = getNibble( data, 4, 5 );
+					int accumTorque = getNibble( data, 6, 7 );
+
+					int pwr = calc1.calculate( crankPeriod, eventCount, accumTorque, crankTicks );
+
+					log.info( "PWR: {}, Cadence: {}, count: {}, wTicks: {}, wPeriod: {}, accumTorque: {}",
+					          pwr,
+					          cadence,
+					          eventCount,
+					          crankTicks,
+					          crankPeriod,
+					          accumTorque );
+
+					break;
+				}
+				case 0x50:
+				{
+					// Required 0x50 Manufacturer’s Information Minimum: Interleave every 121 Common Data Page messages (30.25s)
+					break;
+				}
+				case 0x51:
+				{
+					// Required 0x51 Product Information Minimum: Interleave every 121 Common Data Page messages (30.25s)
+					break;
+				}
+				case 0x52:
+				{
+					// Optional 0x52 Battery Voltage Minimum: Interleave every 61 Common Data Page messages (15.25s)
 					break;
 				}
 				default:

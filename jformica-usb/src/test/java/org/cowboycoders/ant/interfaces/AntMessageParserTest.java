@@ -6,11 +6,6 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-/**
- * User: npratt
- * Date: 1/13/14
- * Time: 21:15
- */
 public class AntMessageParserTest
 {
 	private AntMessageParser parser;

@@ -250,6 +250,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
             if (matchingDevices.isEmpty()) {
                 continue;
             }
+            log.info("found device: {}", matchingDevices.get(0));
             devices.addAll(matchingDevices);
         }
 

@@ -13,3 +13,4 @@ jformica_android/gen
 *.project
 *.classpath
 target/
+.attach*

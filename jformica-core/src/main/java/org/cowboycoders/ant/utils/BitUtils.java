@@ -20,68 +20,60 @@ package org.cowboycoders.ant.utils;
 
 /**
  * Utilities for dealing with raw bits
- * @author will
  *
+ * @author will
  */
-public class BitUtils
-{
+public class BitUtils {
 
-	private BitUtils()
-	{
+    private BitUtils() {
 
-	}
+    }
 
-	/**
-	 * Calulcates index of left most bit
-	 * for any positive integer
-	 * @param number to check
-	 * @return the index of the left most bit
-	 */
-	public static int getMaxBitIndex( int number )
-	{
-		if( number < 0 )
-		{
-			throw new RuntimeException( "negative numbers unsupported" );
-		}
-		int maxBit = 0;
-		while( (number = number >>> 1) >= 0 )
-		{
-			maxBit++;
-			if( number == 0 )
-			{
-				break;
-			}
-		}
-		return maxBit;
+    /**
+     * Calulcates index of left most bit
+     * for any positive integer
+     *
+     * @param number to check
+     * @return the index of the left most bit
+     */
+    public static int getMaxBitIndex(int number) {
+        if (number < 0) {
+            throw new RuntimeException("negative numbers unsupported");
+        }
+        int maxBit = 0;
+        while ((number = number >>> 1) >= 0) {
+            maxBit++;
+            if (number == 0) {
+                break;
+            }
+        }
+        return maxBit;
 
-	}
+    }
 
-	/**
-	 * Calculates index of left most zero before first bit
-	 * for any positive integer
-	 * @param number to check
-	 * @return the index of the left most bit (zero based), -1 if no zeros
-	 */
-	public static int getMaxZeroBitIndex( int number )
-	{
-		if( number < 0 )
-		{
-			throw new RuntimeException( "negative numbers unsupported" );
-		}
-		int maxBit = -1;
-		int mask = 1;
+    /**
+     * Calculates index of left most zero before first bit
+     * for any positive integer
+     *
+     * @param number to check
+     * @return the index of the left most bit (zero based), -1 if no zeros
+     */
+    public static int getMaxZeroBitIndex(int number) {
+        if (number < 0) {
+            throw new RuntimeException("negative numbers unsupported");
+        }
+        int maxBit = -1;
+        int mask = 1;
 
-		while( mask <= number )
-		{
-			if( (mask & number) != 0 )
-			{
-				break;
-			}
-			mask = mask << 1;
-			maxBit++;
-		}
-		return maxBit;
+        while (mask <= number) {
+            if ((mask & number) != 0) {
+                break;
+            }
+            mask = mask << 1;
+            maxBit++;
+        }
+        return maxBit;
 
-	}
+    }
 
 }

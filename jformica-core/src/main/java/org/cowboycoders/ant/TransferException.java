@@ -28,61 +28,54 @@ import org.cowboycoders.ant.messages.responses.ResponseCode;
  * @author will
  *
  */
-public class TransferException extends ChannelError
-{
+public class TransferException extends ChannelError {
 
-	private static final long serialVersionUID = 1L;
-	private MessageId messageId;
-	private ResponseCode responseCode;
+    private static final long serialVersionUID = 1L;
+    private MessageId messageId;
+    private ResponseCode responseCode;
 
-	/**
-	 * Ant msg id and response code of event that caused this eception to be thrown
-	 * @param id TODO : document this
-	 * @param response TODO : document this
-	 */
-	public TransferException( MessageId id, ResponseCode response )
-	{
-		this.messageId = id;
-		this.responseCode = response;
-	}
+    /**
+     * Ant msg id and response code of event that caused this eception to be thrown
+     * @param id TODO : document this
+     * @param response TODO : document this
+     */
+    public TransferException(MessageId id, ResponseCode response) {
+        this.messageId = id;
+        this.responseCode = response;
+    }
 
-	public TransferException( MessageId id, ResponseCode response, String detail )
-	{
-		super( detail );
-		this.messageId = id;
-		this.responseCode = response;
-	}
+    public TransferException(MessageId id, ResponseCode response, String detail) {
+        super(detail);
+        this.messageId = id;
+        this.responseCode = response;
+    }
 
-	/**
-	 * @return the messageId
-	 */
-	public MessageId getMessageId()
-	{
-		return messageId;
-	}
+    /**
+     * @return the messageId
+     */
+    public MessageId getMessageId() {
+        return messageId;
+    }
 
-	/**
-	 * @param messageId the messageId to set
-	 */
-	public void setMessageId( MessageId messageId )
-	{
-		this.messageId = messageId;
-	}
+    /**
+     * @param messageId the messageId to set
+     */
+    public void setMessageId(MessageId messageId) {
+        this.messageId = messageId;
+    }
 
-	/**
-	 * @return the responseCode
-	 */
-	public ResponseCode getResponseCode()
-	{
-		return responseCode;
-	}
+    /**
+     * @return the responseCode
+     */
+    public ResponseCode getResponseCode() {
+        return responseCode;
+    }
 
-	/**
-	 * @param responseCode the responseCode to set
-	 */
-	public void setResponseCode( ResponseCode responseCode )
-	{
-		this.responseCode = responseCode;
-	}
+    /**
+     * @param responseCode the responseCode to set
+     */
+    public void setResponseCode(ResponseCode responseCode) {
+        this.responseCode = responseCode;
+    }
 
 }

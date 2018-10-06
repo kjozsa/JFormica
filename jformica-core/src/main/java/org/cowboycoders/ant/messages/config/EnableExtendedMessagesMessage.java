@@ -30,51 +30,45 @@ import org.cowboycoders.ant.messages.StandardMessage;
  * @author will
  *
  */
-public class EnableExtendedMessagesMessage extends StandardMessage
-{
+public class EnableExtendedMessagesMessage extends StandardMessage {
 
-	/**
-	 * Enables extended Messages.
-	 * @param enable true to enable
-	 */
-	public EnableExtendedMessagesMessage( boolean enable )
-	{
-		super( MessageId.RX_EXT_MESGS_ENABLE, new DataElement[]{
-				DataElement.FILLER_BYTE, DataElement.EXTENDED_MESSAGE_FLAG
-		} );
+    /**
+     * Enables extended Messages.
+     * @param enable true to enable
+     */
+    public EnableExtendedMessagesMessage(boolean enable) {
+        super(MessageId.RX_EXT_MESGS_ENABLE, new DataElement[]{
+                DataElement.FILLER_BYTE, DataElement.EXTENDED_MESSAGE_FLAG
+        });
 
-		byte flag = generateFlag( enable );
-		setFlag( flag );
-	}
+        byte flag = generateFlag(enable);
+        setFlag(flag);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.cowboycoders.ant.messages.StandardMessage#validate()
-	 */
-	@Override
-	public void validate() throws MessageException
-	{
-		// not need as we do not recieve
+    /* (non-Javadoc)
+     * @see org.cowboycoders.ant.messages.StandardMessage#validate()
+     */
+    @Override
+    public void validate() throws MessageException {
+        // not need as we do not recieve
 
-	}
+    }
 
-	private void setFlag( byte flag )
-	{
-		setDataElement( DataElement.EXTENDED_MESSAGE_FLAG, (int) flag );
-	}
+    private void setFlag(byte flag) {
+        setDataElement(DataElement.EXTENDED_MESSAGE_FLAG, (int) flag);
+    }
 
-	/**
-	 * Generates payload
-	 * @param enable if extended messages are required
-	 * @return a suitable payload
-	 */
-	private static byte generateFlag( boolean enable )
-	{
-		byte flag = 0;
-		if( enable )
-		{
-			flag = 1;
-		}
-		return flag;
-	}
+    /**
+     * Generates payload
+     * @param enable if extended messages are required
+     * @return a suitable payload
+     */
+    private static byte generateFlag(boolean enable) {
+        byte flag = 0;
+        if (enable) {
+            flag = 1;
+        }
+        return flag;
+    }
 
 }

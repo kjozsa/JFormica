@@ -24,68 +24,62 @@ import org.cowboycoders.ant.messages.MessageException;
 import org.cowboycoders.ant.messages.MessageId;
 import org.cowboycoders.ant.messages.StandardMessage;
 
-public class LibConfigMessage extends StandardMessage
-{
+public class LibConfigMessage extends StandardMessage {
 
-	/**
-	 * Generate libconfig message
-	 * @param enableChannelId true if channel id info required
-	 * @param enableRssi true if rssi info is required
-	 * @param enableTimestamps true if timestamps are required
-	 */
-	public LibConfigMessage( boolean enableChannelId, boolean enableRssi, boolean enableTimestamps )
-	{
-		super( MessageId.LIB_CONFIG, new DataElement[]{
-				DataElement.FILLER_BYTE, DataElement.EXTENDED_MESSAGE_FLAG
-		} );
-		byte flag = generateFlag( enableChannelId, enableRssi, enableTimestamps );
-		setFlag( flag );
-	}
+    /**
+     * Generate libconfig message
+     *
+     * @param enableChannelId  true if channel id info required
+     * @param enableRssi       true if rssi info is required
+     * @param enableTimestamps true if timestamps are required
+     */
+    public LibConfigMessage(boolean enableChannelId, boolean enableRssi, boolean enableTimestamps) {
+        super(MessageId.LIB_CONFIG, new DataElement[]{
+                DataElement.FILLER_BYTE, DataElement.EXTENDED_MESSAGE_FLAG
+        });
+        byte flag = generateFlag(enableChannelId, enableRssi, enableTimestamps);
+        setFlag(flag);
+    }
 
-	/**
-	 * Useful for some chips which do not support rssi
-	 * @param enableChannelId true if channel id info required
-	 * @param enableTimestamps true if timestamps are required
-	 */
-	public LibConfigMessage( boolean enableChannelId, boolean enableTimestamps )
-	{
-		this( enableChannelId, false, enableTimestamps );
-	}
+    /**
+     * Useful for some chips which do not support rssi
+     *
+     * @param enableChannelId  true if channel id info required
+     * @param enableTimestamps true if timestamps are required
+     */
+    public LibConfigMessage(boolean enableChannelId, boolean enableTimestamps) {
+        this(enableChannelId, false, enableTimestamps);
+    }
 
-	@Override
-	public void validate() throws MessageException
-	{
-		// not needed as we do not receive these messages
-	}
+    @Override
+    public void validate() throws MessageException {
+        // not needed as we do not receive these messages
+    }
 
-	private void setFlag( byte flag )
-	{
-		setDataElement( DataElement.EXTENDED_MESSAGE_FLAG, (int) flag );
-	}
+    private void setFlag(byte flag) {
+        setDataElement(DataElement.EXTENDED_MESSAGE_FLAG, (int) flag);
+    }
 
-	/**
-	 * Generates a libconfig extended message flag
-	 * @param enableChannelId if require channel id info
-	 * @param enableRssi if require rssi info
-	 * @param enableTimestamps if require timestamp info
-	 * @return extended message flag
-	 */
-	private static byte generateFlag( boolean enableChannelId, boolean enableRssi, boolean enableTimestamps )
-	{
-		byte value = ExtendedMessage.ExtendedFlag.DISABLE.getMask();
-		if( enableChannelId )
-		{
-			value |= ExtendedMessage.ExtendedFlag.ENABLE_CHANNEL_ID.getMask();
-		}
-		if( enableRssi )
-		{
-			value |= ExtendedMessage.ExtendedFlag.ENABLE_RSSI_OUTPUT.getMask();
-		}
-		if( enableTimestamps )
-		{
-			value |= ExtendedMessage.ExtendedFlag.ENABLE_RX_TIMESTAMP.getMask();
-		}
-		return value;
-	}
+    /**
+     * Generates a libconfig extended message flag
+     *
+     * @param enableChannelId  if require channel id info
+     * @param enableRssi       if require rssi info
+     * @param enableTimestamps if require timestamp info
+     * @return extended message flag
+     */
+    private static byte generateFlag(boolean enableChannelId, boolean enableRssi, boolean enableTimestamps) {
+        byte value = ExtendedMessage.ExtendedFlag.DISABLE.getMask();
+        if (enableChannelId) {
+            value |= ExtendedMessage.ExtendedFlag.ENABLE_CHANNEL_ID.getMask();
+        }
+        if (enableRssi) {
+            value |= ExtendedMessage.ExtendedFlag.ENABLE_RSSI_OUTPUT.getMask();
+        }
+        if (enableTimestamps) {
+            value |= ExtendedMessage.ExtendedFlag.ENABLE_RX_TIMESTAMP.getMask();
+        }
+        return value;
+    }
 
 }

@@ -23,28 +23,24 @@ import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.utils.Containable;
 import org.cowboycoders.ant.utils.FixedSizeLifo;
 
-public class MessageBufferContainer<T extends Containable<? extends StandardMessage>> extends FixedSizeLifo<T>
-{
+public class MessageBufferContainer<T extends Containable<? extends StandardMessage>> extends FixedSizeLifo<T> {
 
-	private MessageCondition condition;
+    private MessageCondition condition;
 
-	public MessageBufferContainer( int maxSize, MessageCondition condition )
-	{
-		super( maxSize );
-		this.condition = condition;
-	}
+    public MessageBufferContainer(int maxSize, MessageCondition condition) {
+        super(maxSize);
+        this.condition = condition;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.cowboycoders.ant.events.FixedSizeBuffer#offer(java.lang.Object)
-	 */
-	@Override
-	public boolean offer( T e )
-	{
-		if( condition != null && !condition.test( e.unwrap() ) )
-		{
-			return false;
-		}
-		return super.offer( e );
-	}
+    /* (non-Javadoc)
+     * @see org.cowboycoders.ant.events.FixedSizeBuffer#offer(java.lang.Object)
+     */
+    @Override
+    public boolean offer(T e) {
+        if (condition != null && !condition.test(e.unwrap())) {
+            return false;
+        }
+        return super.offer(e);
+    }
 
 }

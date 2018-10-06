@@ -20,47 +20,43 @@ package org.cowboycoders.ant.utils;
 
 /**
  * Stores an object with a timestamp of creation
- * @author will
  *
  * @param <V> to document
+ * @author will
  */
-public class TimestampContainer<V> implements TimestampQueryable<V>
-{
+public class TimestampContainer<V> implements TimestampQueryable<V> {
 
-	V object;
-	long timestamp;
+    V object;
+    long timestamp;
 
-	public TimestampContainer( V object )
-	{
-		this.object = object;
-		this.timestamp = System.nanoTime();
-	}
+    public TimestampContainer(V object) {
+        this.object = object;
+        this.timestamp = System.nanoTime();
+    }
 
-	/**
-	 * Compare this with object timestamp
-	 * @return the current timestamp
-	 */
-	public static long getCurrentTimestamp()
-	{
-		return System.nanoTime();
-	}
+    /**
+     * Compare this with object timestamp
+     *
+     * @return the current timestamp
+     */
+    public static long getCurrentTimestamp() {
+        return System.nanoTime();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.cowboycoders.ant.utils.Containable#getObject()
-	 */
-	@Override
-	public V unwrap()
-	{
-		return object;
-	}
+    /* (non-Javadoc)
+     * @see org.cowboycoders.ant.utils.Containable#getObject()
+     */
+    @Override
+    public V unwrap() {
+        return object;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.cowboycoders.ant.utils.TimestampQueryable#getTimestamp()
-	 */
-	@Override
-	public long getTimestamp()
-	{
-		return timestamp;
-	}
+    /* (non-Javadoc)
+     * @see org.cowboycoders.ant.utils.TimestampQueryable#getTimestamp()
+     */
+    @Override
+    public long getTimestamp() {
+        return timestamp;
+    }
 
 }

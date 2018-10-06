@@ -18,8 +18,7 @@
  */
 package org.cowboycoders.ant;
 
-public interface NetworkListener
-{
+public interface NetworkListener {
 
-	public void onFree( Network network );
+    public void onFree(Network network);
 }

@@ -22,87 +22,77 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class SharedBuffer<V>
-{
+public class SharedBuffer<V> {
 
-	private int length;
+    private int length;
 
-	private Lock lock = new ReentrantLock();
+    private Lock lock = new ReentrantLock();
 
-	private Condition contentsChanged = lock.newCondition();
+    private Condition contentsChanged = lock.newCondition();
 
-	private FixedSizeQueue<V> msgBuffer = null;
+    private FixedSizeQueue<V> msgBuffer = null;
 
-	private boolean clearable = true;
+    private boolean clearable = true;
 
-	public SharedBuffer( int length )
-	{
-		this.length = length;
-		msgBuffer = new FixedSizeFifo<>( length );
+    public SharedBuffer(int length) {
+        this.length = length;
+        msgBuffer = new FixedSizeFifo<>(length);
 
-	}
+    }
 
-	public SharedBuffer( FixedSizeQueue<V> buffer )
-	{
-		this.length = buffer.size();
-		msgBuffer = buffer;
+    public SharedBuffer(FixedSizeQueue<V> buffer) {
+        this.length = buffer.size();
+        msgBuffer = buffer;
 
-	}
+    }
 
-	public boolean isClearable()
-	{
-		return clearable;
-	}
+    public boolean isClearable() {
+        return clearable;
+    }
 
-	public synchronized void setClearable( boolean flag )
-	{
-		this.clearable = flag;
-	}
+    public synchronized void setClearable(boolean flag) {
+        this.clearable = flag;
+    }
 
-	/**
-	 * Only clears if clearable flag set
-	 * @return false, if not clearable
-	 */
-	public synchronized boolean clear()
-	{
-		if( !isClearable() )
-		{
-			return false;
-		}
-		msgBuffer.clear();
-		return true;
-	}
+    /**
+     * Only clears if clearable flag set
+     *
+     * @return false, if not clearable
+     */
+    public synchronized boolean clear() {
+        if (!isClearable()) {
+            return false;
+        }
+        msgBuffer.clear();
+        return true;
+    }
 
-	/**
-	 * @return the length
-	 */
-	public int getLength()
-	{
-		return length;
-	}
+    /**
+     * @return the length
+     */
+    public int getLength() {
+        return length;
+    }
 
-	/**
-	 * @return the lock
-	 */
-	public Lock getLock()
-	{
-		return lock;
-	}
+    /**
+     * @return the lock
+     */
+    public Lock getLock() {
+        return lock;
+    }
 
-	/**
-	 * @return the contentsChanged
-	 */
-	public Condition getContentsChanged()
-	{
-		return contentsChanged;
-	}
+    /**
+     * @return the contentsChanged
+     */
+    public Condition getContentsChanged() {
+        return contentsChanged;
+    }
 
-	/**
-	 * @return the msgBuffer
-	 */
-	public FixedSizeQueue<V> getMsgBuffer()
-	{
-		return msgBuffer;
-	}
+    /**
+     * @return the msgBuffer
+     */
+    public FixedSizeQueue<V> getMsgBuffer() {
+        return msgBuffer;
+    }
 
 }

@@ -18,12 +18,11 @@
  */
 package org.cowboycoders.ant.utils;
 
-public interface TimestampQueryable<V> extends Containable<V>
-{
+public interface TimestampQueryable<V> extends Containable<V> {
 
-	/**
-	 * @return the timestamp
-	 */
-	public abstract long getTimestamp();
+    /**
+     * @return the timestamp
+     */
+    public abstract long getTimestamp();
 
 }

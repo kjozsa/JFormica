@@ -30,22 +30,19 @@ import org.cowboycoders.ant.messages.ValidationException;
  * @author will
  *
  */
-public class ChannelUnassignMessage extends ChannelMessage
-{
+public class ChannelUnassignMessage extends ChannelMessage {
 
-	/**
-	 * Unassigns an ant channel
-	 * @param channelNo channel number to unassign
-	 * @throws ValidationException if channelNo out of bounds
-	 */
-	public ChannelUnassignMessage( Integer channelNo ) throws ValidationException
-	{
-		super( MessageId.UNASSIGN_CHANNEL, channelNo );
-		if( channelNo == null )
-		{
-			channelNo = new Integer( 0 );
-		}
-		setChannelNumber( channelNo );
-	}
+    /**
+     * Unassigns an ant channel
+     * @param channelNo channel number to unassign
+     * @throws ValidationException if channelNo out of bounds
+     */
+    public ChannelUnassignMessage(Integer channelNo) throws ValidationException {
+        super(MessageId.UNASSIGN_CHANNEL, channelNo);
+        if (channelNo == null) {
+            channelNo = new Integer(0);
+        }
+        setChannelNumber(channelNo);
+    }
 
 }

@@ -21,12 +21,8 @@
  */
 package org.cowboycoders.ant.messages.config;
 
-import org.cowboycoders.ant.messages.ChannelMessage;
+import org.cowboycoders.ant.messages.*;
 import org.cowboycoders.ant.messages.Constants.DataElement;
-import org.cowboycoders.ant.messages.FatalMessageException;
-import org.cowboycoders.ant.messages.MessageExceptionFactory;
-import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.utils.ValidationUtils;
 
 /**
@@ -36,54 +32,47 @@ import org.cowboycoders.ant.utils.ValidationUtils;
  * @author will
  *
  */
-public class ChannelLowPrioritySearchTimeoutMessage extends ChannelMessage
-{
+public class ChannelLowPrioritySearchTimeoutMessage extends ChannelMessage {
 
-	private static final int MAX_SEARCH_TIMEOUT = 255;
+    private static final int MAX_SEARCH_TIMEOUT = 255;
 
-	/**
-	 * The additional elements we are adding to channelmessage
-	 */
-	private static DataElement[] additionalElements = new DataElement[]{
-			DataElement.SEARCH_TIMEOUT,
-			};
+    /**
+     * The additional elements we are adding to channelmessage
+     */
+    private static DataElement[] additionalElements = new DataElement[]{
+            DataElement.SEARCH_TIMEOUT,
+    };
 
-	/**
-	 *
-	 * @param channelNo target
-	 * @param timeout 2.5s for each count (255 infinite)
-	 */
-	public ChannelLowPrioritySearchTimeoutMessage( Integer channelNo, Integer timeout )
-	{
-		super( MessageId.SET_LP_SEARCH_TIMEOUT, channelNo, additionalElements );
-		try
-		{
-			setSearchTimeout( timeout );
-		}
-		catch( ValidationException e )
-		{
-			throw new FatalMessageException( "Error setting values", e );
-		}
-	}
+    /**
+     *
+     * @param channelNo target
+     * @param timeout 2.5s for each count (255 infinite)
+     */
+    public ChannelLowPrioritySearchTimeoutMessage(Integer channelNo, Integer timeout) {
+        super(MessageId.SET_LP_SEARCH_TIMEOUT, channelNo, additionalElements);
+        try {
+            setSearchTimeout(timeout);
+        } catch (ValidationException e) {
+            throw new FatalMessageException("Error setting values", e);
+        }
+    }
 
-	public ChannelLowPrioritySearchTimeoutMessage( Integer timeout )
-	{
-		this( 0, timeout );
-	}
+    public ChannelLowPrioritySearchTimeoutMessage(Integer timeout) {
+        this(0, timeout);
+    }
 
-	/**
-	 * Sets timeout
-	 * @param timeout to set
-	 * @throws ValidationException if out of limits
-	 */
-	private void setSearchTimeout( int timeout ) throws ValidationException
-	{
-		ValidationUtils.maxMinValidator( 0,
-		                                 MAX_SEARCH_TIMEOUT,
-		                                 timeout,
-		                                 MessageExceptionFactory.createMaxMinExceptionProducable( "Search timeout" ) );
-		setDataElement( DataElement.SEARCH_TIMEOUT, timeout );
+    /**
+     * Sets timeout
+     * @param timeout to set
+     * @throws ValidationException if out of limits
+     */
+    private void setSearchTimeout(int timeout) throws ValidationException {
+        ValidationUtils.maxMinValidator(0,
+                MAX_SEARCH_TIMEOUT,
+                timeout,
+                MessageExceptionFactory.createMaxMinExceptionProducable("Search timeout"));
+        setDataElement(DataElement.SEARCH_TIMEOUT, timeout);
 
-	}
+    }
 
 }

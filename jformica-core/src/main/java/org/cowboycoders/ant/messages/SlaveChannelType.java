@@ -25,42 +25,36 @@ import java.util.List;
  * Represents a slave channel configuration
  *
  * @author will
- *
  */
-public class SlaveChannelType extends ChannelType
-{
+public class SlaveChannelType extends ChannelType {
 
-	/**
-	 * Slave configuration with all options
-	 * @param shared if shared channel
-	 * @param rxOnly if receive only
-	 */
-	public SlaveChannelType( boolean shared, boolean rxOnly )
-	{
-		super( getChannelTypesArray( shared, rxOnly ) );
-	}
+    /**
+     * Slave configuration with all options
+     *
+     * @param shared if shared channel
+     * @param rxOnly if receive only
+     */
+    public SlaveChannelType(boolean shared, boolean rxOnly) {
+        super(getChannelTypesArray(shared, rxOnly));
+    }
 
-	/**
-	 * Default slave configuration : two-way, non-shared
-	 */
-	public SlaveChannelType()
-	{
-		super( getChannelTypesArray( false, false ) );
-	}
+    /**
+     * Default slave configuration : two-way, non-shared
+     */
+    public SlaveChannelType() {
+        super(getChannelTypesArray(false, false));
+    }
 
-	private static ChannelType.Types[] getChannelTypesArray( boolean shared, boolean rxOnly )
-	{
-		List<ChannelType.Types> types = new ArrayList<>();
-		types.add( ChannelType.Types.SLAVE );
-		if( shared )
-		{
-			types.add( ChannelType.Types.SHARED_RECEIVE );
-		}
-		if( rxOnly )
-		{
-			types.add( ChannelType.Types.ONEWAY_RECEIVE );
-		}
-		return types.toArray( new ChannelType.Types[0] );
-	}
+    private static ChannelType.Types[] getChannelTypesArray(boolean shared, boolean rxOnly) {
+        List<ChannelType.Types> types = new ArrayList<>();
+        types.add(ChannelType.Types.SLAVE);
+        if (shared) {
+            types.add(ChannelType.Types.SHARED_RECEIVE);
+        }
+        if (rxOnly) {
+            types.add(ChannelType.Types.ONEWAY_RECEIVE);
+        }
+        return types.toArray(new ChannelType.Types[0]);
+    }
 
 }

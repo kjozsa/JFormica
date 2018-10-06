@@ -23,14 +23,14 @@ import org.cowboycoders.ant.messages.StandardMessage;
 
 import java.util.List;
 
-public interface MessageSender
-{
+public interface MessageSender {
 
-	/**
-	 * Should send the message
-	 * @param msg may be null if submitting multiple messages
-	 * @return a list of messages sent
-	 */
-	public List<MessageMetaWrapper<? extends StandardMessage>> send( StandardMessage msg );
+    /**
+     * Should send the message
+     *
+     * @param msg may be null if submitting multiple messages
+     * @return a list of messages sent
+     */
+    public List<MessageMetaWrapper<? extends StandardMessage>> send(StandardMessage msg);
 
 }

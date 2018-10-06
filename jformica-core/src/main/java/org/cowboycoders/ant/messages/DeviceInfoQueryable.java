@@ -20,42 +20,46 @@ package org.cowboycoders.ant.messages;
 
 import org.cowboycoders.ant.ChannelId;
 
-public interface DeviceInfoQueryable
-{
+public interface DeviceInfoQueryable {
 
-	/**
-	 * Gets the currently set device number
-	 * @return the {@code Integer} value or null if not set
-	 */
-	public abstract Integer getDeviceNumber();
+    /**
+     * Gets the currently set device number
+     *
+     * @return the {@code Integer} value or null if not set
+     */
+    public abstract Integer getDeviceNumber();
 
-	/**
-	 * Gets the currently set device type
-	 * @return the {@code Integer} value or null if not set
-	 */
-	public abstract Byte getDeviceType();
+    /**
+     * Gets the currently set device type
+     *
+     * @return the {@code Integer} value or null if not set
+     */
+    public abstract Byte getDeviceType();
 
-	/**
-	 * Gets the currently set transmission type
-	 * @return the {@code Integer} value or null if not set
-	 */
-	public abstract Byte getTransmissionType();
+    /**
+     * Gets the currently set transmission type
+     *
+     * @return the {@code Integer} value or null if not set
+     */
+    public abstract Byte getTransmissionType();
 
-	/**
-	 * Gets device info in form of a {@link ChannelId}
-	 * @return the {@link ChannelId} containing the device settings
-	 */
+    /**
+     * Gets device info in form of a {@link ChannelId}
+     * @return the {@link ChannelId} containing the device settings
+     */
 
-	/**
-	 * Pairing flag setting
-	 * @return true if pairing flag is set, false if it is not, null if not available
-	 */
-	public abstract Boolean isPairingFlagSet();
+    /**
+     * Pairing flag setting
+     *
+     * @return true if pairing flag is set, false if it is not, null if not available
+     */
+    public abstract Boolean isPairingFlagSet();
 
-	/**
-	 * ChannelID info associated with this {@code Object}
-	 * @return the {@link ChannelId} info associated with this {@code Object}
-	 */
-	public abstract ChannelId getChannelId();
+    /**
+     * ChannelID info associated with this {@code Object}
+     *
+     * @return the {@link ChannelId} info associated with this {@code Object}
+     */
+    public abstract ChannelId getChannelId();
 
 }

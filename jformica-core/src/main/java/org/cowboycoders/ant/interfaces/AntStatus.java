@@ -18,7 +18,6 @@
  */
 package org.cowboycoders.ant.interfaces;
 
-public enum AntStatus
-{
-	ENABLED, ENABLING, DISABLED, DISABLING, RESET, UNKNOWN,
+public enum AntStatus {
+    ENABLED, ENABLING, DISABLED, DISABLING, RESET, UNKNOWN,
 }

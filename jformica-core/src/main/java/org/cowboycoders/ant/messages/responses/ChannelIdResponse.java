@@ -28,15 +28,13 @@ import org.cowboycoders.ant.messages.config.ChannelIdMessage;
  * @author will
  *
  */
-public class ChannelIdResponse extends ChannelIdMessage
-{
+public class ChannelIdResponse extends ChannelIdMessage {
 
-	/**
-	 * populate with decode
-	 */
-	public ChannelIdResponse()
-	{
-		super( 0, 0, 0, 0, false );
-	}
+    /**
+     * populate with decode
+     */
+    public ChannelIdResponse() {
+        super(0, 0, 0, 0, false);
+    }
 
 }

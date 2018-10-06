@@ -22,13 +22,7 @@
 package org.cowboycoders.ant.messages.data;
 
 import org.cowboycoders.ant.ChannelId;
-import org.cowboycoders.ant.messages.DeviceInfoQueryable;
-import org.cowboycoders.ant.messages.DeviceInfoSettable;
-import org.cowboycoders.ant.messages.ExtendedMessage;
-import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.RssiInfoQueryable;
-import org.cowboycoders.ant.messages.TimestampInfoQueryable;
-import org.cowboycoders.ant.messages.ValidationException;
+import org.cowboycoders.ant.messages.*;
 
 /**
  * extended burst data
@@ -36,107 +30,90 @@ import org.cowboycoders.ant.messages.ValidationException;
  *
  */
 public class ExtendedBurstDataMessage extends BurstDataMessage
-		implements DeviceInfoQueryable, DeviceInfoSettable, RssiInfoQueryable, TimestampInfoQueryable
-{
+        implements DeviceInfoQueryable, DeviceInfoSettable, RssiInfoQueryable, TimestampInfoQueryable {
 
-	public ExtendedBurstDataMessage()
-	{
-		this( 0 );
-	}
+    public ExtendedBurstDataMessage() {
+        this(0);
+    }
 
-	public ExtendedBurstDataMessage( int channel )
-	{
-		super( new ExtendedMessage(), MessageId.BURST_DATA, channel );
-	}
+    public ExtendedBurstDataMessage(int channel) {
+        super(new ExtendedMessage(), MessageId.BURST_DATA, channel);
+    }
 
-	@Override
-	public Integer getRxTimeStamp()
-	{
-		return ((ExtendedMessage) getBackendMessage()).getRxTimeStamp();
-	}
+    @Override
+    public Integer getRxTimeStamp() {
+        return ((ExtendedMessage) getBackendMessage()).getRxTimeStamp();
+    }
 
-	@Override
-	public Byte getRssiMeasurementType()
-	{
-		return ((ExtendedMessage) getBackendMessage()).getRssiMeasurementType();
-	}
+    @Override
+    public Byte getRssiMeasurementType() {
+        return ((ExtendedMessage) getBackendMessage()).getRssiMeasurementType();
+    }
 
-	@Override
-	public Byte getRssiThresholdConfig()
-	{
-		return ((ExtendedMessage) getBackendMessage()).getRssiThresholdConfig();
-	}
+    @Override
+    public Byte getRssiThresholdConfig() {
+        return ((ExtendedMessage) getBackendMessage()).getRssiThresholdConfig();
+    }
 
-	@Override
-	public Byte getRssiValue()
-	{
-		return ((ExtendedMessage) getBackendMessage()).getRssiValue();
-	}
+    @Override
+    public Byte getRssiValue() {
+        return ((ExtendedMessage) getBackendMessage()).getRssiValue();
+    }
 
-	@Override
-	public Integer getDeviceNumber()
-	{
-		return ((ExtendedMessage) getBackendMessage()).getDeviceNumber();
-	}
+    @Override
+    public Integer getDeviceNumber() {
+        return ((ExtendedMessage) getBackendMessage()).getDeviceNumber();
+    }
 
-	@Override
-	public Byte getDeviceType()
-	{
-		return ((ExtendedMessage) getBackendMessage()).getDeviceType();
-	}
+    @Override
+    public Byte getDeviceType() {
+        return ((ExtendedMessage) getBackendMessage()).getDeviceType();
+    }
 
-	@Override
-	public Byte getTransmissionType()
-	{
-		return ((ExtendedMessage) getBackendMessage()).getTransmissionType();
-	}
+    @Override
+    public Byte getTransmissionType() {
+        return ((ExtendedMessage) getBackendMessage()).getTransmissionType();
+    }
 
-	@Override
-	public void setTransmissionType( int transmissionType ) throws ValidationException
-	{
-		((ExtendedMessage) getBackendMessage()).setTransmissionType( transmissionType );
-	}
+    @Override
+    public void setTransmissionType(int transmissionType) throws ValidationException {
+        ((ExtendedMessage) getBackendMessage()).setTransmissionType(transmissionType);
+    }
 
-	@Override
-	public Boolean isPairingFlagSet()
-	{
-		return ((ExtendedMessage) getBackendMessage()).isPairingFlagSet();
-	}
+    @Override
+    public Boolean isPairingFlagSet() {
+        return ((ExtendedMessage) getBackendMessage()).isPairingFlagSet();
+    }
 
-	public ChannelId getChannelId()
-	{
-		ChannelId id = ChannelId.Builder.newInstance()
-		                                .setDeviceNumber( getDeviceNumber() )
-		                                .setDeviceType( getDeviceType() )
-		                                .setTransmissonType( getTransmissionType() )
-		                                .setPairingFlag( isPairingFlagSet() )
-		                                .build();
-		return id;
-	}
+    public ChannelId getChannelId() {
+        ChannelId id = ChannelId.Builder.newInstance()
+                .setDeviceNumber(getDeviceNumber())
+                .setDeviceType(getDeviceType())
+                .setTransmissonType(getTransmissionType())
+                .setPairingFlag(isPairingFlagSet())
+                .build();
+        return id;
+    }
 
-	public void setChannelId( ChannelId id )
-	{
-		((ExtendedMessage) getBackendMessage()).setChannelId( id );
-	}
+    public void setChannelId(ChannelId id) {
+        ((ExtendedMessage) getBackendMessage()).setChannelId(id);
+    }
 
-	@Override
-	public void setPairingFlag( boolean pair )
-	{
-		((ExtendedMessage) getBackendMessage()).setPairingFlag( pair );
+    @Override
+    public void setPairingFlag(boolean pair) {
+        ((ExtendedMessage) getBackendMessage()).setPairingFlag(pair);
 
-	}
+    }
 
-	@Override
-	public void setDeviceType( int deviceType ) throws ValidationException
-	{
-		((ExtendedMessage) getBackendMessage()).setDeviceType( deviceType );
+    @Override
+    public void setDeviceType(int deviceType) throws ValidationException {
+        ((ExtendedMessage) getBackendMessage()).setDeviceType(deviceType);
 
-	}
+    }
 
-	@Override
-	public void setDeviceNumber( int deviceId ) throws ValidationException
-	{
-		((ExtendedMessage) getBackendMessage()).setDeviceNumber( deviceId );
-	}
+    @Override
+    public void setDeviceNumber(int deviceId) throws ValidationException {
+        ((ExtendedMessage) getBackendMessage()).setDeviceNumber(deviceId);
+    }
 
 }

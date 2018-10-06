@@ -20,47 +20,41 @@
 package org.cowboycoders.ant.utils;
 
 import org.cowboycoders.ant.defines.AntDefine;
-import org.junit.*;
+import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class MiscUtilsTest
-{
+public class MiscUtilsTest {
 
-	public static List<byte[]> splitBurst( byte[] data )
-	{
-		return ByteUtils.splitByteArray( data, AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE );
-	}
+    public static List<byte[]> splitBurst(byte[] data) {
+        return ByteUtils.splitByteArray(data, AntDefine.ANT_STANDARD_DATA_PAYLOAD_SIZE);
+    }
 
-	@Test
-	public void testSplitBurst()
-	{
-		assertEquals( splitBurst( new byte[0] ).size(), 1 );
-		assertEquals( splitBurst( new byte[8] ).size(), 1 );
-		assertEquals( splitBurst( new byte[16] ).size(), 2 );
-		assertEquals( splitBurst( new byte[25] ).size(), 4 );
+    @Test
+    public void testSplitBurst() {
+        assertEquals(splitBurst(new byte[0]).size(), 1);
+        assertEquals(splitBurst(new byte[8]).size(), 1);
+        assertEquals(splitBurst(new byte[16]).size(), 2);
+        assertEquals(splitBurst(new byte[25]).size(), 4);
 
-		int length = 25;
-		byte[] test = new byte[length];
-		for( int i = 0; i < length; i++ )
-		{
-			test[i] = (byte) i;
-		}
+        int length = 25;
+        byte[] test = new byte[length];
+        for (int i = 0; i < length; i++) {
+            test[i] = (byte) i;
+        }
 
-		List<byte[]> split = splitBurst( test );
+        List<byte[]> split = splitBurst(test);
 
-		for( byte[] a : split )
-		{
-			for( byte b : a )
-			{
-				System.out.printf( "%d ", b );
-			}
+        for (byte[] a : split) {
+            for (byte b : a) {
+                System.out.printf("%d ", b);
+            }
 
-			System.out.printf( "\n" );
-		}
+            System.out.printf("\n");
+        }
 
-	}
+    }
 
 }

@@ -26,25 +26,24 @@ import java.util.concurrent.locks.ReentrantLock;
  * Used to return a lock to a calling thread. Should check returnLock for null,
  * if null : lockAvailable.await(),
  * else: return the the returnLock using  a Future
- * @author will
  *
+ * @author will
  */
-public class LockExchangeContainer
-{
+public class LockExchangeContainer {
 
-	/**
-	 * locks this class
-	 */
-	Lock lock = new ReentrantLock();
+    /**
+     * locks this class
+     */
+    Lock lock = new ReentrantLock();
 
-	/**
-	 * signalled when a lock has been added to this object
-	 */
-	Condition lockAvailable = lock.newCondition();
+    /**
+     * signalled when a lock has been added to this object
+     */
+    Condition lockAvailable = lock.newCondition();
 
-	/**
-	 * the lock that is exchanged
-	 */
-	Lock returnLock;
+    /**
+     * the lock that is exchanged
+     */
+    Lock returnLock;
 
 }

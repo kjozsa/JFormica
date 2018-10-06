@@ -29,48 +29,43 @@ package org.cowboycoders.ant.messages;
  * @author will
  *
  */
-public class FatalMessageException extends RuntimeException
-{
+public class FatalMessageException extends RuntimeException {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 735718079342651690L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 735718079342651690L;
 
-	/**
-	 *
-	 */
-	public FatalMessageException()
-	{
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     *
+     */
+    public FatalMessageException() {
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param detailMessage to document
-	 */
-	public FatalMessageException( String detailMessage )
-	{
-		super( detailMessage );
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param detailMessage to document
+     */
+    public FatalMessageException(String detailMessage) {
+        super(detailMessage);
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param throwable to document
-	 */
-	public FatalMessageException( Throwable throwable )
-	{
-		super( throwable );
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param throwable to document
+     */
+    public FatalMessageException(Throwable throwable) {
+        super(throwable);
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param detailMessage to document
-	 * @param throwable to document
-	 */
-	public FatalMessageException( String detailMessage, Throwable throwable )
-	{
-		super( detailMessage, throwable );
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param detailMessage to document
+     * @param throwable to document
+     */
+    public FatalMessageException(String detailMessage, Throwable throwable) {
+        super(detailMessage, throwable);
+        // TODO Auto-generated constructor stub
+    }
 
 }

@@ -20,15 +20,13 @@ package org.cowboycoders.ant.utils;
 
 /**
  * A hotchpotch of utils
- * @author will
  *
+ * @author will
  */
-public class MiscUtils
-{
+public class MiscUtils {
 
-	private MiscUtils()
-	{
+    private MiscUtils() {
 
-	}
+    }
 
 }

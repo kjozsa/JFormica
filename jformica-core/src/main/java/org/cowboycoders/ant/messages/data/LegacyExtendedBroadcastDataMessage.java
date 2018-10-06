@@ -19,100 +19,83 @@
 package org.cowboycoders.ant.messages.data;
 
 import org.cowboycoders.ant.ChannelId;
-import org.cowboycoders.ant.messages.DeviceInfoQueryable;
-import org.cowboycoders.ant.messages.DeviceInfoSettable;
-import org.cowboycoders.ant.messages.LegacyMessage;
-import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.ValidationException;
+import org.cowboycoders.ant.messages.*;
 
 /**
  * Legacy extended broadcast data message
- * @author will
  *
+ * @author will
  */
-public class LegacyExtendedBroadcastDataMessage extends BroadcastDataMessage implements DeviceInfoQueryable, DeviceInfoSettable
-{
+public class LegacyExtendedBroadcastDataMessage extends BroadcastDataMessage implements DeviceInfoQueryable, DeviceInfoSettable {
 
-	public LegacyExtendedBroadcastDataMessage()
-	{
-		this( 0 );
-	}
+    public LegacyExtendedBroadcastDataMessage() {
+        this(0);
+    }
 
-	public LegacyExtendedBroadcastDataMessage( int channel )
-	{
-		super( new LegacyMessage(), MessageId.EXT_BROADCAST_DATA, channel );
-	}
+    public LegacyExtendedBroadcastDataMessage(int channel) {
+        super(new LegacyMessage(), MessageId.EXT_BROADCAST_DATA, channel);
+    }
 
-	@Override
-	public Integer getDeviceNumber()
-	{
-		return ((LegacyMessage) getBackendMessage()).getDeviceNumber();
-	}
+    @Override
+    public Integer getDeviceNumber() {
+        return ((LegacyMessage) getBackendMessage()).getDeviceNumber();
+    }
 
-	@Override
-	public Byte getDeviceType()
-	{
-		return ((LegacyMessage) getBackendMessage()).getDeviceType();
-	}
+    @Override
+    public Byte getDeviceType() {
+        return ((LegacyMessage) getBackendMessage()).getDeviceType();
+    }
 
-	@Override
-	public Byte getTransmissionType()
-	{
-		return ((LegacyMessage) getBackendMessage()).getDeviceType();
-	}
+    @Override
+    public Byte getTransmissionType() {
+        return ((LegacyMessage) getBackendMessage()).getDeviceType();
+    }
 
-	@Override
-	public void setTransmissionType( int transmissionType ) throws ValidationException
-	{
-		((LegacyMessage) getBackendMessage()).setTransmissionType( transmissionType );
+    @Override
+    public void setTransmissionType(int transmissionType) throws ValidationException {
+        ((LegacyMessage) getBackendMessage()).setTransmissionType(transmissionType);
 
-	}
+    }
 
-	@Override
-	public Boolean isPairingFlagSet()
-	{
-		return ((LegacyMessage) getBackendMessage()).isPairingFlagSet();
-	}
+    @Override
+    public Boolean isPairingFlagSet() {
+        return ((LegacyMessage) getBackendMessage()).isPairingFlagSet();
+    }
 
-	@Override
-	public ChannelId getChannelId()
-	{
-		ChannelId id = ChannelId.Builder.newInstance()
-		                                .setDeviceNumber( getDeviceNumber() )
-		                                .setDeviceType( getDeviceType() )
-		                                .setTransmissonType( getTransmissionType() )
-		                                .setPairingFlag( isPairingFlagSet() )
-		                                .build();
-		return id;
-	}
+    @Override
+    public ChannelId getChannelId() {
+        ChannelId id = ChannelId.Builder.newInstance()
+                .setDeviceNumber(getDeviceNumber())
+                .setDeviceType(getDeviceType())
+                .setTransmissonType(getTransmissionType())
+                .setPairingFlag(isPairingFlagSet())
+                .build();
+        return id;
+    }
 
-	@Override
-	public void setChannelId( ChannelId id )
-	{
-		setDeviceNumber( id.getDeviceNumber() );
-		setDeviceType( id.getDeviceType() );
-		setTransmissionType( id.getTransmissonType() );
-		setPairingFlag( id.isPairingFlagSet() );
-	}
+    @Override
+    public void setChannelId(ChannelId id) {
+        setDeviceNumber(id.getDeviceNumber());
+        setDeviceType(id.getDeviceType());
+        setTransmissionType(id.getTransmissonType());
+        setPairingFlag(id.isPairingFlagSet());
+    }
 
-	@Override
-	public void setPairingFlag( boolean pair )
-	{
-		((LegacyMessage) getBackendMessage()).setPairingFlag( pair );
-	}
+    @Override
+    public void setPairingFlag(boolean pair) {
+        ((LegacyMessage) getBackendMessage()).setPairingFlag(pair);
+    }
 
-	@Override
-	public void setDeviceType( int deviceType ) throws ValidationException
-	{
-		((LegacyMessage) getBackendMessage()).setDeviceType( deviceType );
+    @Override
+    public void setDeviceType(int deviceType) throws ValidationException {
+        ((LegacyMessage) getBackendMessage()).setDeviceType(deviceType);
 
-	}
+    }
 
-	@Override
-	public void setDeviceNumber( int deviceId ) throws ValidationException
-	{
-		((LegacyMessage) getBackendMessage()).setDeviceNumber( deviceId );
+    @Override
+    public void setDeviceNumber(int deviceId) throws ValidationException {
+        ((LegacyMessage) getBackendMessage()).setDeviceNumber(deviceId);
 
-	}
+    }
 
 }

@@ -23,18 +23,16 @@ import org.cowboycoders.ant.messages.MessageId;
 
 /**
  * Opens a channel
- * @author will
  *
+ * @author will
  */
-public class ChannelOpenMessage extends ChannelMessage
-{
+public class ChannelOpenMessage extends ChannelMessage {
 
-	/**
-	 * @param channelNumber of channel to open
-	 */
-	public ChannelOpenMessage( Integer channelNumber )
-	{
-		super( MessageId.OPEN_CHANNEL, channelNumber );
-	}
+    /**
+     * @param channelNumber of channel to open
+     */
+    public ChannelOpenMessage(Integer channelNumber) {
+        super(MessageId.OPEN_CHANNEL, channelNumber);
+    }
 
 }

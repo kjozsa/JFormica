@@ -23,46 +23,42 @@ import org.cowboycoders.ant.utils.ValidationUtils.MaxMinExceptionProducer;
 
 /**
  * Creates commonly used exceptions
- * @author will
  *
+ * @author will
  */
-public class MessageExceptionFactory
-{
+public class MessageExceptionFactory {
 
-	private MessageExceptionFactory()
-	{
-	}
+    private MessageExceptionFactory() {
+    }
 
-	/**
-	 * Creates a MessageException with a message suitable for max-min validation
-	 * @param identifer the name of the variable to be tested
-	 * @param min minimum allowable value of variable
-	 * @param max allowable value of variable
-	 * @param value value being checked
-	 * @return the {@code ValidationException}
-	 */
-	public static ValidationException createMaxMinException( String identifer, int min, int max, int value )
-	{
-		return new ValidationException( identifer + " must be between " + min + " and " + max + ". Actual value: " + value );
-	}
+    /**
+     * Creates a MessageException with a message suitable for max-min validation
+     *
+     * @param identifer the name of the variable to be tested
+     * @param min       minimum allowable value of variable
+     * @param max       allowable value of variable
+     * @param value     value being checked
+     * @return the {@code ValidationException}
+     */
+    public static ValidationException createMaxMinException(String identifer, int min, int max, int value) {
+        return new ValidationException(identifer + " must be between " + min + " and " + max + ". Actual value: " + value);
+    }
 
-	/**
-	 * A factory which produces {@code ValidationUtils.MaxMinExceptionProducable}s
-	 * @param identifier variableName being tested
-	 * @return the created factory
-	 */
-	public static ValidationUtils.MaxMinExceptionProducer<ValidationException> createMaxMinExceptionProducable( final String identifier )
-	{
-		return new MaxMinExceptionProducer<ValidationException>()
-		{
+    /**
+     * A factory which produces {@code ValidationUtils.MaxMinExceptionProducable}s
+     *
+     * @param identifier variableName being tested
+     * @return the created factory
+     */
+    public static ValidationUtils.MaxMinExceptionProducer<ValidationException> createMaxMinExceptionProducable(final String identifier) {
+        return new MaxMinExceptionProducer<ValidationException>() {
 
-			@Override
-			public ValidationException getMaxMinException( int min, int max, int value )
-			{
-				return createMaxMinException( identifier, min, max, value );
-			}
+            @Override
+            public ValidationException getMaxMinException(int min, int max, int value) {
+                return createMaxMinException(identifier, min, max, value);
+            }
 
-		};
-	}
+        };
+    }
 
 }

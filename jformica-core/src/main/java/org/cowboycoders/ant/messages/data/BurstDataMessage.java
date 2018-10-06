@@ -29,22 +29,18 @@ import org.cowboycoders.ant.messages.MessageId;
  * @author will
  *
  */
-public class BurstDataMessage extends BurstData
-{
+public class BurstDataMessage extends BurstData {
 
-	public BurstDataMessage( Integer channelNo )
-	{
-		super( new Message(), MessageId.BURST_DATA, channelNo );
-	}
+    public BurstDataMessage(Integer channelNo) {
+        super(new Message(), MessageId.BURST_DATA, channelNo);
+    }
 
-	public BurstDataMessage()
-	{
-		super( new Message(), MessageId.BURST_DATA, 0 );
-	}
+    public BurstDataMessage() {
+        super(new Message(), MessageId.BURST_DATA, 0);
+    }
 
-	protected BurstDataMessage( Message backend, MessageId id, Integer channelNo )
-	{
-		super( backend, id, channelNo );
-	}
+    protected BurstDataMessage(Message backend, MessageId id, Integer channelNo) {
+        super(backend, id, channelNo);
+    }
 
 }

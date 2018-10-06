@@ -19,21 +19,19 @@
 
 package org.cowboycoders.ant.messages.data;
 
-import org.junit.*;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class LegacyExtendedBroadcastDataMessageTest
-{
+public class LegacyExtendedBroadcastDataMessageTest {
 
-	@Test
-	public void test()
-	{
-		LegacyExtendedBroadcastDataMessage msg = new LegacyExtendedBroadcastDataMessage();
+    @Test
+    public void test() {
+        LegacyExtendedBroadcastDataMessage msg = new LegacyExtendedBroadcastDataMessage();
 
-		msg.setDeviceNumber( 5 );
+        msg.setDeviceNumber(5);
 
-		assertEquals( (int) msg.getDeviceNumber(), 5 );
-	}
+        assertEquals((int) msg.getDeviceNumber(), 5);
+    }
 
 }

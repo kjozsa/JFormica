@@ -26,43 +26,35 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Lock;
 
-public class LockExchanger implements Callable<Lock>
-{
-	private static final Logger log = LoggerFactory.getLogger( LockExchanger.class );
+public class LockExchanger implements Callable<Lock> {
+    private static final Logger log = LoggerFactory.getLogger(LockExchanger.class);
 
-	private TimeUnit timeoutUnit;
-	private long timeout;
-	private LockExchangeContainer container;
+    private TimeUnit timeoutUnit;
+    private long timeout;
+    private LockExchangeContainer container;
 
-	public LockExchanger( LockExchangeContainer container, long timeout, TimeUnit unit )
-	{
-		this.timeout = timeout;
-		this.timeoutUnit = unit;
-		this.container = container;
-	}
+    public LockExchanger(LockExchangeContainer container, long timeout, TimeUnit unit) {
+        this.timeout = timeout;
+        this.timeoutUnit = unit;
+        this.container = container;
+    }
 
-	@Override
-	public Lock call() throws InterruptedException, TimeoutException
-	{
-		try
-		{
-			container.lock.lock();
-			final long timeoutNano = TimeUnit.NANOSECONDS.convert( timeout, timeoutUnit );
-			final long initialTimeStamp = System.nanoTime();
-			while( container.returnLock == null )
-			{
-				long timeoutRemaining = timeoutNano - (System.nanoTime() - initialTimeStamp);
-				if( !(container.lockAvailable.await( timeoutRemaining, TimeUnit.NANOSECONDS )) )
-				{
-					throw new TimeoutException( "timeout waiting for exchanged lock" );
-				}
-			}
-			log.trace( "call() - returning" );
-			return container.returnLock;
-		}
-		finally
-		{
-			container.lock.unlock();
-		}
-	}
+    @Override
+    public Lock call() throws InterruptedException, TimeoutException {
+        try {
+            container.lock.lock();
+            final long timeoutNano = TimeUnit.NANOSECONDS.convert(timeout, timeoutUnit);
+            final long initialTimeStamp = System.nanoTime();
+            while (container.returnLock == null) {
+                long timeoutRemaining = timeoutNano - (System.nanoTime() - initialTimeStamp);
+                if (!(container.lockAvailable.await(timeoutRemaining, TimeUnit.NANOSECONDS))) {
+                    throw new TimeoutException("timeout waiting for exchanged lock");
+                }
+            }
+            log.trace("call() - returning");
+            return container.returnLock;
+        } finally {
+            container.lock.unlock();
+        }
+    }
 }

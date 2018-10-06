@@ -20,11 +20,10 @@ package org.cowboycoders.ant.messages.responses;
 
 /**
  * Categories to subdivide the {@code Capability} enum
- * @author will
  *
+ * @author will
  */
-public enum CapabilityCategory
-{
-	STANDARD, ADVANCED, ADVANCED2, ADVANCED3,
+public enum CapabilityCategory {
+    STANDARD, ADVANCED, ADVANCED2, ADVANCED3,
 }
 

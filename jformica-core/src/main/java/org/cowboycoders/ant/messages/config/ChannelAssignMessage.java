@@ -29,116 +29,102 @@ import java.util.Set;
 
 /**
  * Channel assignment message
- * @author will
  *
+ * @author will
  */
-public class ChannelAssignMessage extends ChannelMessage
-{
+public class ChannelAssignMessage extends ChannelMessage {
 
-	/**
-	 * The additional elements we are adding to channelmessage
-	 */
-	private static DataElement[] additionalElements = new DataElement[]{
-			DataElement.CHANNEL_TYPE, DataElement.NETWORK_NUMBER,
-			//DataElements.EXTENDED_ASSIGNMENT,
-	};
-	private ChannelType type;
+    /**
+     * The additional elements we are adding to channelmessage
+     */
+    private static DataElement[] additionalElements = new DataElement[]{
+            DataElement.CHANNEL_TYPE, DataElement.NETWORK_NUMBER,
+            //DataElements.EXTENDED_ASSIGNMENT,
+    };
+    private ChannelType type;
 
-	/**
-	 * Possible extended assignment options
-	 * @author will
-	 *
-	 */
-	public enum ExtendedAssignment
-	{
-		BACKGROUND_SCANNING_ENABLE( 0x01 ), FREQUENCY_AGILITY_ENABLE( 0x04 ),;
+    /**
+     * Possible extended assignment options
+     *
+     * @author will
+     */
+    public enum ExtendedAssignment {
+        BACKGROUND_SCANNING_ENABLE(0x01), FREQUENCY_AGILITY_ENABLE(0x04),
+        ;
 
-		/**
-		 * value in the ant spec
-		 */
-		public int code;
+        /**
+         * value in the ant spec
+         */
+        public int code;
 
-		ExtendedAssignment( int code )
-		{
-			this.code = code;
-		}
-	}
+        ExtendedAssignment(int code) {
+            this.code = code;
+        }
+    }
 
-	/**
-	 * Assignment message - multiple extended assignment options
-	 * @param networkNo network we are assigning
-	 * @param type type of channel required
-	 * @param extended extended assignment options
-	 * @throws ValidationException on error constructing this message
-	 */
-	public ChannelAssignMessage( Integer networkNo, ChannelType type, Set<ExtendedAssignment> extended )
-	{
-		super( MessageId.ASSIGN_CHANNEL, 0, additionalElements );
-		this.type = type;
-		setChannelType( type );
-		setExtendedAssignment( extended );
-		setNetworkNumber( networkNo );
+    /**
+     * Assignment message - multiple extended assignment options
+     *
+     * @param networkNo network we are assigning
+     * @param type      type of channel required
+     * @param extended  extended assignment options
+     * @throws ValidationException on error constructing this message
+     */
+    public ChannelAssignMessage(Integer networkNo, ChannelType type, Set<ExtendedAssignment> extended) {
+        super(MessageId.ASSIGN_CHANNEL, 0, additionalElements);
+        this.type = type;
+        setChannelType(type);
+        setExtendedAssignment(extended);
+        setNetworkNumber(networkNo);
 
-	}
+    }
 
-	public ChannelAssignMessage( Integer networkNo, ChannelType type )
-	{
-		this( networkNo, type, generateExtendedSet( new ExtendedAssignment[0] ) );
-	}
+    public ChannelAssignMessage(Integer networkNo, ChannelType type) {
+        this(networkNo, type, generateExtendedSet(new ExtendedAssignment[0]));
+    }
 
-	public ChannelAssignMessage( ChannelType type )
-	{
-		this( 0, type, generateExtendedSet( new ExtendedAssignment[0] ) );
-	}
+    public ChannelAssignMessage(ChannelType type) {
+        this(0, type, generateExtendedSet(new ExtendedAssignment[0]));
+    }
 
-	public ChannelAssignMessage( Integer networkNo, ChannelType type, ExtendedAssignment... extended )
-	{
-		this( networkNo, type, generateExtendedSet( extended ) );
-	}
+    public ChannelAssignMessage(Integer networkNo, ChannelType type, ExtendedAssignment... extended) {
+        this(networkNo, type, generateExtendedSet(extended));
+    }
 
-	public void setNetworkNumber( int network )
-	{
-		setDataElement( DataElement.NETWORK_NUMBER, network );
-	}
+    public void setNetworkNumber(int network) {
+        setDataElement(DataElement.NETWORK_NUMBER, network);
+    }
 
-	public ChannelType getType()
-	{
-		return type;
-	}
+    public ChannelType getType() {
+        return type;
+    }
 
-	private static Set<ExtendedAssignment> generateExtendedSet( ExtendedAssignment[] extended )
-	{
-		Set<ExtendedAssignment> ea = new HashSet<>();
-		if( extended != null )
-		{
-			for( ExtendedAssignment e : extended )
-			{
-				ea.add( e );
-			}
-		}
-		return ea;
-	}
+    private static Set<ExtendedAssignment> generateExtendedSet(ExtendedAssignment[] extended) {
+        Set<ExtendedAssignment> ea = new HashSet<>();
+        if (extended != null) {
+            for (ExtendedAssignment e : extended) {
+                ea.add(e);
+            }
+        }
+        return ea;
+    }
 
-	private void setExtendedAssignment( Set<ExtendedAssignment> extended )
-	{
-		if( extended == null || extended.size() == 0 )
-		{
-			return;
-		}
-		// this is optional so, we didn't add it on the constructor
-		addOptionalDataElement( DataElement.EXTENDED_ASSIGNMENT );
-		int code = 0;
-		for( ExtendedAssignment ea : extended )
-		{
-			code |= ea.code;
-		}
-		setDataElement( DataElement.EXTENDED_ASSIGNMENT, code );
+    private void setExtendedAssignment(Set<ExtendedAssignment> extended) {
+        if (extended == null || extended.size() == 0) {
+            return;
+        }
+        // this is optional so, we didn't add it on the constructor
+        addOptionalDataElement(DataElement.EXTENDED_ASSIGNMENT);
+        int code = 0;
+        for (ExtendedAssignment ea : extended) {
+            code |= ea.code;
+        }
+        setDataElement(DataElement.EXTENDED_ASSIGNMENT, code);
 
-	}
+    }
 
-	private void setChannelType( ChannelType type )
-	{
-		setDataElement( DataElement.CHANNEL_TYPE, type.getChannelTypeCode() );
-	}
+    private void setChannelType(ChannelType type) {
+        setDataElement(DataElement.CHANNEL_TYPE, type.getChannelTypeCode());
+    }
 
 }

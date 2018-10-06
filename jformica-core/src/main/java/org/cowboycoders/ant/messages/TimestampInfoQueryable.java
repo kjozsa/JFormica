@@ -18,13 +18,13 @@
  */
 package org.cowboycoders.ant.messages;
 
-public interface TimestampInfoQueryable
-{
+public interface TimestampInfoQueryable {
 
-	/**
-	 * Get the the timestamp when this message was received
-	 * @return the timestamp, or null if not included
-	 */
-	public abstract Integer getRxTimeStamp();
+    /**
+     * Get the the timestamp when this message was received
+     *
+     * @return the timestamp, or null if not included
+     */
+    public abstract Integer getRxTimeStamp();
 
 }

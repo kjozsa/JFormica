@@ -21,73 +21,65 @@ package org.cowboycoders.ant.messages;
 /**
  * Abstract channel type - combines codes from
  * the Types enum
- * @author will
  *
+ * @author will
  */
-public abstract class ChannelType
-{
+public abstract class ChannelType {
 
-	/**
-	 * true if shared channel
-	 */
-	private boolean shared = false;
+    /**
+     * true if shared channel
+     */
+    private boolean shared = false;
 
-	/**
-	 * true if oneway transmit/receive
-	 */
-	private boolean oneway = false;
-	private int channelTypeCode = 0;
+    /**
+     * true if oneway transmit/receive
+     */
+    private boolean oneway = false;
+    private int channelTypeCode = 0;
 
-	public enum Types
-	{
-		SLAVE( 0x00 ), MASTER( 0x10 ), SHARED_RECEIVE( 0x20 ), SHARED_TRANSMIT( 0x30 ), ONEWAY_RECEIVE( 0x40 ), ONEWAY_TRANSMIT( 0x50 ),;
+    public enum Types {
+        SLAVE(0x00), MASTER(0x10), SHARED_RECEIVE(0x20), SHARED_TRANSMIT(0x30), ONEWAY_RECEIVE(0x40), ONEWAY_TRANSMIT(0x50),
+        ;
 
-		public int code;
+        public int code;
 
-		Types( int code )
-		{
-			this.code = code;
-		}
-	}
+        Types(int code) {
+            this.code = code;
+        }
+    }
 
-	/**
-	 * build ChannelType with the supplied ChannelTypes.Types
-	 * @param channelTypes TODO : to document
-	 */
-	protected ChannelType( Types[] channelTypes )
-	{
-		for( Types c : channelTypes )
-		{
-			channelTypeCode |= c.code;
-			if( c == Types.SHARED_RECEIVE || c == Types.SHARED_TRANSMIT )
-			{
-				shared = true;
-			}
-			if( c == Types.ONEWAY_RECEIVE || c == Types.ONEWAY_TRANSMIT )
-			{
-				oneway = true;
-			}
-		}
-	}
+    /**
+     * build ChannelType with the supplied ChannelTypes.Types
+     *
+     * @param channelTypes TODO : to document
+     */
+    protected ChannelType(Types[] channelTypes) {
+        for (Types c : channelTypes) {
+            channelTypeCode |= c.code;
+            if (c == Types.SHARED_RECEIVE || c == Types.SHARED_TRANSMIT) {
+                shared = true;
+            }
+            if (c == Types.ONEWAY_RECEIVE || c == Types.ONEWAY_TRANSMIT) {
+                oneway = true;
+            }
+        }
+    }
 
-	public int getChannelTypeCode()
-	{
-		return channelTypeCode;
-	}
+    public int getChannelTypeCode() {
+        return channelTypeCode;
+    }
 
-	/**
-	 * @return true, if shared Channel
-	 */
-	public boolean isShared()
-	{
-		return shared;
-	}
+    /**
+     * @return true, if shared Channel
+     */
+    public boolean isShared() {
+        return shared;
+    }
 
-	/**
-	 * @return true if channel is oneway transmit/receive
-	 */
-	public boolean isOneway()
-	{
-		return oneway;
-	}
+    /**
+     * @return true if channel is oneway transmit/receive
+     */
+    public boolean isOneway() {
+        return oneway;
+    }
 }

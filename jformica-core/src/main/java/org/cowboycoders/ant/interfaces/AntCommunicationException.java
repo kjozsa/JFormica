@@ -27,48 +27,43 @@ import org.cowboycoders.ant.AntError;
  * @author will
  *
  */
-public class AntCommunicationException extends AntError
-{
+public class AntCommunicationException extends AntError {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 *
-	 */
-	public AntCommunicationException()
-	{
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     *
+     */
+    public AntCommunicationException() {
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param detailMessage TODO : to document
-	 */
-	public AntCommunicationException( String detailMessage )
-	{
-		super( detailMessage );
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param detailMessage TODO : to document
+     */
+    public AntCommunicationException(String detailMessage) {
+        super(detailMessage);
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param throwable TODO : to document
-	 */
-	public AntCommunicationException( Throwable throwable )
-	{
-		super( throwable );
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param throwable TODO : to document
+     */
+    public AntCommunicationException(Throwable throwable) {
+        super(throwable);
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param detailMessage TODO : to document
-	 * @param throwable TODO : to document
-	 */
-	public AntCommunicationException( String detailMessage, Throwable throwable )
-	{
-		super( detailMessage, throwable );
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param detailMessage TODO : to document
+     * @param throwable TODO : to document
+     */
+    public AntCommunicationException(String detailMessage, Throwable throwable) {
+        super(detailMessage, throwable);
+        // TODO Auto-generated constructor stub
+    }
 
 }

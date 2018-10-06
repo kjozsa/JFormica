@@ -26,46 +26,41 @@ import org.cowboycoders.ant.utils.SharedBuffer;
 
 /**
  * Provides acknowledgement buffer and message buffer
- * @author will
  *
+ * @author will
  */
 @Deprecated
-public abstract class BufferedNodeComponent
-{
+public abstract class BufferedNodeComponent {
 
-	private static final int ACK_BUFFER_LENGTH = 20;
+    private static final int ACK_BUFFER_LENGTH = 20;
 
-	private static final int MSG_BUFFER_LENGTH = 20;
+    private static final int MSG_BUFFER_LENGTH = 20;
 
-	private SharedBuffer<MessageMetaWrapper<StandardMessage>> msgBuffer;
+    private SharedBuffer<MessageMetaWrapper<StandardMessage>> msgBuffer;
 
-	private SharedBuffer<MessageMetaWrapper<Response>> ackBuffer;
+    private SharedBuffer<MessageMetaWrapper<Response>> ackBuffer;
 
-	public BufferedNodeComponent()
-	{
-		this( null, null );
-	}
+    public BufferedNodeComponent() {
+        this(null, null);
+    }
 
-	public BufferedNodeComponent( MessageCondition msgCondition, MessageCondition ackCondition )
-	{
-		msgBuffer = new SharedMetaBuffer<>( MSG_BUFFER_LENGTH, msgCondition );
-		ackBuffer = new SharedMetaBuffer<>( ACK_BUFFER_LENGTH, ackCondition );
-	}
+    public BufferedNodeComponent(MessageCondition msgCondition, MessageCondition ackCondition) {
+        msgBuffer = new SharedMetaBuffer<>(MSG_BUFFER_LENGTH, msgCondition);
+        ackBuffer = new SharedMetaBuffer<>(ACK_BUFFER_LENGTH, ackCondition);
+    }
 
-	/**
-	 * @return the msgBuffer
-	 */
-	public SharedBuffer<MessageMetaWrapper<StandardMessage>> getMsgBuffer()
-	{
-		return msgBuffer;
-	}
+    /**
+     * @return the msgBuffer
+     */
+    public SharedBuffer<MessageMetaWrapper<StandardMessage>> getMsgBuffer() {
+        return msgBuffer;
+    }
 
-	/**
-	 * @return the ackBuffer
-	 */
-	public SharedBuffer<MessageMetaWrapper<Response>> getAckBuffer()
-	{
-		return ackBuffer;
-	}
+    /**
+     * @return the ackBuffer
+     */
+    public SharedBuffer<MessageMetaWrapper<Response>> getAckBuffer() {
+        return ackBuffer;
+    }
 
 }

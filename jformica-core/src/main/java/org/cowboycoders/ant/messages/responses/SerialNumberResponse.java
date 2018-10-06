@@ -32,35 +32,31 @@ import org.cowboycoders.ant.messages.StandardMessage;
  * @author will
  *
  */
-public class SerialNumberResponse extends StandardMessage
-{
+public class SerialNumberResponse extends StandardMessage {
 
-	/**
-	 * The additional elements we are adding to channelmessage
-	 */
-	private static DataElement[] additionalElements = new DataElement[]{
-			DataElement.SERIAL_NUMBER,
-			};
+    /**
+     * The additional elements we are adding to channelmessage
+     */
+    private static DataElement[] additionalElements = new DataElement[]{
+            DataElement.SERIAL_NUMBER,
+    };
 
-	public SerialNumberResponse()
-	{
-		super( MessageId.GET_SERIAL_NUM, additionalElements );
-		setAllElementsMustBePresent( true );
-	}
+    public SerialNumberResponse() {
+        super(MessageId.GET_SERIAL_NUM, additionalElements);
+        setAllElementsMustBePresent(true);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.cowboycoders.ant.messages.StandardMessage#validate()
-	 */
-	@Override
-	public void validate() throws MessageException
-	{
-		// no additional validation
+    /* (non-Javadoc)
+     * @see org.cowboycoders.ant.messages.StandardMessage#validate()
+     */
+    @Override
+    public void validate() throws MessageException {
+        // no additional validation
 
-	}
+    }
 
-	public int getSerialNumber()
-	{
-		return getDataElement( DataElement.SERIAL_NUMBER );
-	}
+    public int getSerialNumber() {
+        return getDataElement(DataElement.SERIAL_NUMBER);
+    }
 
 }

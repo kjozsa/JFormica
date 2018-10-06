@@ -29,44 +29,39 @@ package org.cowboycoders.ant.messages;
  * @author will
  *
  */
-public class MessageException extends Exception
-{
+public class MessageException extends Exception {
 
-	/**
-	 * UID for serialisation
-	 */
-	private static final long serialVersionUID = -327114350153625390L;
+    /**
+     * UID for serialisation
+     */
+    private static final long serialVersionUID = -327114350153625390L;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public MessageException()
-	{
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public MessageException() {
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public MessageException( String detailMessage )
-	{
-		super( detailMessage );
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public MessageException(String detailMessage) {
+        super(detailMessage);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public MessageException( Throwable throwable )
-	{
-		super( throwable );
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public MessageException(Throwable throwable) {
+        super(throwable);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public MessageException( String detailMessage, Throwable throwable )
-	{
-		super( detailMessage, throwable );
+    /**
+     * {@inheritDoc}
+     */
+    public MessageException(String detailMessage, Throwable throwable) {
+        super(detailMessage, throwable);
 
-	}
+    }
 
 }

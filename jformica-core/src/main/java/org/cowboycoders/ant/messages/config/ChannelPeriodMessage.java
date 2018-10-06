@@ -21,12 +21,8 @@
  */
 package org.cowboycoders.ant.messages.config;
 
-import org.cowboycoders.ant.messages.ChannelMessage;
+import org.cowboycoders.ant.messages.*;
 import org.cowboycoders.ant.messages.Constants.DataElement;
-import org.cowboycoders.ant.messages.FatalMessageException;
-import org.cowboycoders.ant.messages.MessageExceptionFactory;
-import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.utils.ValidationUtils;
 
 /**
@@ -34,50 +30,44 @@ import org.cowboycoders.ant.utils.ValidationUtils;
  * @author will
  *
  */
-public class ChannelPeriodMessage extends ChannelMessage
-{
+public class ChannelPeriodMessage extends ChannelMessage {
 
-	private static final int MAX_PERIOD = 65535;
+    private static final int MAX_PERIOD = 65535;
 
-	/**
-	 * The additional elements we are adding to channelmessage
-	 */
-	private static DataElement[] additionalElements = new DataElement[]{
-			DataElement.CHANNEL_PERIOD,
-			};
+    /**
+     * The additional elements we are adding to channelmessage
+     */
+    private static DataElement[] additionalElements = new DataElement[]{
+            DataElement.CHANNEL_PERIOD,
+    };
 
-	/**
-	 * creates channel message
-	 *
-	 * Messaging period = channel period time (s) * 32768.
-	 * E.g.: To send or receive a message at 4Hz, set the channel period to 32768/4 = 8192.
-	 *
-	 * @param channelNo target channel number
-	 * @param period period to set
-	 */
-	public ChannelPeriodMessage( Integer channelNo, int period )
-	{
-		super( MessageId.CHANNEL_PERIOD, channelNo, additionalElements );
-		try
-		{
-			setPeriod( period );
-		}
-		catch( ValidationException e )
-		{
-			throw new FatalMessageException( "Error setting values", e );
-		}
-	}
+    /**
+     * creates channel message
+     *
+     * Messaging period = channel period time (s) * 32768.
+     * E.g.: To send or receive a message at 4Hz, set the channel period to 32768/4 = 8192.
+     *
+     * @param channelNo target channel number
+     * @param period period to set
+     */
+    public ChannelPeriodMessage(Integer channelNo, int period) {
+        super(MessageId.CHANNEL_PERIOD, channelNo, additionalElements);
+        try {
+            setPeriod(period);
+        } catch (ValidationException e) {
+            throw new FatalMessageException("Error setting values", e);
+        }
+    }
 
-	/**
-	 * Sets period
-	 * @param period to set
-	 * @throws ValidationException if out of limits
-	 */
-	private void setPeriod( int period ) throws ValidationException
-	{
-		ValidationUtils.maxMinValidator( 0, MAX_PERIOD, period, MessageExceptionFactory.createMaxMinExceptionProducable( "period" ) );
-		setDataElement( DataElement.CHANNEL_PERIOD, period );
+    /**
+     * Sets period
+     * @param period to set
+     * @throws ValidationException if out of limits
+     */
+    private void setPeriod(int period) throws ValidationException {
+        ValidationUtils.maxMinValidator(0, MAX_PERIOD, period, MessageExceptionFactory.createMaxMinExceptionProducable("period"));
+        setDataElement(DataElement.CHANNEL_PERIOD, period);
 
-	}
+    }
 
 }

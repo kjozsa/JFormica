@@ -18,25 +18,27 @@
  */
 package org.cowboycoders.ant.messages;
 
-public interface RssiInfoQueryable
-{
+public interface RssiInfoQueryable {
 
-	/**
-	 * Returns the RSSI measurement type
-	 * @return the measurement type, or null if not included
-	 */
-	public abstract Byte getRssiMeasurementType();
+    /**
+     * Returns the RSSI measurement type
+     *
+     * @return the measurement type, or null if not included
+     */
+    public abstract Byte getRssiMeasurementType();
 
-	/**
-	 * Returns the RSSI threshold config
-	 * @return the threshold config or null if not included
-	 */
-	public abstract Byte getRssiThresholdConfig();
+    /**
+     * Returns the RSSI threshold config
+     *
+     * @return the threshold config or null if not included
+     */
+    public abstract Byte getRssiThresholdConfig();
 
-	/**
-	 * Returns the RSSI value
-	 * @return the RSSI value or null if not included
-	 */
-	public abstract Byte getRssiValue();
+    /**
+     * Returns the RSSI value
+     *
+     * @return the RSSI value or null if not included
+     */
+    public abstract Byte getRssiValue();
 
 }

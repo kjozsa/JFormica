@@ -36,105 +36,94 @@ import java.util.List;
  * @author will
  *
  */
-public class CapabilityResponse extends StandardMessage
-{
+public class CapabilityResponse extends StandardMessage {
 
-	private static final Logger log = LoggerFactory.getLogger( CapabilityResponse.class );
-	/**
-	 * The additional elements we are adding to channelmessage
-	 */
-	private static DataElement[] additionalElements = new DataElement[]{
-			DataElement.MAX_CHANNELS,
-			DataElement.MAX_NETWORKS,
-			DataElement.STANDARD_CAPABILITIES,
-			DataElement.ADVANCED_CAPABILITIES,
-			DataElement.ADVANCED_CAPABILITIES,
-			DataElement.ADVANCED_CAPABILITIES,
-			};
+    private static final Logger log = LoggerFactory.getLogger(CapabilityResponse.class);
+    /**
+     * The additional elements we are adding to channelmessage
+     */
+    private static DataElement[] additionalElements = new DataElement[]{
+            DataElement.MAX_CHANNELS,
+            DataElement.MAX_NETWORKS,
+            DataElement.STANDARD_CAPABILITIES,
+            DataElement.ADVANCED_CAPABILITIES,
+            DataElement.ADVANCED_CAPABILITIES,
+            DataElement.ADVANCED_CAPABILITIES,
+    };
 
-	public CapabilityResponse()
-	{
-		super( MessageId.CAPABILITIES, additionalElements );
-		setAllElementsMustBePresent( true );
-	}
+    public CapabilityResponse() {
+        super(MessageId.CAPABILITIES, additionalElements);
+        setAllElementsMustBePresent(true);
+    }
 
-	@Override
-	public void validate() throws MessageException
-	{
-		// no additional validation needded
-	}
+    @Override
+    public void validate() throws MessageException {
+        // no additional validation needded
+    }
 
-	/**
-	 *
-	 * @param category to check capabilities
-	 * @return a list of capabilities from that category
-	 */
-	public List<Capability> getCapabilitiesList( CapabilityCategory category )
-	{
-		List<Capability> rtn = new ArrayList<>();
-		byte capabilityByte = 0;
-		switch( category )
-		{
-			case STANDARD:
-				capabilityByte = getDataElement( DataElement.STANDARD_CAPABILITIES ).byteValue();
-				break;
-			case ADVANCED:
-				capabilityByte = getDataElement( DataElement.ADVANCED_CAPABILITIES ).byteValue();
-				break;
-			case ADVANCED2:
-				capabilityByte = getDataElement( DataElement.ADVANCED_CAPABILITIES, 1 ).byteValue();
-				break;
-			case ADVANCED3:
-				capabilityByte = getDataElement( DataElement.ADVANCED_CAPABILITIES, 2 ).byteValue();
-				break;
-		}
+    /**
+     *
+     * @param category to check capabilities
+     * @return a list of capabilities from that category
+     */
+    public List<Capability> getCapabilitiesList(CapabilityCategory category) {
+        List<Capability> rtn = new ArrayList<>();
+        byte capabilityByte = 0;
+        switch (category) {
+            case STANDARD:
+                capabilityByte = getDataElement(DataElement.STANDARD_CAPABILITIES).byteValue();
+                break;
+            case ADVANCED:
+                capabilityByte = getDataElement(DataElement.ADVANCED_CAPABILITIES).byteValue();
+                break;
+            case ADVANCED2:
+                capabilityByte = getDataElement(DataElement.ADVANCED_CAPABILITIES, 1).byteValue();
+                break;
+            case ADVANCED3:
+                capabilityByte = getDataElement(DataElement.ADVANCED_CAPABILITIES, 2).byteValue();
+                break;
+        }
 
-		log.trace( "capabilityByte :" + String.format( "%x", capabilityByte ) );
+        log.trace("capabilityByte :" + String.format("%x", capabilityByte));
 
-		for( Capability c : Capability.getCapabilitiesInCategory( category ) )
-		{
-			byte mask = c.getCode();
-			log.trace( "mask :" + String.format( "%x", mask ) );
-			if( (capabilityByte & mask) != 0 )
-			{
-				rtn.add( c );
-			}
-		}
-		return rtn;
-	}
+        for (Capability c : Capability.getCapabilitiesInCategory(category)) {
+            byte mask = c.getCode();
+            log.trace("mask :" + String.format("%x", mask));
+            if ((capabilityByte & mask) != 0) {
+                rtn.add(c);
+            }
+        }
+        return rtn;
+    }
 
-	/**
-	 * Checks whether device has a specific capability
-	 * @param capability to check
-	 * @return true if device has this capability, false otherwise
-	 */
-	public boolean hasCapability( Capability capability )
-	{
-		List<Capability> capabilities = getCapabilitiesList( CapabilityCategory.STANDARD );
-		capabilities.addAll( getCapabilitiesList( CapabilityCategory.ADVANCED ) );
-		capabilities.addAll( getCapabilitiesList( CapabilityCategory.ADVANCED2 ) );
-		capabilities.addAll( getCapabilitiesList( CapabilityCategory.ADVANCED3 ) );
-		if( capabilities.contains( capability ) )
-		{
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Checks whether device has a specific capability
+     * @param capability to check
+     * @return true if device has this capability, false otherwise
+     */
+    public boolean hasCapability(Capability capability) {
+        List<Capability> capabilities = getCapabilitiesList(CapabilityCategory.STANDARD);
+        capabilities.addAll(getCapabilitiesList(CapabilityCategory.ADVANCED));
+        capabilities.addAll(getCapabilitiesList(CapabilityCategory.ADVANCED2));
+        capabilities.addAll(getCapabilitiesList(CapabilityCategory.ADVANCED3));
+        if (capabilities.contains(capability)) {
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * @return max number of channels this ant device supports
-	 */
-	public int getMaxChannels()
-	{
-		return getDataElement( DataElement.MAX_CHANNELS );
-	}
+    /**
+     * @return max number of channels this ant device supports
+     */
+    public int getMaxChannels() {
+        return getDataElement(DataElement.MAX_CHANNELS);
+    }
 
-	/**
-	 * @return max number of networks this ant device supports
-	 */
-	public int getMaxNetworks()
-	{
-		return getDataElement( DataElement.MAX_NETWORKS );
-	}
+    /**
+     * @return max number of networks this ant device supports
+     */
+    public int getMaxNetworks() {
+        return getDataElement(DataElement.MAX_NETWORKS);
+    }
 
 }

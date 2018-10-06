@@ -31,56 +31,49 @@ import org.cowboycoders.ant.messages.MessageId;
  * @author will
  *
  */
-public class Response extends ChannelMessage
-{
+public class Response extends ChannelMessage {
 
-	/**
-	 * The additional elements we are adding to channel message
-	 */
-	private static DataElement[] additionalElements = new DataElement[]{
-			DataElement.MESSAGE_ID, DataElement.RESPONSE_CODE,
-			};
+    /**
+     * The additional elements we are adding to channel message
+     */
+    private static DataElement[] additionalElements = new DataElement[]{
+            DataElement.MESSAGE_ID, DataElement.RESPONSE_CODE,
+    };
 
-	/**
-	 * Populated with {@code decode()}
-	 * @param channelNo channel event occured on
-	 */
-	public Response( Integer channelNo )
-	{
-		super( MessageId.RESPONSE_EVENT, channelNo, additionalElements );
-	}
+    /**
+     * Populated with {@code decode()}
+     * @param channelNo channel event occured on
+     */
+    public Response(Integer channelNo) {
+        super(MessageId.RESPONSE_EVENT, channelNo, additionalElements);
+    }
 
-	public Response()
-	{
-		this( 0 );
-	}
+    public Response() {
+        this(0);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.cowboycoders.ant.messages.ChannelMessage#validate()
-	 */
-	@Override
-	public void validate() throws MessageException
-	{
-		super.validate();
-		if( getStandardPayload().size() < 3 )
-		{
-			throw new MessageException( "insufficent data" );
-		}
-	}
+    /* (non-Javadoc)
+     * @see org.cowboycoders.ant.messages.ChannelMessage#validate()
+     */
+    @Override
+    public void validate() throws MessageException {
+        super.validate();
+        if (getStandardPayload().size() < 3) {
+            throw new MessageException("insufficent data");
+        }
+    }
 
-	/**
-	 * @return {@code org.cowboycoders.ant.messages.MessageId} of message that caused
-	 *         event. This is equal to {@code MessageId.EVENT} if wasn't result of
-	 *         message sent.
-	 */
-	public MessageId getMessageId()
-	{
-		return MessageId.lookUp( getDataElement( DataElement.MESSAGE_ID ).byteValue() );
-	}
+    /**
+     * @return {@code org.cowboycoders.ant.messages.MessageId} of message that caused
+     *         event. This is equal to {@code MessageId.EVENT} if wasn't result of
+     *         message sent.
+     */
+    public MessageId getMessageId() {
+        return MessageId.lookUp(getDataElement(DataElement.MESSAGE_ID).byteValue());
+    }
 
-	public ResponseCode getResponseCode()
-	{
-		return ResponseCode.lookUp( getDataElement( DataElement.RESPONSE_CODE ).byteValue() );
-	}
+    public ResponseCode getResponseCode() {
+        return ResponseCode.lookUp(getDataElement(DataElement.RESPONSE_CODE).byteValue());
+    }
 
 }

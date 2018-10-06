@@ -18,11 +18,10 @@
  */
 package org.cowboycoders.ant.interfaces;
 
-public class AntStatusUpdate
-{
+public class AntStatusUpdate {
 
-	public AntStatus status = AntStatus.UNKNOWN;
+    public AntStatus status = AntStatus.UNKNOWN;
 
-	public Object optionalArg;
+    public Object optionalArg;
 
 }

@@ -32,134 +32,119 @@ import java.util.List;
  * @author will
  *
  */
-public class DataElementUtils
-{
+public class DataElementUtils {
 
-	private DataElementUtils()
-	{
+    private DataElementUtils() {
 
-	}
+    }
 
-	/**
-	 * Sets a DataElement in a payload
-	 * @param payload to modify
-	 * @param messageElements describe the composition of the payload
-	 * @param element to modify
-	 * @param value to set {@code element} to
-	 * @param offset to messageElements description
-	 * @param skip how many identical elements to skip before insertion
-	 * @return true, if successful otherwise false
-	 */
-	public static boolean setDataElement( ArrayList<Byte> payload,
-	                                      DataElement[] messageElements,
-	                                      DataElement element,
-	                                      Integer value,
-	                                      int offset,
-	                                      int skip )
-	{
-		if( !Arrays.asList( messageElements ).contains( element ) )
-		{
-			throw new FatalMessageException( "Arg, element, not in expected list" );
-		}
+    /**
+     * Sets a DataElement in a payload
+     * @param payload to modify
+     * @param messageElements describe the composition of the payload
+     * @param element to modify
+     * @param value to set {@code element} to
+     * @param offset to messageElements description
+     * @param skip how many identical elements to skip before insertion
+     * @return true, if successful otherwise false
+     */
+    public static boolean setDataElement(ArrayList<Byte> payload,
+                                         DataElement[] messageElements,
+                                         DataElement element,
+                                         Integer value,
+                                         int offset,
+                                         int skip) {
+        if (!Arrays.asList(messageElements).contains(element)) {
+            throw new FatalMessageException("Arg, element, not in expected list");
+        }
 
-		boolean completed = false;
-		List<Byte> insertionBytes = ByteUtils.lsbSplit( value, element.getLength() );
+        boolean completed = false;
+        List<Byte> insertionBytes = ByteUtils.lsbSplit(value, element.getLength());
 
-		completed = insertElementBytes( payload, messageElements, element, insertionBytes, offset, skip );
+        completed = insertElementBytes(payload, messageElements, element, insertionBytes, offset, skip);
 
-		if( !completed )
-		{
-			throw new FatalMessageException( "Byte insertion failed" );
-		}
+        if (!completed) {
+            throw new FatalMessageException("Byte insertion failed");
+        }
 
-		return completed;
+        return completed;
 
-	}
+    }
 
-	/**
-	 * Gets the data associated with a given {@code DataElement}
-	 * @param payload to get the data from
-	 * @param messageElements describes the composition of the payload
-	 * @param element to get data for
-	 * @param offset in payload to start of messageElements
-	 * @param skip in payload to start of messageElements
-	 * @return data element
-	 */
-	public static Integer getDataElement( ArrayList<Byte> payload,
-	                                      DataElement[] messageElements,
-	                                      DataElement element,
-	                                      int offset,
-	                                      int skip )
-	{
+    /**
+     * Gets the data associated with a given {@code DataElement}
+     * @param payload to get the data from
+     * @param messageElements describes the composition of the payload
+     * @param element to get data for
+     * @param offset in payload to start of messageElements
+     * @param skip in payload to start of messageElements
+     * @return data element
+     */
+    public static Integer getDataElement(ArrayList<Byte> payload,
+                                         DataElement[] messageElements,
+                                         DataElement element,
+                                         int offset,
+                                         int skip) {
 
-		if( !Arrays.asList( messageElements ).contains( element ) )
-		{
-			throw new FatalMessageException( "Arg, element, not in expected list" );
-		}
+        if (!Arrays.asList(messageElements).contains(element)) {
+            throw new FatalMessageException("Arg, element, not in expected list");
+        }
 
-		Integer rtn = null;
-		int elementCount = 0;
-		int index = offset;
-		for( DataElement e : messageElements )
-		{
-			if( e == element )
-			{
-				if( elementCount == skip )
-				{
-					rtn = ByteUtils.lsbMerge( payload.subList( index, index += e.getLength() ) );
-					break;
-				}
-				elementCount++;
-			}
-			index += e.getLength();
-		}
+        Integer rtn = null;
+        int elementCount = 0;
+        int index = offset;
+        for (DataElement e : messageElements) {
+            if (e == element) {
+                if (elementCount == skip) {
+                    rtn = ByteUtils.lsbMerge(payload.subList(index, index += e.getLength()));
+                    break;
+                }
+                elementCount++;
+            }
+            index += e.getLength();
+        }
 
-		return rtn;
-	}
+        return rtn;
+    }
 
-	/**
-	 * Inserts data, given as  a {@code List} of Bytes, into a payload
-	 * @param payload the payload to insert bytes into
-	 * @param messageElements description of the composition
-	 * @param element element we are targeting
-	 * @param bytesToInsert new bytes to insert
-	 * @param offset to messageElements description
-	 * @param skip how many identical elements to skip before insertion
-	 * @return true if successful, otherwise false
-	 */
-	private static boolean insertElementBytes( ArrayList<Byte> payload,
-	                                           DataElement[] messageElements,
-	                                           DataElement element,
-	                                           List<Byte> bytesToInsert,
-	                                           int offset,
-	                                           int skip )
-	{
-		assert bytesToInsert.size() == element.getLength() : "Number of bytes to insert doesn't match expected element length";
+    /**
+     * Inserts data, given as  a {@code List} of Bytes, into a payload
+     * @param payload the payload to insert bytes into
+     * @param messageElements description of the composition
+     * @param element element we are targeting
+     * @param bytesToInsert new bytes to insert
+     * @param offset to messageElements description
+     * @param skip how many identical elements to skip before insertion
+     * @return true if successful, otherwise false
+     */
+    private static boolean insertElementBytes(ArrayList<Byte> payload,
+                                              DataElement[] messageElements,
+                                              DataElement element,
+                                              List<Byte> bytesToInsert,
+                                              int offset,
+                                              int skip) {
+        assert bytesToInsert.size() == element.getLength() : "Number of bytes to insert doesn't match expected element length";
 
-		boolean completed = false;
-		int elementCount = 0;
-		int index = offset;
-		for( DataElement e : messageElements )
-		{
-			if( e == element )
-			{
-				if( elementCount == skip )
-				{
-					for( byte b : bytesToInsert )
-					{
-						payload.set( index, b );
-						index++;
-					}
-					completed = true;
-					break;
-				}
-				elementCount++;
+        boolean completed = false;
+        int elementCount = 0;
+        int index = offset;
+        for (DataElement e : messageElements) {
+            if (e == element) {
+                if (elementCount == skip) {
+                    for (byte b : bytesToInsert) {
+                        payload.set(index, b);
+                        index++;
+                    }
+                    completed = true;
+                    break;
+                }
+                elementCount++;
 
-			}
-			index += e.getLength();
-		}
+            }
+            index += e.getLength();
+        }
 
-		return completed;
-	}
+        return completed;
+    }
 
 }

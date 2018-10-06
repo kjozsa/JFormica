@@ -20,26 +20,24 @@ package org.cowboycoders.ant.messages;
 
 /**
  * Standard interface for all org.cowboycoders.ant message decorators.
- * The standard is wrap all ant messages, so this allows us to recover 
+ * The standard is wrap all ant messages, so this allows us to recover
  * the original.
  *
  * @author will
- *
  */
-public interface MessageDecorator
-{
+public interface MessageDecorator {
 
-	/**
-	 * Returns the <code>Message</code> class doing the leg work.
-	 * This can be one of:
-	 * Message -for standard ant messages,
-	 * LegacyMessage - for legacy extended messages
-	 * ExtendedMessage -for extended messages
-	 *
-	 * These classes can provide additional functionality.
-	 *
-	 * @return the message used as the backend
-	 */
-	public Message getBackendMessage();
+    /**
+     * Returns the <code>Message</code> class doing the leg work.
+     * This can be one of:
+     * Message -for standard ant messages,
+     * LegacyMessage - for legacy extended messages
+     * ExtendedMessage -for extended messages
+     * <p>
+     * These classes can provide additional functionality.
+     *
+     * @return the message used as the backend
+     */
+    public Message getBackendMessage();
 
 }

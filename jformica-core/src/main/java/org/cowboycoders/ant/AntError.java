@@ -18,36 +18,31 @@
  */
 package org.cowboycoders.ant;
 
-public class AntError extends RuntimeException
-{
+public class AntError extends RuntimeException {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -29940270544783811L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -29940270544783811L;
 
-	public AntError()
-	{
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    public AntError() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	public AntError( String detailMessage, Throwable throwable )
-	{
-		super( detailMessage, throwable );
-		// TODO Auto-generated constructor stub
-	}
+    public AntError(String detailMessage, Throwable throwable) {
+        super(detailMessage, throwable);
+        // TODO Auto-generated constructor stub
+    }
 
-	public AntError( String detailMessage )
-	{
-		super( detailMessage );
-		// TODO Auto-generated constructor stub
-	}
+    public AntError(String detailMessage) {
+        super(detailMessage);
+        // TODO Auto-generated constructor stub
+    }
 
-	public AntError( Throwable throwable )
-	{
-		super( throwable );
-		// TODO Auto-generated constructor stub
-	}
+    public AntError(Throwable throwable) {
+        super(throwable);
+        // TODO Auto-generated constructor stub
+    }
 
 }

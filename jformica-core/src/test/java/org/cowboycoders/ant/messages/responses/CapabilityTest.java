@@ -19,16 +19,14 @@
 
 package org.cowboycoders.ant.messages.responses;
 
-import org.junit.*;
+import org.junit.Test;
 
-public class CapabilityTest
-{
+public class CapabilityTest {
 
-	@Test
-	public void test()
-	{
-		//FIXME : just tests no exceptions thrown
-		Capability.getCapabilitiesInCategory( CapabilityCategory.STANDARD );
-	}
+    @Test
+    public void test() {
+        //FIXME : just tests no exceptions thrown
+        Capability.getCapabilitiesInCategory(CapabilityCategory.STANDARD);
+    }
 
 }

@@ -27,44 +27,39 @@ package org.cowboycoders.ant.messages;
  * @author will
  *
  */
-public class ValidationException extends FatalMessageException
-{
+public class ValidationException extends FatalMessageException {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -6928449140060446544L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6928449140060446544L;
 
-	/**
-	 *
-	 */
-	public ValidationException()
-	{
-	}
+    /**
+     *
+     */
+    public ValidationException() {
+    }
 
-	/**
-	 * @param detailMessage to document
-	 */
-	public ValidationException( String detailMessage )
-	{
-		super( detailMessage );
-	}
+    /**
+     * @param detailMessage to document
+     */
+    public ValidationException(String detailMessage) {
+        super(detailMessage);
+    }
 
-	/**
-	 * @param throwable to document
-	 */
-	public ValidationException( Throwable throwable )
-	{
-		super( throwable );
-	}
+    /**
+     * @param throwable to document
+     */
+    public ValidationException(Throwable throwable) {
+        super(throwable);
+    }
 
-	/**
-	 * @param detailMessage to document
-	 * @param throwable to document
-	 */
-	public ValidationException( String detailMessage, Throwable throwable )
-	{
-		super( detailMessage, throwable );
-	}
+    /**
+     * @param detailMessage to document
+     * @param throwable to document
+     */
+    public ValidationException(String detailMessage, Throwable throwable) {
+        super(detailMessage, throwable);
+    }
 
 }

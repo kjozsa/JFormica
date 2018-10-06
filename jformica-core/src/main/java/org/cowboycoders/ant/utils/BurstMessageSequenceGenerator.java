@@ -18,42 +18,36 @@
  */
 package org.cowboycoders.ant.utils;
 
-public class BurstMessageSequenceGenerator
-{
+public class BurstMessageSequenceGenerator {
 
-	public static int FINISH_MASK = 0x04;
-	public static int START = 0x00;
-	public static int RESET = 0x01;
-	public static int MAX = 0x03;
+    public static int FINISH_MASK = 0x04;
+    public static int START = 0x00;
+    public static int RESET = 0x01;
+    public static int MAX = 0x03;
 
-	private int current = START;
+    private int current = START;
 
-	public void reset()
-	{
-		current = START;
-	}
+    public void reset() {
+        current = START;
+    }
 
-	public int next()
-	{
-		if( (current & FINISH_MASK) != 0 )
-		{
-			throw new IndexOutOfBoundsException( "Sequence is finished" );
-		}
+    public int next() {
+        if ((current & FINISH_MASK) != 0) {
+            throw new IndexOutOfBoundsException("Sequence is finished");
+        }
 
-		int rtn = current;
-		current++;
+        int rtn = current;
+        current++;
 
-		if( current > MAX )
-		{
-			current = RESET;
-		}
+        if (current > MAX) {
+            current = RESET;
+        }
 
-		return rtn;
-	}
+        return rtn;
+    }
 
-	public int finish()
-	{
-		return current |= FINISH_MASK;
-	}
+    public int finish() {
+        return current |= FINISH_MASK;
+    }
 
 }

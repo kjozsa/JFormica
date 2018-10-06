@@ -20,14 +20,14 @@ package org.cowboycoders.ant.messages;
 
 import org.cowboycoders.ant.messages.Constants.DataElement;
 
-public interface ExtendedInformationQueryable
-{
+public interface ExtendedInformationQueryable {
 
-	/**
-	 * Gets the ExtendedData Info for a given {@code DataElement}
-	 * @param element to look for
-	 * @return extended data or None if not found
-	 */
-	public abstract Integer getExtendedData( DataElement element );
+    /**
+     * Gets the ExtendedData Info for a given {@code DataElement}
+     *
+     * @param element to look for
+     * @return extended data or None if not found
+     */
+    public abstract Integer getExtendedData(DataElement element);
 
 }

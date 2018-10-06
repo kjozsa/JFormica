@@ -33,42 +33,35 @@ import org.cowboycoders.ant.messages.ValidationException;
  * @author will
  *
  */
-public class ProximitySearchMessage extends ChannelMessage
-{
+public class ProximitySearchMessage extends ChannelMessage {
 
-	/**
-	 * The additional elements we are adding to channelmessage
-	 */
-	private static DataElement[] additionalElements = new DataElement[]{
-			DataElement.SEARCH_THRESHOLD,
-			};
+    /**
+     * The additional elements we are adding to channelmessage
+     */
+    private static DataElement[] additionalElements = new DataElement[]{
+            DataElement.SEARCH_THRESHOLD,
+    };
 
-	/**
-	 * Filter using signal strength
-	 * @param channelNo target
-	 * @param threshold 0-10 , 0 disabled, 1-10 signal strength bands
-	 */
-	public ProximitySearchMessage( Integer channelNo, int threshold )
-	{
-		super( MessageId.PROX_SEARCH_CONFIG, channelNo, additionalElements );
-		try
-		{
-			setThreshold( threshold );
-		}
-		catch( ValidationException e )
-		{
-			throw new FatalMessageException( "Error setting values", e );
-		}
-	}
+    /**
+     * Filter using signal strength
+     * @param channelNo target
+     * @param threshold 0-10 , 0 disabled, 1-10 signal strength bands
+     */
+    public ProximitySearchMessage(Integer channelNo, int threshold) {
+        super(MessageId.PROX_SEARCH_CONFIG, channelNo, additionalElements);
+        try {
+            setThreshold(threshold);
+        } catch (ValidationException e) {
+            throw new FatalMessageException("Error setting values", e);
+        }
+    }
 
-	public ProximitySearchMessage( int threshold )
-	{
-		this( 0, threshold );
-	}
+    public ProximitySearchMessage(int threshold) {
+        this(0, threshold);
+    }
 
-	private void setThreshold( int threshold ) throws ValidationException
-	{
-		setAndValidateDataElement( DataElement.SEARCH_THRESHOLD, threshold );
-	}
+    private void setThreshold(int threshold) throws ValidationException {
+        setAndValidateDataElement(DataElement.SEARCH_THRESHOLD, threshold);
+    }
 
 }

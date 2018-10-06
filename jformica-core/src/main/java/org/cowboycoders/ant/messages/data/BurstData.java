@@ -25,66 +25,60 @@ import org.cowboycoders.ant.messages.ValidationException;
 
 /**
  * Common functionality to all burst message types
- * @author will
  *
+ * @author will
  */
-public abstract class BurstData extends DataMessage
-{
+public abstract class BurstData extends DataMessage {
 
-	public static final int CHANNEL_MASK = 0x1F;
-	public static final int BURST_MAX_CHANNEL_NO = 0x1f;
-	public static final int SEQUENCE_MASK = 0xe0;
-	public static final int SEQUENCE_MAX = 0x07;
+    public static final int CHANNEL_MASK = 0x1F;
+    public static final int BURST_MAX_CHANNEL_NO = 0x1f;
+    public static final int SEQUENCE_MASK = 0xe0;
+    public static final int SEQUENCE_MAX = 0x07;
 
-	protected BurstData( Message backend, MessageId id, Integer channelNo )
-	{
-		super( backend, id, channelNo );
-	}
+    protected BurstData(Message backend, MessageId id, Integer channelNo) {
+        super(backend, id, channelNo);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.cowboycoders.ant.messages.ChannelMessage#getChannelNumber()
-	 */
-	@Override
-	public int getChannelNumber()
-	{
-		return getDataElement( DataElement.CHANNEL_ID ).byteValue() & CHANNEL_MASK;
-	}
+    /* (non-Javadoc)
+     * @see org.cowboycoders.ant.messages.ChannelMessage#getChannelNumber()
+     */
+    @Override
+    public int getChannelNumber() {
+        return getDataElement(DataElement.CHANNEL_ID).byteValue() & CHANNEL_MASK;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.cowboycoders.ant.messages.ChannelMessage#setChannelNumber(byte)
-	 */
-	@Override
-	public void setChannelNumber( int channelNumber ) throws ValidationException
-	{
-		if( channelNumber > BURST_MAX_CHANNEL_NO || channelNumber < 0 )
-		{
-			throw new ValidationException( "Channel number must be between 0 and " + BURST_MAX_CHANNEL_NO );
-		}
-		setPartialDataElement( DataElement.CHANNEL_ID, (int) channelNumber, (int) CHANNEL_MASK );
-	}
+    /* (non-Javadoc)
+     * @see org.cowboycoders.ant.messages.ChannelMessage#setChannelNumber(byte)
+     */
+    @Override
+    public void setChannelNumber(int channelNumber) throws ValidationException {
+        if (channelNumber > BURST_MAX_CHANNEL_NO || channelNumber < 0) {
+            throw new ValidationException("Channel number must be between 0 and " + BURST_MAX_CHANNEL_NO);
+        }
+        setPartialDataElement(DataElement.CHANNEL_ID, (int) channelNumber, (int) CHANNEL_MASK);
+    }
 
-	/**
-	 * Gets this burst packets sequence number
-	 * @return sequence number of this burst packet
-	 */
-	public int getSequenceNumber()
-	{
-		return (getDataElement( DataElement.CHANNEL_ID ) & SEQUENCE_MASK) >>> 5;
-	}
+    /**
+     * Gets this burst packets sequence number
+     *
+     * @return sequence number of this burst packet
+     */
+    public int getSequenceNumber() {
+        return (getDataElement(DataElement.CHANNEL_ID) & SEQUENCE_MASK) >>> 5;
+    }
 
-	/**
-	 * Each burst element corresponds to a value in the burst
-	 * sequence.
-	 * @param sequence current value
-	 * @throws ValidationException if sequence is &lt; 0 or &gt; 7
-	 */
-	public void setSequenceNumber( int sequence ) throws ValidationException
-	{
-		if( sequence > SEQUENCE_MAX || sequence < 0 )
-		{
-			throw new ValidationException( "sequnece number must be between 0 and " + SEQUENCE_MAX );
-		}
-		setPartialDataElement( DataElement.CHANNEL_ID, sequence, SEQUENCE_MASK );
-	}
+    /**
+     * Each burst element corresponds to a value in the burst
+     * sequence.
+     *
+     * @param sequence current value
+     * @throws ValidationException if sequence is &lt; 0 or &gt; 7
+     */
+    public void setSequenceNumber(int sequence) throws ValidationException {
+        if (sequence > SEQUENCE_MAX || sequence < 0) {
+            throw new ValidationException("sequnece number must be between 0 and " + SEQUENCE_MAX);
+        }
+        setPartialDataElement(DataElement.CHANNEL_ID, sequence, SEQUENCE_MASK);
+    }
 
 }

@@ -23,24 +23,21 @@ package org.cowboycoders.ant.interfaces;
  *
  * @author will
  */
-public enum AntDeviceId
-{
-	ANTUSB_2( new DeviceDescriptor( 0x0fcf, 0x1008 ) ), ANTUSB_M( new DeviceDescriptor( 0x0fcf, 0x1009 ) ),;
+public enum AntDeviceId {
+    ANTUSB_2(new DeviceDescriptor(0x0fcf, 0x1008)), ANTUSB_M(new DeviceDescriptor(0x0fcf, 0x1009)),
+    ;
 
-	private DeviceDescriptor usbDescriptor;
+    private DeviceDescriptor usbDescriptor;
 
-	AntDeviceId( DeviceDescriptor usbDescriptor )
-	{
-		if( usbDescriptor == null )
-		{
-			throw new IllegalArgumentException( "you must provide a usb descriptor" );
-		}
-		this.usbDescriptor = usbDescriptor;
-	}
+    AntDeviceId(DeviceDescriptor usbDescriptor) {
+        if (usbDescriptor == null) {
+            throw new IllegalArgumentException("you must provide a usb descriptor");
+        }
+        this.usbDescriptor = usbDescriptor;
+    }
 
-	public DeviceDescriptor getUsbDescriptor()
-	{
-		return usbDescriptor;
-	}
+    public DeviceDescriptor getUsbDescriptor() {
+        return usbDescriptor;
+    }
 
 }

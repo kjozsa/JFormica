@@ -20,37 +20,33 @@ package org.cowboycoders.ant.messages;
 
 import org.cowboycoders.ant.utils.TimestampQueryable;
 
-public class MessageMetaWrapper<V extends StandardMessage> implements TimestampQueryable<V>
-{
+public class MessageMetaWrapper<V extends StandardMessage> implements TimestampQueryable<V> {
 
-	private V message;
-	private long timestamp;
+    private V message;
+    private long timestamp;
 
-	public MessageMetaWrapper( V message )
-	{
-		this.message = message;
-		this.timestamp = System.nanoTime();
-	}
+    public MessageMetaWrapper(V message) {
+        this.message = message;
+        this.timestamp = System.nanoTime();
+    }
 
-	/**
-	 * Compare this with object timestamp
-	 * @return the current timestamp
-	 */
-	public static long getCurrentTimestamp()
-	{
-		return System.nanoTime();
-	}
+    /**
+     * Compare this with object timestamp
+     *
+     * @return the current timestamp
+     */
+    public static long getCurrentTimestamp() {
+        return System.nanoTime();
+    }
 
-	@Override
-	public V unwrap()
-	{
-		return message;
-	}
+    @Override
+    public V unwrap() {
+        return message;
+    }
 
-	@Override
-	public long getTimestamp()
-	{
-		return timestamp;
-	}
+    @Override
+    public long getTimestamp() {
+        return timestamp;
+    }
 
 }

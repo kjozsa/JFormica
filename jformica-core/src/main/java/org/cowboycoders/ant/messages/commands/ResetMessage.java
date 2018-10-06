@@ -25,28 +25,25 @@ import org.cowboycoders.ant.messages.StandardMessage;
 
 /**
  * resets the ant chip
- * @author will
  *
+ * @author will
  */
-public class ResetMessage extends StandardMessage
-{
+public class ResetMessage extends StandardMessage {
 
-	/**
-	 * The additional elements we are adding to channel message
-	 */
-	private static DataElement[] additionalElements = new DataElement[]{
-			DataElement.FILLER_BYTE,
-			};
+    /**
+     * The additional elements we are adding to channel message
+     */
+    private static DataElement[] additionalElements = new DataElement[]{
+            DataElement.FILLER_BYTE,
+    };
 
-	public ResetMessage()
-	{
-		super( MessageId.SYSTEM_RESET, additionalElements );
-	}
+    public ResetMessage() {
+        super(MessageId.SYSTEM_RESET, additionalElements);
+    }
 
-	@Override
-	public void validate() throws MessageException
-	{
-		// no validation needed
-	}
+    @Override
+    public void validate() throws MessageException {
+        // no validation needed
+    }
 
 }

@@ -29,22 +29,18 @@ import org.cowboycoders.ant.messages.MessageId;
  * @author will
  *
  */
-public class BroadcastDataMessage extends DataMessage
-{
+public class BroadcastDataMessage extends DataMessage {
 
-	public BroadcastDataMessage()
-	{
-		this( 0 );
-	}
+    public BroadcastDataMessage() {
+        this(0);
+    }
 
-	public BroadcastDataMessage( Integer channelNo )
-	{
-		this( new Message(), MessageId.BROADCAST_DATA, channelNo );
-	}
+    public BroadcastDataMessage(Integer channelNo) {
+        this(new Message(), MessageId.BROADCAST_DATA, channelNo);
+    }
 
-	protected BroadcastDataMessage( Message message, MessageId id, Integer channelNo )
-	{
-		super( message, id, channelNo );
-	}
+    protected BroadcastDataMessage(Message message, MessageId id, Integer channelNo) {
+        super(message, id, channelNo);
+    }
 
 }

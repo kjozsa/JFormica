@@ -22,9 +22,7 @@ package org.cowboycoders.ant.interfaces;
  * Represents a reason why the ant chip was disabled.
  *
  * @author will
- *
  */
-public enum DisableReason
-{
-	SELF_SHUTDOWN, OTHER_SHUTDOWN, AIRPLANE_MODE_ENABLED, INTERFACE_CLAIMED, POWER_OFF, // the ant chip has been power off
+public enum DisableReason {
+    SELF_SHUTDOWN, OTHER_SHUTDOWN, AIRPLANE_MODE_ENABLED, INTERFACE_CLAIMED, POWER_OFF, // the ant chip has been power off
 }

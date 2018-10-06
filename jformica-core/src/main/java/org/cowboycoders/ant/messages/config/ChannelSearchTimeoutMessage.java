@@ -21,12 +21,8 @@
  */
 package org.cowboycoders.ant.messages.config;
 
-import org.cowboycoders.ant.messages.ChannelMessage;
+import org.cowboycoders.ant.messages.*;
 import org.cowboycoders.ant.messages.Constants.DataElement;
-import org.cowboycoders.ant.messages.FatalMessageException;
-import org.cowboycoders.ant.messages.MessageExceptionFactory;
-import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.utils.ValidationUtils;
 
 /**
@@ -34,50 +30,44 @@ import org.cowboycoders.ant.utils.ValidationUtils;
  * @author will
  *
  */
-public class ChannelSearchTimeoutMessage extends ChannelMessage
-{
+public class ChannelSearchTimeoutMessage extends ChannelMessage {
 
-	private static final int MAX_SEARCH_TIMEOUT = 255;
+    private static final int MAX_SEARCH_TIMEOUT = 255;
 
-	/**
-	 * The additional elements we are adding to channelmessage
-	 */
-	private static DataElement[] additionalElements = new DataElement[]{
-			DataElement.SEARCH_TIMEOUT,
-			};
+    /**
+     * The additional elements we are adding to channelmessage
+     */
+    private static DataElement[] additionalElements = new DataElement[]{
+            DataElement.SEARCH_TIMEOUT,
+    };
 
-	/**
-	 * Search timeout before channel stops looking for master
-	 *
-	 * @param channelNo target channel number
-	 * @param searchTimeout timeout each count equivalent to 2.5s, 255 infinite
-	 */
-	public ChannelSearchTimeoutMessage( Integer channelNo, int searchTimeout )
-	{
-		super( MessageId.CHANNEL_SEARCH_TIMEOUT, channelNo, additionalElements );
-		try
-		{
-			setSearchTimeout( searchTimeout );
-		}
-		catch( ValidationException e )
-		{
-			throw new FatalMessageException( "Error setting values", e );
-		}
-	}
+    /**
+     * Search timeout before channel stops looking for master
+     *
+     * @param channelNo target channel number
+     * @param searchTimeout timeout each count equivalent to 2.5s, 255 infinite
+     */
+    public ChannelSearchTimeoutMessage(Integer channelNo, int searchTimeout) {
+        super(MessageId.CHANNEL_SEARCH_TIMEOUT, channelNo, additionalElements);
+        try {
+            setSearchTimeout(searchTimeout);
+        } catch (ValidationException e) {
+            throw new FatalMessageException("Error setting values", e);
+        }
+    }
 
-	/**
-	 * Sets timeout
-	 * @param timeout to set
-	 * @throws ValidationException if out of limits
-	 */
-	private void setSearchTimeout( int timeout ) throws ValidationException
-	{
-		ValidationUtils.maxMinValidator( 0,
-		                                 MAX_SEARCH_TIMEOUT,
-		                                 timeout,
-		                                 MessageExceptionFactory.createMaxMinExceptionProducable( "Search timeout" ) );
-		setDataElement( DataElement.SEARCH_TIMEOUT, timeout );
+    /**
+     * Sets timeout
+     * @param timeout to set
+     * @throws ValidationException if out of limits
+     */
+    private void setSearchTimeout(int timeout) throws ValidationException {
+        ValidationUtils.maxMinValidator(0,
+                MAX_SEARCH_TIMEOUT,
+                timeout,
+                MessageExceptionFactory.createMaxMinExceptionProducable("Search timeout"));
+        setDataElement(DataElement.SEARCH_TIMEOUT, timeout);
 
-	}
+    }
 
 }

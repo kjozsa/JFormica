@@ -19,19 +19,17 @@
 
 package org.cowboycoders.ant.messages.data;
 
-import org.junit.*;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class BurstDataMessageTest
-{
+public class BurstDataMessageTest {
 
-	@Test
-	public void testSetSequenceNumber()
-	{
-		BurstDataMessage msg = new BurstDataMessage();
-		msg.setSequenceNumber( 7 );
-		assertEquals( 7, msg.getSequenceNumber() );
-	}
+    @Test
+    public void testSetSequenceNumber() {
+        BurstDataMessage msg = new BurstDataMessage();
+        msg.setSequenceNumber(7);
+        assertEquals(7, msg.getSequenceNumber());
+    }
 
 }

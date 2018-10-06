@@ -18,12 +18,11 @@
  */
 package org.cowboycoders.ant.utils;
 
-public interface Containable<V>
-{
+public interface Containable<V> {
 
-	/**
-	 * @return the object
-	 */
-	public abstract V unwrap();
+    /**
+     * @return the object
+     */
+    public abstract V unwrap();
 
 }

@@ -24,115 +24,103 @@ import org.cowboycoders.ant.utils.ListUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public abstract class ChannelMessage extends StandardMessage
-{
+public abstract class ChannelMessage extends StandardMessage {
 
-	public static final byte MAX_CHANNEL_NO = 127;
-	public static final byte CHANNEL_NO_OFFSET = 0;
+    public static final byte MAX_CHANNEL_NO = 127;
+    public static final byte CHANNEL_NO_OFFSET = 0;
 
-	/**
-	 * Creates a ChannelMessage using the a {@code Message}
-	 * as the backend. See @{code ChannelMessage(message, id, payload)}
-	 * for param explanations.
-	 * @param id id of the message
-	 * @param channelNo channel to use
-	 * @param messageElements elements of the message
-	 * @throws ValidationException  TODO : to document
-	 */
-	public ChannelMessage( MessageId id, Integer channelNo, ArrayList<DataElement> messageElements )
-	{
-		this( null, id, channelNo, messageElements );
-	}
+    /**
+     * Creates a ChannelMessage using the a {@code Message}
+     * as the backend. See @{code ChannelMessage(message, id, payload)}
+     * for param explanations.
+     *
+     * @param id              id of the message
+     * @param channelNo       channel to use
+     * @param messageElements elements of the message
+     * @throws ValidationException TODO : to document
+     */
+    public ChannelMessage(MessageId id, Integer channelNo, ArrayList<DataElement> messageElements) {
+        this(null, id, channelNo, messageElements);
+    }
 
-	public ChannelMessage( MessageId id, Integer channelNo, DataElement[] messageElements )
-	{
-		this( null, id, channelNo, messageElements );
-	}
+    public ChannelMessage(MessageId id, Integer channelNo, DataElement[] messageElements) {
+        this(null, id, channelNo, messageElements);
+    }
 
-	public ChannelMessage( Message backend, MessageId id, Integer channelNo, DataElement[] messageElements )
-	{
-		this( backend, id, channelNo, new ArrayList<>( Arrays.asList( messageElements ) ) );
-	}
+    public ChannelMessage(Message backend, MessageId id, Integer channelNo, DataElement[] messageElements) {
+        this(backend, id, channelNo, new ArrayList<>(Arrays.asList(messageElements)));
+    }
 
-	/**
-	 * Creates a ChannelMessage using the a {@code Message}
-	 * as the backend without any additional data elements.
-	 * See @{code ChannelMessage(message, id, payload)}
-	 * for param explanations.
-	 * @param id Message ID
-	 * @param channelNo channel
-	 * @throws ValidationException TODO : to document
-	 */
-	public ChannelMessage( MessageId id, Integer channelNo )
-	{
-		this( null, id, channelNo, new DataElement[0] );
-	}
+    /**
+     * Creates a ChannelMessage using the a {@code Message}
+     * as the backend without any additional data elements.
+     * See @{code ChannelMessage(message, id, payload)}
+     * for param explanations.
+     *
+     * @param id        Message ID
+     * @param channelNo channel
+     * @throws ValidationException TODO : to document
+     */
+    public ChannelMessage(MessageId id, Integer channelNo) {
+        this(null, id, channelNo, new DataElement[0]);
+    }
 
-	/**
-	 * Creates a ChannelMessage using {@code message} as its
-	 * backend
-	 * @param message the message to use as the backend
-	 * @param id the id of the message
-	 * @param channelNo Channel number
-	 * @param messageElements additional message elements - this is appended
-	 *        to the the standard channel message list of elements
-	 * @throws FatalMessageException on error creating the message
-	 */
-	public ChannelMessage( Message message, MessageId id, Integer channelNo, ArrayList<DataElement> messageElements )
-	{
-		super( message, id, ListUtils.prefixList( messageElements, new DataElement[]{ DataElement.CHANNEL_ID } ) );
-		try
-		{
-			setChannelNumber( channelNo.byteValue() );
-		}
-		catch( ValidationException e )
-		{
-			throw new FatalMessageException( "invalid channel no", e );
-		}
-	}
+    /**
+     * Creates a ChannelMessage using {@code message} as its
+     * backend
+     *
+     * @param message         the message to use as the backend
+     * @param id              the id of the message
+     * @param channelNo       Channel number
+     * @param messageElements additional message elements - this is appended
+     *                        to the the standard channel message list of elements
+     * @throws FatalMessageException on error creating the message
+     */
+    public ChannelMessage(Message message, MessageId id, Integer channelNo, ArrayList<DataElement> messageElements) {
+        super(message, id, ListUtils.prefixList(messageElements, new DataElement[]{DataElement.CHANNEL_ID}));
+        try {
+            setChannelNumber(channelNo.byteValue());
+        } catch (ValidationException e) {
+            throw new FatalMessageException("invalid channel no", e);
+        }
+    }
 
-	/**
-	 * Gets the channel number
-	 * @return the channel number
-	 */
-	public int getChannelNumber()
-	{
-		//ArrayList<Byte >payload = getStandardPayload();
-		//return payload.get(CHANNEL_NO_OFFSET);
-		return getDataElement( DataElement.CHANNEL_ID );
-	}
+    /**
+     * Gets the channel number
+     *
+     * @return the channel number
+     */
+    public int getChannelNumber() {
+        //ArrayList<Byte >payload = getStandardPayload();
+        //return payload.get(CHANNEL_NO_OFFSET);
+        return getDataElement(DataElement.CHANNEL_ID);
+    }
 
-	/**
-	 * Sets the channel to transmit on
-	 *
-	 * @param channelNumber channel number (id)
-	 * @throws ValidationException if cahnnelNumber out of range
-	 */
-	public void setChannelNumber( int channelNumber ) throws ValidationException
-	{
-		if( channelNumber > MAX_CHANNEL_NO || channelNumber < 0 )
-		{
-			throw new ValidationException( "Channel number must be between 0 and " + MAX_CHANNEL_NO );
-		}
-		//ArrayList<Byte >payload = getStandardPayload();
-		//payload.set(CHANNEL_NO_OFFSET, channelNumber);
-		//setStandardPayload(payload);
-		setDataElement( DataElement.CHANNEL_ID, channelNumber );
-	}
+    /**
+     * Sets the channel to transmit on
+     *
+     * @param channelNumber channel number (id)
+     * @throws ValidationException if cahnnelNumber out of range
+     */
+    public void setChannelNumber(int channelNumber) throws ValidationException {
+        if (channelNumber > MAX_CHANNEL_NO || channelNumber < 0) {
+            throw new ValidationException("Channel number must be between 0 and " + MAX_CHANNEL_NO);
+        }
+        //ArrayList<Byte >payload = getStandardPayload();
+        //payload.set(CHANNEL_NO_OFFSET, channelNumber);
+        //setStandardPayload(payload);
+        setDataElement(DataElement.CHANNEL_ID, channelNumber);
+    }
 
-	// TODO: validate that message id is a suitable value
-	@Override
-	public void validate() throws MessageException
-	{
-		try
-		{
-			setChannelNumber( getChannelNumber() );
-		}
-		catch( IndexOutOfBoundsException e )
-		{
-			throw new MessageException( "Payload too small", e );
-		}
+    // TODO: validate that message id is a suitable value
+    @Override
+    public void validate() throws MessageException {
+        try {
+            setChannelNumber(getChannelNumber());
+        } catch (IndexOutOfBoundsException e) {
+            throw new MessageException("Payload too small", e);
+        }
 
-	}
+    }
 
 }

@@ -25,48 +25,43 @@ package org.cowboycoders.ant.interfaces;
  * @author will
  *
  */
-public class AntRadioPoweredOffException extends AntCommunicationException
-{
+public class AntRadioPoweredOffException extends AntCommunicationException {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 *
-	 */
-	public AntRadioPoweredOffException()
-	{
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     *
+     */
+    public AntRadioPoweredOffException() {
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param detailMessage to document
-	 */
-	public AntRadioPoweredOffException( String detailMessage )
-	{
-		super( detailMessage );
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param detailMessage to document
+     */
+    public AntRadioPoweredOffException(String detailMessage) {
+        super(detailMessage);
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param throwable to document
-	 */
-	public AntRadioPoweredOffException( Throwable throwable )
-	{
-		super( throwable );
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param throwable to document
+     */
+    public AntRadioPoweredOffException(Throwable throwable) {
+        super(throwable);
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param detailMessage to document
-	 * @param throwable to document
-	 */
-	public AntRadioPoweredOffException( String detailMessage, Throwable throwable )
-	{
-		super( detailMessage, throwable );
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param detailMessage to document
+     * @param throwable to document
+     */
+    public AntRadioPoweredOffException(String detailMessage, Throwable throwable) {
+        super(detailMessage, throwable);
+        // TODO Auto-generated constructor stub
+    }
 
 }

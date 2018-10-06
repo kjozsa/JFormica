@@ -20,30 +20,25 @@ package org.cowboycoders.ant.utils;
 
 import java.util.Iterator;
 
-public class FixedSizeFifo<V> extends AbstractFixedSizeQueue<V>
-{
+public class FixedSizeFifo<V> extends AbstractFixedSizeQueue<V> {
 
-	public FixedSizeFifo( int maxSize )
-	{
-		super( maxSize );
-	}
+    public FixedSizeFifo(int maxSize) {
+        super(maxSize);
+    }
 
-	@Override
-	public V poll()
-	{
-		return queue.poll();
-	}
+    @Override
+    public V poll() {
+        return queue.poll();
+    }
 
-	@Override
-	public V peek()
-	{
-		return queue.peek();
-	}
+    @Override
+    public V peek() {
+        return queue.peek();
+    }
 
-	@Override
-	public Iterator<V> iterator()
-	{
-		return queue.iterator();
-	}
+    @Override
+    public Iterator<V> iterator() {
+        return queue.iterator();
+    }
 
 }

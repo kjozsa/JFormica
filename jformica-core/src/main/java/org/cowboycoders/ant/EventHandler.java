@@ -23,10 +23,9 @@ import org.cowboycoders.ant.messages.responses.Response;
 
 /**
  * Common interface to all event handlers
- * @author will
  *
+ * @author will
  */
-public interface EventHandler extends BroadcastListener<Response>
-{
+public interface EventHandler extends BroadcastListener<Response> {
 
 }

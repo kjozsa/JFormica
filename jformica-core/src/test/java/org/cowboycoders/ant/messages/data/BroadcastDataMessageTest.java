@@ -20,24 +20,23 @@
 package org.cowboycoders.ant.messages.data;
 
 import org.cowboycoders.ant.messages.MessageException;
-import org.junit.*;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
-public class BroadcastDataMessageTest
-{
+public class BroadcastDataMessageTest {
 
-	@Test
-	public void test() throws MessageException
-	{
-		BroadcastDataMessage msg = new BroadcastDataMessage();
-		byte[] data = new byte[]{ 0, 1, 2, 3, 4, 5, 6, 7 };
-		int chan = 5;
-		msg.setData( data );
-		msg.setChannelNumber( chan );
+    @Test
+    public void test() throws MessageException {
+        BroadcastDataMessage msg = new BroadcastDataMessage();
+        byte[] data = new byte[]{0, 1, 2, 3, 4, 5, 6, 7};
+        int chan = 5;
+        msg.setData(data);
+        msg.setChannelNumber(chan);
 
-		assertArrayEquals( data, msg.getPrimitiveData() );
-		assertEquals( chan, (int) msg.getChannelNumber() );
-	}
+        assertArrayEquals(data, msg.getPrimitiveData());
+        assertEquals(chan, (int) msg.getChannelNumber());
+    }
 
 }

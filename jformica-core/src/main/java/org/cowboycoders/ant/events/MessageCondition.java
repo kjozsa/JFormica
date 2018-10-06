@@ -20,9 +20,8 @@ package org.cowboycoders.ant.events;
 
 import org.cowboycoders.ant.messages.StandardMessage;
 
-public interface MessageCondition
-{
+public interface MessageCondition {
 
-	public boolean test( StandardMessage msg );
+    public boolean test(StandardMessage msg);
 
 }

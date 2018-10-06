@@ -25,55 +25,49 @@ import org.cowboycoders.ant.messages.StandardMessage;
 
 /**
  * contains version string
- * @author will
  *
+ * @author will
  */
-public class VersionResponse extends StandardMessage
-{
+public class VersionResponse extends StandardMessage {
 
-	private static final byte VERSION_STRING_LENGTH = 11;
-	/**
-	 * The additional elements we are adding to channelmessage
-	 */
-	private static DataElement[] additionalElements;
+    private static final byte VERSION_STRING_LENGTH = 11;
+    /**
+     * The additional elements we are adding to channelmessage
+     */
+    private static DataElement[] additionalElements;
 
-	static
-	{
-		additionalElements = new DataElement[VERSION_STRING_LENGTH];
-		for( int i = 0; i < additionalElements.length; i++ )
-		{
-			additionalElements[i] = DataElement.VERSION_STRING_BYTE;
-		}
+    static {
+        additionalElements = new DataElement[VERSION_STRING_LENGTH];
+        for (int i = 0; i < additionalElements.length; i++) {
+            additionalElements[i] = DataElement.VERSION_STRING_BYTE;
+        }
 
-	}
+    }
 
-	/**
-	 * creates version response message
-	 */
-	public VersionResponse()
-	{
-		super( MessageId.VERSION, additionalElements );
-		setAllElementsMustBePresent( true );
-	}
+    /**
+     * creates version response message
+     */
+    public VersionResponse() {
+        super(MessageId.VERSION, additionalElements);
+        setAllElementsMustBePresent(true);
+    }
 
-	/**
-	 * Returns the version string as a {@code java.lang.String}
-	 * @return the version string
-	 */
-	public String getVersionString()
-	{
-		char[] string = new char[VERSION_STRING_LENGTH];
-		for( int i = 0; i < VERSION_STRING_LENGTH; i++ )
-		{
-			string[i] = (char) getDataElement( DataElement.VERSION_STRING_BYTE, i ).intValue();
-		}
-		return new String( string );
-	}
+    /**
+     * Returns the version string as a {@code java.lang.String}
+     *
+     * @return the version string
+     */
+    public String getVersionString() {
+        char[] string = new char[VERSION_STRING_LENGTH];
+        for (int i = 0; i < VERSION_STRING_LENGTH; i++) {
+            string[i] = (char) getDataElement(DataElement.VERSION_STRING_BYTE, i).intValue();
+        }
+        return new String(string);
+    }
 
-	@Override
-	public void validate() throws MessageException
-	{
-		// no additional validation
-	}
+    @Override
+    public void validate() throws MessageException {
+        // no additional validation
+    }
 
 }

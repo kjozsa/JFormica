@@ -29,22 +29,18 @@ import org.cowboycoders.ant.messages.MessageId;
  * @author will
  *
  */
-public class AcknowledgedDataMessage extends DataMessage
-{
+public class AcknowledgedDataMessage extends DataMessage {
 
-	public AcknowledgedDataMessage()
-	{
-		this( 0 );
-	}
+    public AcknowledgedDataMessage() {
+        this(0);
+    }
 
-	public AcknowledgedDataMessage( Integer channelNo )
-	{
-		this( new Message(), MessageId.ACKNOWLEDGED_DATA, channelNo );
-	}
+    public AcknowledgedDataMessage(Integer channelNo) {
+        this(new Message(), MessageId.ACKNOWLEDGED_DATA, channelNo);
+    }
 
-	protected AcknowledgedDataMessage( Message message, MessageId id, Integer channelNo )
-	{
-		super( message, id, channelNo );
-	}
+    protected AcknowledgedDataMessage(Message message, MessageId id, Integer channelNo) {
+        super(message, id, channelNo);
+    }
 
 }

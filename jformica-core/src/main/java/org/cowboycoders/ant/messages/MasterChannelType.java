@@ -23,43 +23,38 @@ import java.util.List;
 
 /**
  * Represents a MAster channel configuration
- * @author will
  *
+ * @author will
  */
-public class MasterChannelType extends ChannelType
-{
+public class MasterChannelType extends ChannelType {
 
-	/**
-	 * Master configuration with all options
-	 * @param shared if channel is shared
-	 * @param txOnly if transmit only channel
-	 */
-	public MasterChannelType( boolean shared, boolean txOnly )
-	{
-		super( getChannelTypesArray( shared, txOnly ) );
-	}
+    /**
+     * Master configuration with all options
+     *
+     * @param shared if channel is shared
+     * @param txOnly if transmit only channel
+     */
+    public MasterChannelType(boolean shared, boolean txOnly) {
+        super(getChannelTypesArray(shared, txOnly));
+    }
 
-	/**
-	 * Default master configuration : two-way, non-sahred
-	 */
-	public MasterChannelType()
-	{
-		super( getChannelTypesArray( false, false ) );
-	}
+    /**
+     * Default master configuration : two-way, non-sahred
+     */
+    public MasterChannelType() {
+        super(getChannelTypesArray(false, false));
+    }
 
-	private static ChannelType.Types[] getChannelTypesArray( boolean shared, boolean rxOnly )
-	{
-		List<ChannelType.Types> types = new ArrayList<>();
-		types.add( ChannelType.Types.MASTER );
-		if( shared )
-		{
-			types.add( ChannelType.Types.SHARED_TRANSMIT );
-		}
-		if( rxOnly )
-		{
-			types.add( ChannelType.Types.ONEWAY_TRANSMIT );
-		}
-		return types.toArray( new ChannelType.Types[0] );
-	}
+    private static ChannelType.Types[] getChannelTypesArray(boolean shared, boolean rxOnly) {
+        List<ChannelType.Types> types = new ArrayList<>();
+        types.add(ChannelType.Types.MASTER);
+        if (shared) {
+            types.add(ChannelType.Types.SHARED_TRANSMIT);
+        }
+        if (rxOnly) {
+            types.add(ChannelType.Types.ONEWAY_TRANSMIT);
+        }
+        return types.toArray(new ChannelType.Types[0]);
+    }
 
 }

@@ -21,12 +21,8 @@
  */
 package org.cowboycoders.ant.messages.config;
 
-import org.cowboycoders.ant.messages.ChannelMessage;
+import org.cowboycoders.ant.messages.*;
 import org.cowboycoders.ant.messages.Constants.DataElement;
-import org.cowboycoders.ant.messages.FatalMessageException;
-import org.cowboycoders.ant.messages.MessageExceptionFactory;
-import org.cowboycoders.ant.messages.MessageId;
-import org.cowboycoders.ant.messages.ValidationException;
 import org.cowboycoders.ant.utils.ValidationUtils;
 
 /**
@@ -34,50 +30,44 @@ import org.cowboycoders.ant.utils.ValidationUtils;
  * @author will
  *
  */
-public class ChannelFrequencyMessage extends ChannelMessage
-{
+public class ChannelFrequencyMessage extends ChannelMessage {
 
-	private static final int MAX_CHANNEL_FREQUENCY = 124;
+    private static final int MAX_CHANNEL_FREQUENCY = 124;
 
-	/**
-	 * The additional elements we are adding to channelmessage
-	 */
-	private static DataElement[] additionalElements = new DataElement[]{
-			DataElement.CHANNEL_FREQUENCY,
-			};
+    /**
+     * The additional elements we are adding to channelmessage
+     */
+    private static DataElement[] additionalElements = new DataElement[]{
+            DataElement.CHANNEL_FREQUENCY,
+    };
 
-	/**
-	 * Radio frequency
-	 *
-	 * @param channelNo target channel number
-	 * @param channelFrequency 2400 MHz + this value (max: 124)
-	 */
-	public ChannelFrequencyMessage( Integer channelNo, int channelFrequency )
-	{
-		super( MessageId.CHANNEL_RADIO_FREQ, channelNo, additionalElements );
-		try
-		{
-			setChannelFrequency( channelFrequency );
-		}
-		catch( ValidationException e )
-		{
-			throw new FatalMessageException( "Error setting values", e );
-		}
-	}
+    /**
+     * Radio frequency
+     *
+     * @param channelNo target channel number
+     * @param channelFrequency 2400 MHz + this value (max: 124)
+     */
+    public ChannelFrequencyMessage(Integer channelNo, int channelFrequency) {
+        super(MessageId.CHANNEL_RADIO_FREQ, channelNo, additionalElements);
+        try {
+            setChannelFrequency(channelFrequency);
+        } catch (ValidationException e) {
+            throw new FatalMessageException("Error setting values", e);
+        }
+    }
 
-	/**
-	 * Sets timeout
-	 * @param timeout to set
-	 * @throws ValidationException if out of limits
-	 */
-	private void setChannelFrequency( int frequency ) throws ValidationException
-	{
-		ValidationUtils.maxMinValidator( 0,
-		                                 MAX_CHANNEL_FREQUENCY,
-		                                 frequency,
-		                                 MessageExceptionFactory.createMaxMinExceptionProducable( "Channel frequency" ) );
-		setDataElement( DataElement.CHANNEL_FREQUENCY, frequency );
+    /**
+     * Sets timeout
+     * @param timeout to set
+     * @throws ValidationException if out of limits
+     */
+    private void setChannelFrequency(int frequency) throws ValidationException {
+        ValidationUtils.maxMinValidator(0,
+                MAX_CHANNEL_FREQUENCY,
+                frequency,
+                MessageExceptionFactory.createMaxMinExceptionProducable("Channel frequency"));
+        setDataElement(DataElement.CHANNEL_FREQUENCY, frequency);
 
-	}
+    }
 
 }

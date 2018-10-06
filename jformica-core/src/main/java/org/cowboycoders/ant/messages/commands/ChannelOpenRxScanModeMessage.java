@@ -23,18 +23,16 @@ import org.cowboycoders.ant.messages.MessageId;
 
 /**
  * Opens channel in continuous scanning mode
- * @author will
  *
+ * @author will
  */
-public class ChannelOpenRxScanModeMessage extends ChannelMessage
-{
+public class ChannelOpenRxScanModeMessage extends ChannelMessage {
 
-	/**
-	 * Should set up channel 0 as slave before sending this
-	 */
-	public ChannelOpenRxScanModeMessage()
-	{
-		super( MessageId.OPEN_RX_SCAN, 0 );
-	}
+    /**
+     * Should set up channel 0 as slave before sending this
+     */
+    public ChannelOpenRxScanModeMessage() {
+        super(MessageId.OPEN_RX_SCAN, 0);
+    }
 
 }

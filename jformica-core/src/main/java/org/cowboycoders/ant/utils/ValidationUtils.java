@@ -18,25 +18,20 @@
  */
 package org.cowboycoders.ant.utils;
 
-public class ValidationUtils
-{
+public class ValidationUtils {
 
-	private ValidationUtils()
-	{
+    private ValidationUtils() {
 
-	}
+    }
 
-	public static <e extends Throwable> void maxMinValidator( int min, int max, int value, MaxMinExceptionProducer<e> factory ) throws e
-	{
-		if( value > max || value < min )
-		{
-			throw factory.getMaxMinException( min, max, value );
-		}
-	}
+    public static <e extends Throwable> void maxMinValidator(int min, int max, int value, MaxMinExceptionProducer<e> factory) throws e {
+        if (value > max || value < min) {
+            throw factory.getMaxMinException(min, max, value);
+        }
+    }
 
-	public interface MaxMinExceptionProducer<e extends Throwable>
-	{
-		e getMaxMinException( int min, int max, int value );
-	}
+    public interface MaxMinExceptionProducer<e extends Throwable> {
+        e getMaxMinException(int min, int max, int value);
+    }
 
 }

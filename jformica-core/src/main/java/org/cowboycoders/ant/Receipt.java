@@ -26,66 +26,54 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Receipt
-{
+public class Receipt {
 
-	private static final Logger log = LoggerFactory.getLogger( Receipt.class );
+    private static final Logger log = LoggerFactory.getLogger(Receipt.class);
 
-	private LinkedList<MessageMetaWrapper<? extends StandardMessage>> sentMessages = new LinkedList<>();
-	private LinkedList<MessageMetaWrapper<? extends StandardMessage>> receivedMessages = new LinkedList<>();
+    private LinkedList<MessageMetaWrapper<? extends StandardMessage>> sentMessages = new LinkedList<>();
+    private LinkedList<MessageMetaWrapper<? extends StandardMessage>> receivedMessages = new LinkedList<>();
 
-	public void addReceived( MessageMetaWrapper<? extends StandardMessage> receivedMeta )
-	{
-		if( receivedMeta == null )
-		{
-			log.warn( "passed null message, ignoring" );
-			return;
-		}
-		receivedMessages.add( receivedMeta );
-	}
+    public void addReceived(MessageMetaWrapper<? extends StandardMessage> receivedMeta) {
+        if (receivedMeta == null) {
+            log.warn("passed null message, ignoring");
+            return;
+        }
+        receivedMessages.add(receivedMeta);
+    }
 
-	public void addSent( MessageMetaWrapper<? extends StandardMessage> msg )
-	{
-		if( msg == null )
-		{
-			log.warn( "passed null message, ignoring" );
-			return;
-		}
-		sentMessages.add( msg );
-	}
+    public void addSent(MessageMetaWrapper<? extends StandardMessage> msg) {
+        if (msg == null) {
+            log.warn("passed null message, ignoring");
+            return;
+        }
+        sentMessages.add(msg);
+    }
 
-	public void addSent( List<MessageMetaWrapper<? extends StandardMessage>> msgs )
-	{
-		if( msgs == null )
-		{
-			log.warn( "passed null list, ignoring" );
-			return;
-		}
-		for( MessageMetaWrapper<? extends StandardMessage> msg : msgs )
-		{
-			addSent( msg );
-		}
-	}
+    public void addSent(List<MessageMetaWrapper<? extends StandardMessage>> msgs) {
+        if (msgs == null) {
+            log.warn("passed null list, ignoring");
+            return;
+        }
+        for (MessageMetaWrapper<? extends StandardMessage> msg : msgs) {
+            addSent(msg);
+        }
+    }
 
-	public MessageMetaWrapper<? extends StandardMessage> getLastSent()
-	{
-		return sentMessages.getLast();
-	}
+    public MessageMetaWrapper<? extends StandardMessage> getLastSent() {
+        return sentMessages.getLast();
+    }
 
-	public MessageMetaWrapper<? extends StandardMessage> getLastReceived()
-	{
-		return receivedMessages.getLast();
-	}
+    public MessageMetaWrapper<? extends StandardMessage> getLastReceived() {
+        return receivedMessages.getLast();
+    }
 
-	protected LinkedList<MessageMetaWrapper<? extends StandardMessage>> getSentMessages()
-	{
-		return sentMessages;
-	}
+    protected LinkedList<MessageMetaWrapper<? extends StandardMessage>> getSentMessages() {
+        return sentMessages;
+    }
 
-	protected LinkedList<MessageMetaWrapper<? extends StandardMessage>> getReceivedMessages()
-	{
-		return receivedMessages;
-	}
+    protected LinkedList<MessageMetaWrapper<? extends StandardMessage>> getReceivedMessages() {
+        return receivedMessages;
+    }
 
 }
   

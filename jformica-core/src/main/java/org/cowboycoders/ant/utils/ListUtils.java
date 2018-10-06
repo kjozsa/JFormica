@@ -22,52 +22,49 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ListUtils
-{
+public class ListUtils {
 
-	private ListUtils()
-	{
+    private ListUtils() {
 
-	}
+    }
 
-	/**
-	 * prefixes a list with elements given in an array
-	 * @param <X> TODO: document this
-	 * @param <V> TODO: document this
-	 * @param list that will be prefixed (must be mutable)
-	 * @param prefix the prefix to added to @{code ArrayList}
-	 * @return the List with prefix attached
-	 */
-	public static <X extends List<V>, V> X prefixList( X list, V[] prefix )
-	{
-		List<V> prefixList = Arrays.asList( prefix );
-		@SuppressWarnings( "unchecked" )
-		Class<V> clazz = (Class<V>) prefix.getClass().getComponentType();
-		prefixList( list, prefixList, clazz );
-		return list;
-	}
+    /**
+     * prefixes a list with elements given in an array
+     *
+     * @param <X>    TODO: document this
+     * @param <V>    TODO: document this
+     * @param list   that will be prefixed (must be mutable)
+     * @param prefix the prefix to added to @{code ArrayList}
+     * @return the List with prefix attached
+     */
+    public static <X extends List<V>, V> X prefixList(X list, V[] prefix) {
+        List<V> prefixList = Arrays.asList(prefix);
+        @SuppressWarnings("unchecked")
+        Class<V> clazz = (Class<V>) prefix.getClass().getComponentType();
+        prefixList(list, prefixList, clazz);
+        return list;
+    }
 
-	/**
-	 * prefixes a list with elements given in an List
-	 * @param <X> TODO: document this
-	 * @param <V> TODO: document this
-	 * @param list that will be prefixed (must be mutable)
-	 * @param prefix the prefix to added to @{code ArrayList}
-	 * @param clazz the class of Objects held in the two lists
-	 * @return the List with prefix attached
-	 */
-	@SuppressWarnings( "unchecked" )
-	public static <X extends List<V>, V> X prefixList( X list, X prefix, Class<V> clazz )
-	{
-		if( list == null )
-		{
-			list = (X) new ArrayList<V>();
-		}
-		List<V> temp = new ArrayList<>( list );
-		list.removeAll( temp );
-		list.addAll( prefix );
-		list.addAll( temp );
-		return list;
-	}
+    /**
+     * prefixes a list with elements given in an List
+     *
+     * @param <X>    TODO: document this
+     * @param <V>    TODO: document this
+     * @param list   that will be prefixed (must be mutable)
+     * @param prefix the prefix to added to @{code ArrayList}
+     * @param clazz  the class of Objects held in the two lists
+     * @return the List with prefix attached
+     */
+    @SuppressWarnings("unchecked")
+    public static <X extends List<V>, V> X prefixList(X list, X prefix, Class<V> clazz) {
+        if (list == null) {
+            list = (X) new ArrayList<V>();
+        }
+        List<V> temp = new ArrayList<>(list);
+        list.removeAll(temp);
+        list.addAll(prefix);
+        list.addAll(temp);
+        return list;
+    }
 
 }

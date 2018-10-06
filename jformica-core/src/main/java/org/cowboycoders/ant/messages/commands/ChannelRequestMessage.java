@@ -26,83 +26,74 @@ import org.cowboycoders.ant.messages.ValidationException;
 
 /**
  * Request channel / ant info
- * @author will
  *
+ * @author will
  */
-public class ChannelRequestMessage extends ChannelMessage
-{
+public class ChannelRequestMessage extends ChannelMessage {
 
-	/**
-	 * The additional elements we are adding to channel message
-	 */
-	private static DataElement[] additionalElements = new DataElement[]{
-			DataElement.CHANNEL_REQUEST_MSG_ID,
-			};
+    /**
+     * The additional elements we are adding to channel message
+     */
+    private static DataElement[] additionalElements = new DataElement[]{
+            DataElement.CHANNEL_REQUEST_MSG_ID,
+    };
 
-	/**
-	 * Supported request messages
-	 * @author will
-	 *
-	 */
-	public enum Request
-	{
-		CHANNEL_STATUS( 0x52 ), CHANNEL_ID( 0x51 ), ANT_VERSION( 0x3E ), CAPABILITIES( 0x54 ), SERIAL_NUMBER( 0x61 ),;
+    /**
+     * Supported request messages
+     *
+     * @author will
+     */
+    public enum Request {
+        CHANNEL_STATUS(0x52), CHANNEL_ID(0x51), ANT_VERSION(0x3E), CAPABILITIES(0x54), SERIAL_NUMBER(0x61),
+        ;
 
-		byte msgId;
+        byte msgId;
 
-		Request( int msgId )
-		{
-			setMsgId( (byte) msgId );
-		}
+        Request(int msgId) {
+            setMsgId((byte) msgId);
+        }
 
-		/**
-		 * @return the msgId
-		 */
-		public byte getMsgId()
-		{
-			return msgId;
-		}
+        /**
+         * @return the msgId
+         */
+        public byte getMsgId() {
+            return msgId;
+        }
 
-		/**
-		 * @param msgId the msgId to set
-		 */
-		private void setMsgId( byte msgId )
-		{
-			this.msgId = msgId;
-		}
+        /**
+         * @param msgId the msgId to set
+         */
+        private void setMsgId(byte msgId) {
+            this.msgId = msgId;
+        }
 
-	}
+    }
 
-	public ChannelRequestMessage( Integer channelNo, Request request )
-	{
-		super( MessageId.REQUEST, channelNo, additionalElements );
-		try
-		{
-			setRequest( request );
-		}
-		catch( ValidationException e )
-		{
-			throw new FatalMessageException( "Error setting values", e );
-		}
-	}
+    public ChannelRequestMessage(Integer channelNo, Request request) {
+        super(MessageId.REQUEST, channelNo, additionalElements);
+        try {
+            setRequest(request);
+        } catch (ValidationException e) {
+            throw new FatalMessageException("Error setting values", e);
+        }
+    }
 
-	/**
-	 * Use default channel (zero). If sent though {TODO : fix link org.cowycoders.ant.Channel} this
-	 * will be set to the corresponding channel number associated with that instance.
-	 * @param request TODO : to document
-	 */
-	public ChannelRequestMessage( Request request )
-	{
-		this( 0, request );
-	}
+    /**
+     * Use default channel (zero). If sent though {TODO : fix link org.cowycoders.ant.Channel} this
+     * will be set to the corresponding channel number associated with that instance.
+     *
+     * @param request TODO : to document
+     */
+    public ChannelRequestMessage(Request request) {
+        this(0, request);
+    }
 
-	/**
-	 * @param request to set
-	 * @throws ValidationException if fails validation
-	 */
-	private void setRequest( Request request ) throws ValidationException
-	{
-		setAndValidateDataElement( DataElement.CHANNEL_REQUEST_MSG_ID, request.getMsgId() );
-	}
+    /**
+     * @param request to set
+     * @throws ValidationException if fails validation
+     */
+    private void setRequest(Request request) throws ValidationException {
+        setAndValidateDataElement(DataElement.CHANNEL_REQUEST_MSG_ID, request.getMsgId());
+    }
 
 }

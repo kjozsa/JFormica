@@ -19,19 +19,17 @@
 
 package org.cowboycoders.ant.utils;
 
-import org.junit.*;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class BitUtilsTest
-{
+public class BitUtilsTest {
 
-	@Test
-	public void testGetMaxBitIndex()
-	{
-		assertEquals( 1, BitUtils.getMaxBitIndex( 1 ) );
-		assertEquals( 8, BitUtils.getMaxBitIndex( 255 ) );
-		org.junit.Assert.assertNotSame( 8, BitUtils.getMaxBitIndex( 256 ) );
-	}
+    @Test
+    public void testGetMaxBitIndex() {
+        assertEquals(1, BitUtils.getMaxBitIndex(1));
+        assertEquals(8, BitUtils.getMaxBitIndex(255));
+        org.junit.Assert.assertNotSame(8, BitUtils.getMaxBitIndex(256));
+    }
 
 }

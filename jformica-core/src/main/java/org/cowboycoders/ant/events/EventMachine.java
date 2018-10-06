@@ -32,215 +32,169 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class EventMachine
-{
-	private static final Logger log = LoggerFactory.getLogger( EventMachine.class );
-	private AntChipInterface chipInterface;
+public class EventMachine {
+    private static final Logger log = LoggerFactory.getLogger(EventMachine.class);
+    private AntChipInterface chipInterface;
 
-	private BroadcastMessenger<StandardMessage> convertedMessenger;
+    private BroadcastMessenger<StandardMessage> convertedMessenger;
 
-	private boolean running = false;
+    private boolean running = false;
 
-	public EventMachine( AntChipInterface chipInterface )
-	{
-		this.chipInterface = chipInterface;
-		BroadcastMessenger<byte[]> rawMessenger = new BroadcastMessenger<>();
-		this.convertedMessenger = new BroadcastMessenger<>();
-		chipInterface.registerRxMesenger( rawMessenger );
-		rawMessenger.addBroadcastListener( new EventPump() );
-	}
+    public EventMachine(AntChipInterface chipInterface) {
+        this.chipInterface = chipInterface;
+        BroadcastMessenger<byte[]> rawMessenger = new BroadcastMessenger<>();
+        this.convertedMessenger = new BroadcastMessenger<>();
+        chipInterface.registerRxMesenger(rawMessenger);
+        rawMessenger.addBroadcastListener(new EventPump());
+    }
 
-	public void registerRxListener( BroadcastListener<StandardMessage> listener )
-	{
-		convertedMessenger.addBroadcastListener( listener );
-	}
+    public void registerRxListener(BroadcastListener<StandardMessage> listener) {
+        convertedMessenger.addBroadcastListener(listener);
+    }
 
-	public void removeRxListener( BroadcastListener<StandardMessage> listener )
-	{
-		convertedMessenger.removeBroadcastListener( listener );
-	}
+    public void removeRxListener(BroadcastListener<StandardMessage> listener) {
+        convertedMessenger.removeBroadcastListener(listener);
+    }
 
-	public MessageMetaWrapper<StandardMessage> waitForCondition( MessageCondition msgCondition,
-	                                                             Long timeout,
-	                                                             TimeUnit timeoutUnit,
-	                                                             LockExchangeContainer lockExchanger ) throws
-	                                                                                                   InterruptedException,
-	                                                                                                   TimeoutException
-	{
+    public MessageMetaWrapper<StandardMessage> waitForCondition(MessageCondition msgCondition,
+                                                                Long timeout,
+                                                                TimeUnit timeoutUnit,
+                                                                LockExchangeContainer lockExchanger) throws
+            InterruptedException,
+            TimeoutException {
 
-		Lock msgLock = new ReentrantLock();
+        Lock msgLock = new ReentrantLock();
 
-		try
-		{
-			msgLock.lock();
+        try {
+            msgLock.lock();
 
-			IncomingMessageListener listener = new IncomingMessageListener( msgLock, msgCondition );
+            IncomingMessageListener listener = new IncomingMessageListener(msgLock, msgCondition);
 
-			registerRxListener( listener );
+            registerRxListener(listener);
 
-			if( lockExchanger != null )
-			{
-				try
-				{
-					lockExchanger.lock.lock();
-					lockExchanger.returnLock = msgLock;
-					lockExchanger.lockAvailable.signalAll();
-				}
-				finally
-				{
-					lockExchanger.lock.unlock();
-				}
-			}
+            if (lockExchanger != null) {
+                try {
+                    lockExchanger.lock.lock();
+                    lockExchanger.returnLock = msgLock;
+                    lockExchanger.lockAvailable.signalAll();
+                } finally {
+                    lockExchanger.lock.unlock();
+                }
+            }
 
-			MessageMetaWrapper<StandardMessage> rtn = null;
+            MessageMetaWrapper<StandardMessage> rtn = null;
 
-			// don't leave extraneous listeners if an exception is thrown
-			try
-			{
-				rtn = listener.getReply( timeout, timeoutUnit );
-			}
-			finally
-			{
-				removeRxListener( listener );
-			}
+            // don't leave extraneous listeners if an exception is thrown
+            try {
+                rtn = listener.getReply(timeout, timeoutUnit);
+            } finally {
+                removeRxListener(listener);
+            }
 
-			return rtn;
+            return rtn;
 
-		}
-		finally
-		{
-			msgLock.unlock();
-		}
-	}
+        } finally {
+            msgLock.unlock();
+        }
+    }
 
-	public synchronized void start()
-	{
-		if( running )
-		{
-			return;
-		}
-		chipInterface.start();
-		running = true;
-	}
+    public synchronized void start() {
+        if (running) {
+            return;
+        }
+        chipInterface.start();
+        running = true;
+    }
 
-	public synchronized void stop()
-	{
-		if( !running )
-		{
-			return;
-		}
-		chipInterface.stop();
-		running = false;
-	}
+    public synchronized void stop() {
+        if (!running) {
+            return;
+        }
+        chipInterface.stop();
+        running = false;
+    }
 
-	private class EventPump implements BroadcastListener<byte[]>
-	{
+    private class EventPump implements BroadcastListener<byte[]> {
 
-		@Override
-		public void receiveMessage( byte[] message )
-		{
-			StandardMessage msg = null;
-			try
-			{
-				msg = AntMessageFactory.createMessage( message );
-			}
-			catch( MessageException e )
-			{
-				log.warn( "Error converting raw data to type StandardMessage" );
-			}
+        @Override
+        public void receiveMessage(byte[] message) {
+            StandardMessage msg = null;
+            try {
+                msg = AntMessageFactory.createMessage(message);
+            } catch (MessageException e) {
+                log.warn("Error converting raw data to type StandardMessage");
+            }
 
-			if( msg != null )
-			{
-				log.trace( "received :" + msg.getClass() );
-				convertedMessenger.sendMessage( msg );
-			}
-			else
-			{
-				log.warn( "Ignoring data packet, len: " + message.length );
-			}
-		}
+            if (msg != null) {
+                log.trace("received :" + msg.getClass());
+                convertedMessenger.sendMessage(msg);
+            } else {
+                log.warn("Ignoring data packet, len: " + message.length);
+            }
+        }
 
-	}
+    }
 
-	private class IncomingMessageListener implements BroadcastListener<StandardMessage>
-	{
+    private class IncomingMessageListener implements BroadcastListener<StandardMessage> {
 
-		private MessageMetaWrapper<StandardMessage> wrappedMessage;
-		private Lock messageUpdateLock;
-		private Condition replyRecieved;
-		private MessageCondition condition;
+        private MessageMetaWrapper<StandardMessage> wrappedMessage;
+        private Lock messageUpdateLock;
+        private Condition replyRecieved;
+        private MessageCondition condition;
 
-		public IncomingMessageListener( Lock messageUpdateLock, MessageCondition condition )
-		{
-			this.condition = condition;
-			this.messageUpdateLock = messageUpdateLock;
-			this.replyRecieved = messageUpdateLock.newCondition();
-		}
+        public IncomingMessageListener(Lock messageUpdateLock, MessageCondition condition) {
+            this.condition = condition;
+            this.messageUpdateLock = messageUpdateLock;
+            this.replyRecieved = messageUpdateLock.newCondition();
+        }
 
-		public MessageMetaWrapper<StandardMessage> getReply( Long timeout, TimeUnit timeoutUnit ) throws
-		                                                                                          InterruptedException,
-		                                                                                          TimeoutException
-		{
-			final long timeoutNano = timeout != null ? TimeUnit.NANOSECONDS.convert( timeout, timeoutUnit ) : 0L;
-			final long initialTimeStamp = MessageMetaWrapper.getCurrentTimestamp();
-			try
-			{
-				messageUpdateLock.lock();
-				while( wrappedMessage == null )
-				{
-					if( timeout != null )
-					{
-						long timeoutRemaining = timeoutNano - (MessageMetaWrapper.getCurrentTimestamp() - initialTimeStamp);
-						if( !replyRecieved.await( timeoutRemaining, TimeUnit.NANOSECONDS ) )
-						{
-							throw new TimeoutException( "timeout waiting for message" );
-						}
-					}
-					else
-					{
-						replyRecieved.await();
-					}
-				}
-			}
-			finally
-			{
-				messageUpdateLock.unlock();
-			}
+        public MessageMetaWrapper<StandardMessage> getReply(Long timeout, TimeUnit timeoutUnit) throws
+                InterruptedException,
+                TimeoutException {
+            final long timeoutNano = timeout != null ? TimeUnit.NANOSECONDS.convert(timeout, timeoutUnit) : 0L;
+            final long initialTimeStamp = MessageMetaWrapper.getCurrentTimestamp();
+            try {
+                messageUpdateLock.lock();
+                while (wrappedMessage == null) {
+                    if (timeout != null) {
+                        long timeoutRemaining = timeoutNano - (MessageMetaWrapper.getCurrentTimestamp() - initialTimeStamp);
+                        if (!replyRecieved.await(timeoutRemaining, TimeUnit.NANOSECONDS)) {
+                            throw new TimeoutException("timeout waiting for message");
+                        }
+                    } else {
+                        replyRecieved.await();
+                    }
+                }
+            } finally {
+                messageUpdateLock.unlock();
+            }
 
-			// retest to throw an exception on calling thread
-			condition.test( wrappedMessage.unwrap() );
+            // retest to throw an exception on calling thread
+            condition.test(wrappedMessage.unwrap());
 
-			return wrappedMessage;
-		}
+            return wrappedMessage;
+        }
 
-		@Override
-		public void receiveMessage( StandardMessage message )
-		{
+        @Override
+        public void receiveMessage(StandardMessage message) {
 
-			try
-			{
-				if( !condition.test( message ) )
-				{
-					return;
-				}
-			}
-			catch( Exception e )
-			{
-				// we re-test the condition later back on calling thread
-			}
+            try {
+                if (!condition.test(message)) {
+                    return;
+                }
+            } catch (Exception e) {
+                // we re-test the condition later back on calling thread
+            }
 
-			MessageMetaWrapper<StandardMessage> wrappedMessage = new MessageMetaWrapper<>( message );
+            MessageMetaWrapper<StandardMessage> wrappedMessage = new MessageMetaWrapper<>(message);
 
-			try
-			{
-				messageUpdateLock.lock();
-				this.wrappedMessage = wrappedMessage;
-				replyRecieved.signalAll();
-			}
-			finally
-			{
-				messageUpdateLock.unlock();
-			}
-		}
-	}
+            try {
+                messageUpdateLock.lock();
+                this.wrappedMessage = wrappedMessage;
+                replyRecieved.signalAll();
+            } finally {
+                messageUpdateLock.unlock();
+            }
+        }
+    }
 }

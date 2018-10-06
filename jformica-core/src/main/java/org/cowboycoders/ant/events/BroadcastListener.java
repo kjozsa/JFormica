@@ -18,13 +18,13 @@
  */
 package org.cowboycoders.ant.events;
 
-public interface BroadcastListener<V>
-{
+public interface BroadcastListener<V> {
 
-	/**
-	 * Called whenever a message is broadcast. Should be thread safe.
-	 * @param message TODO: document this
-	 */
-	void receiveMessage( V message );
+    /**
+     * Called whenever a message is broadcast. Should be thread safe.
+     *
+     * @param message TODO: document this
+     */
+    void receiveMessage(V message);
 
 }

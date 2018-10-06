@@ -23,9 +23,8 @@ import org.cowboycoders.ant.messages.StandardMessage;
 
 import java.util.concurrent.TimeoutException;
 
-public interface WaitAdapter
-{
+public interface WaitAdapter {
 
-	MessageMetaWrapper<? extends StandardMessage> execute() throws InterruptedException, TimeoutException;
+    MessageMetaWrapper<? extends StandardMessage> execute() throws InterruptedException, TimeoutException;
 
 }

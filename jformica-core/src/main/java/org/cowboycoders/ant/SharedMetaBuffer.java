@@ -23,12 +23,10 @@ import org.cowboycoders.ant.messages.StandardMessage;
 import org.cowboycoders.ant.utils.Containable;
 import org.cowboycoders.ant.utils.SharedBuffer;
 
-public class SharedMetaBuffer<V extends Containable<? extends StandardMessage>> extends SharedBuffer<V>
-{
+public class SharedMetaBuffer<V extends Containable<? extends StandardMessage>> extends SharedBuffer<V> {
 
-	public SharedMetaBuffer( int length, MessageCondition condition )
-	{
-		super( new MessageBufferContainer<V>( length, condition ) );
-	}
+    public SharedMetaBuffer(int length, MessageCondition condition) {
+        super(new MessageBufferContainer<V>(length, condition));
+    }
 
 }

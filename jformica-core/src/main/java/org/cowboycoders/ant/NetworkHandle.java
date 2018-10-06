@@ -20,64 +20,55 @@ package org.cowboycoders.ant;
 
 /**
  * Ensures a network reference can only be freed once
- * @author will
  *
+ * @author will
  */
-public class NetworkHandle extends Network
-{
+public class NetworkHandle extends Network {
 
-	private boolean freed = false;
+    private boolean freed = false;
 
-	protected NetworkHandle( Network network )
-	{
-		super( network );
-		// increment reference count
-		use();
-	}
+    protected NetworkHandle(Network network) {
+        super(network);
+        // increment reference count
+        use();
+    }
 
-	@Override
-	public synchronized void free()
-	{
-		// if has been freed
-		checkState();
-		super.free();
-		freed = true;
-	}
+    @Override
+    public synchronized void free() {
+        // if has been freed
+        checkState();
+        super.free();
+        freed = true;
+    }
 
-	@Override
-	public synchronized int getNumber()
-	{
-		checkState();
-		return super.getNumber();
-	}
+    @Override
+    public synchronized int getNumber() {
+        checkState();
+        return super.getNumber();
+    }
 
-	@Override
-	public synchronized NetworkKey getNetworkKey()
-	{
-		checkState();
-		return super.getNetworkKey();
-	}
+    @Override
+    public synchronized NetworkKey getNetworkKey() {
+        checkState();
+        return super.getNetworkKey();
+    }
 
-	@Override
-	protected synchronized void use()
-	{
-		checkState();
-		super.use();
-	}
+    @Override
+    protected synchronized void use() {
+        checkState();
+        super.use();
+    }
 
-	@Override
-	protected synchronized NetworkListener getNetworkListener()
-	{
-		checkState();
-		return super.getNetworkListener();
-	}
+    @Override
+    protected synchronized NetworkListener getNetworkListener() {
+        checkState();
+        return super.getNetworkListener();
+    }
 
-	private synchronized void checkState()
-	{
-		if( freed )
-		{
-			throw new IllegalStateException( "Trying to use a network which has been freed" );
-		}
-	}
+    private synchronized void checkState() {
+        if (freed) {
+            throw new IllegalStateException("Trying to use a network which has been freed");
+        }
+    }
 
 }

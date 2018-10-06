@@ -18,36 +18,31 @@
  */
 package org.cowboycoders.ant;
 
-public class ChannelError extends AntError
-{
+public class ChannelError extends AntError {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -8498544038648232325L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8498544038648232325L;
 
-	public ChannelError()
-	{
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    public ChannelError() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	public ChannelError( String detailMessage, Throwable throwable )
-	{
-		super( detailMessage, throwable );
-		// TODO Auto-generated constructor stub
-	}
+    public ChannelError(String detailMessage, Throwable throwable) {
+        super(detailMessage, throwable);
+        // TODO Auto-generated constructor stub
+    }
 
-	public ChannelError( String detailMessage )
-	{
-		super( detailMessage );
-		// TODO Auto-generated constructor stub
-	}
+    public ChannelError(String detailMessage) {
+        super(detailMessage);
+        // TODO Auto-generated constructor stub
+    }
 
-	public ChannelError( Throwable throwable )
-	{
-		super( throwable );
-		// TODO Auto-generated constructor stub
-	}
+    public ChannelError(Throwable throwable) {
+        super(throwable);
+        // TODO Auto-generated constructor stub
+    }
 
 }

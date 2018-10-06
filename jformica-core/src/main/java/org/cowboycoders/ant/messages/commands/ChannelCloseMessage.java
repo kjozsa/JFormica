@@ -23,18 +23,16 @@ import org.cowboycoders.ant.messages.MessageId;
 
 /**
  * Closes a channel
- * @author will
  *
+ * @author will
  */
-public class ChannelCloseMessage extends ChannelMessage
-{
+public class ChannelCloseMessage extends ChannelMessage {
 
-	/**
-	 * @param channelNumber of channel to close
-	 */
-	public ChannelCloseMessage( Integer channelNumber )
-	{
-		super( MessageId.CLOSE_CHANNEL, channelNumber );
-	}
+    /**
+     * @param channelNumber of channel to close
+     */
+    public ChannelCloseMessage(Integer channelNumber) {
+        super(MessageId.CLOSE_CHANNEL, channelNumber);
+    }
 
 }

@@ -281,7 +281,7 @@ public class AntTransceiver extends AbstractAntTransceiver {
         try {
             interfaceLock.lock();
             if (claim) {
-                _interface.claim();
+                _interface.claim(it -> true);
                 log.info("USB Interface claimed.");
             } else {
                 if (_interface.isClaimed()) {

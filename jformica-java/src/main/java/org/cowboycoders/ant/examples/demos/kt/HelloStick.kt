@@ -22,6 +22,7 @@ class Stick {
 
     init {
         node.start()
+        node.setLibConfig(true, false, false)
         node.reset()
 
         channel = node.freeChannel
@@ -36,7 +37,7 @@ class Stick {
 
     suspend fun start() {
         try {
-            channel.open()
+            channel.openInRxScanMode()
             delay(10_000)
 
         } finally {

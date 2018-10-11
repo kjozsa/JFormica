@@ -1,10 +1,11 @@
-package org.cowboycoders.ant.examples.demos.kt
+package com.ftl.beats
 
 /**
  * See ANT+ data sheet for explanation
  */
 const val HRM_CHANNEL_PERIOD = 8070
 
+const val HRM_CHANNEL_PERIOD_MIN = 32280
 /**
  * See ANT+ data sheet for explanation
  */

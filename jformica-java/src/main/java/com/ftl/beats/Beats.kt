@@ -1,11 +1,10 @@
-package org.cowboycoders.ant.examples.demos.kt
+package com.ftl.beats
 
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.cowboycoders.ant.Channel
 import org.cowboycoders.ant.Node
-import org.cowboycoders.ant.events.BroadcastListener
 import org.cowboycoders.ant.examples.NetworkKeys
 import org.cowboycoders.ant.examples.Utils
 import org.cowboycoders.ant.interfaces.AntTransceiver
@@ -13,8 +12,14 @@ import org.cowboycoders.ant.messages.SlaveChannelType
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage
 import org.slf4j.LoggerFactory
 
-
-class Stick {
+/**
+ * Garmin HRM1G
+ *
+ * manufacturer: 2, serial: 13 : 24
+ * hardware: 3, software: 127, model: 3
+ * operating time LSB: 1, 35, MSB: 11
+ */
+class Beats {
     val logger = LoggerFactory.getLogger(javaClass)
     val antchip = AntTransceiver(0)
     val node = Node(antchip)
@@ -31,14 +36,15 @@ class Stick {
         channel.registerRxListener(Listener(), BroadcastDataMessage::class.java)
         channel.setId(HRM_DEVICE_ID, HRM_DEVICE_TYPE, HRM_TRANSMISSION_TYPE, HRM_PAIRING_FLAG)
         channel.setFrequency(HRM_CHANNEL_FREQ)
-        channel.setPeriod(HRM_CHANNEL_PERIOD)
+        channel.setPeriod(HRM_CHANNEL_PERIOD_MIN)
         channel.setSearchTimeout(10)
     }
 
     suspend fun start() {
         try {
+//            channel.openInRxScanMode()
             channel.open()
-            delay(3  * 60_000)
+            delay(60_000)
 
         } finally {
             logger.info("End of sleep, closing channel...")
@@ -51,17 +57,10 @@ class Stick {
         }
     }
 
-    class Listener : BroadcastListener<BroadcastDataMessage> {
-        val logger = LoggerFactory.getLogger(javaClass)
-
-        override fun receiveMessage(message: BroadcastDataMessage?) {
-            logger.info("heart rate: {}", message!!.unsignedData[7])
-        }
-    }
 }
 
 fun main(args: Array<String>) {
-    val stick = Stick()
+    val stick = Beats()
     GlobalScope.launch {
         stick.start()
     }

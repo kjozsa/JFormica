@@ -19,6 +19,10 @@
         <!--<level value="TRACE"/>-->
     </logger>
 
+    <logger name="org.cowboycoders.ant">
+        <!--<level value="DEBUG"/>-->
+        <level value="INFO"/>
+    </logger>
 
     <root>
         <priority value="TRACE"/>

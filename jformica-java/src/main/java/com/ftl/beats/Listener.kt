@@ -1,7 +1,6 @@
 package com.ftl.beats
 
 import org.cowboycoders.ant.events.BroadcastListener
-import org.cowboycoders.ant.messages.DeviceInfoQueryable
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage
 import org.slf4j.LoggerFactory
 
@@ -13,22 +12,22 @@ class Listener : BroadcastListener<BroadcastDataMessage> {
         if (message == null || message.unsignedData == null) return
         count += 1
 
-        val data = message.unsignedData
-        val pageNumber = data[0] and 0x7F
+        val rawData = message.unsignedData
+        val pageNumber = rawData[0] and 0x7F
 
-        val dataPage = when (pageNumber) {
-            1 -> OperatingTime(data)
-            2 -> ManufacturerInfo(data)
-            3 -> ProductInfo(data)
-            4 -> HeartBeat(data)
-            7 -> BatteryStatus(data)
-            else -> null
+        val data = when (pageNumber) {
+            1 -> OperatingTime(pageNumber, rawData)
+            2 -> ManufacturerInfo(pageNumber, rawData)
+            3 -> ProductInfo(pageNumber, rawData)
+            4 -> HeartBeat(pageNumber, rawData)
+            7 -> BatteryStatus(pageNumber, rawData)
+            else -> throw NotImplementedError();
         }
 
-        if (dataPage !is HeartBeat) {
-            logger.info(dataPage.toString())
+        if (data.pageNumber != 4) {
+            logger.info(data.toString())
         } else {
-            logger.debug(dataPage.toString())
+            logger.debug(data.toString())
         }
     }
 }

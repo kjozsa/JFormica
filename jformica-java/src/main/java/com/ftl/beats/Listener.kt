@@ -1,6 +1,7 @@
 package com.ftl.beats
 
 import org.cowboycoders.ant.events.BroadcastListener
+import org.cowboycoders.ant.messages.DeviceInfoQueryable
 import org.cowboycoders.ant.messages.data.BroadcastDataMessage
 import org.slf4j.LoggerFactory
 

@@ -91,7 +91,7 @@ public class BasicHeartRateMonitor {
 
         /******* start device specific configuration ******/
 
-        channel.setId(HRM_DEVICE_ID, HRM_DEVICE_TYPE, HRM_TRANSMISSION_TYPE, HRM_PAIRING_FLAG);
+        channel.setId(HRM_DEVICE_ID, HRM_DEVICE_TYPE, HRM_TRANSMISSION_TYPE, false);
         channel.setFrequency(HRM_CHANNEL_FREQ);
         channel.setPeriod(HRM_CHANNEL_PERIOD);
 

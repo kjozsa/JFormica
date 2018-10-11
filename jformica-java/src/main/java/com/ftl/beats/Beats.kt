@@ -42,21 +42,20 @@ class Beats {
 
     suspend fun start() {
         try {
-//            channel.openInRxScanMode()
-            channel.open()
-            delay(60_000)
+            channel.openInRxScanMode()
+//            channel.open()
+            delay(3 * 60_000)
 
         } finally {
             logger.info("End of sleep, closing channel...")
-            channel.close()
             Utils.printChannelConfig(channel)
+            channel.close()
             channel.unassign()
             node.freeChannel(channel)
             node.stop()
             logger.info("Exiting.")
         }
     }
-
 }
 
 fun main(args: Array<String>) {

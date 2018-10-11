@@ -37,8 +37,8 @@ class Stick {
 
     suspend fun start() {
         try {
-            channel.openInRxScanMode()
-            delay(10_000)
+            channel.open()
+            delay(3  * 60_000)
 
         } finally {
             logger.info("End of sleep, closing channel...")
@@ -55,7 +55,7 @@ class Stick {
         val logger = LoggerFactory.getLogger(javaClass)
 
         override fun receiveMessage(message: BroadcastDataMessage?) {
-            logger.warn("## received {}", message)
+            logger.info("heart rate: {}", message!!.unsignedData[7])
         }
     }
 }

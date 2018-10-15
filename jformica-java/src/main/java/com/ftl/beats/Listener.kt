@@ -6,11 +6,9 @@ import org.slf4j.LoggerFactory
 
 class Listener : BroadcastListener<BroadcastDataMessage> {
     val logger = LoggerFactory.getLogger(javaClass)
-    var count = 0
 
     override fun receiveMessage(message: BroadcastDataMessage?) {
         if (message == null || message.unsignedData == null) return
-        count += 1
 
         val rawData = message.unsignedData
         val pageNumber = rawData[0] and 0x7F
@@ -24,10 +22,9 @@ class Listener : BroadcastListener<BroadcastDataMessage> {
             else -> throw NotImplementedError();
         }
 
-        if (data.pageNumber != 4) {
-            logger.info(data.toString())
-        } else {
-            logger.debug(data.toString())
+        when {
+            data.pageNumber != 4 -> logger.info(data.toString())
+            else -> logger.debug(data.toString())
         }
     }
 }
